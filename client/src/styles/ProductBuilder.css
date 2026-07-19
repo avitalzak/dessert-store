@@ -1,0 +1,126 @@
+/* ===========================
+   ProductBuilder Layout
+=========================== */
+
+.kiosk-builder-wrapper {
+    background-color: #fffaf5;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ===========================
+   Main Content
+=========================== */
+
+.kiosk-main-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+}
+
+/* ===========================
+   Step Screen
+=========================== */
+
+.kiosk-step-container {
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+}
+
+.kiosk-step-title {
+    color: #836753;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0 0 10px;
+}
+
+.kiosk-step-subtitle {
+    color: #5c4d42;
+    font-size: 14px;
+    margin: 0 0 35px;
+    opacity: .8;
+}
+
+/* ===========================
+   Options Grid
+=========================== */
+
+.kiosk-options-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 24px;
+    width: 100%;
+}
+
+/* ===========================
+   Footer
+=========================== */
+
+.kiosk-footer-bar {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    margin-top: 20px;
+    flex-shrink: 0;
+}
+
+.kiosk-nav-buttons {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.kiosk-btn-next {
+    flex: 1;
+    background: #e5c3c3;
+    color: #614646;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.kiosk-btn-next:hover:not(:disabled) {
+    background: #dbb3b3;
+}
+
+.kiosk-btn-next:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.kiosk-btn-back {
+    padding: 12px 20px;
+    background: transparent;
+    color: #836753;
+    border: 1px solid #dcd1c4;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.kiosk-btn-back:hover {
+    background: rgba(131,103,83,.05);
+}

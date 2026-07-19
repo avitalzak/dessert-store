@@ -1,0 +1,277 @@
+/* ==========================================================================
+   1. איפוס שוליים גלובלי
+   ========================================================================== */
+html, body, #root, [class*="app"], [class*="layout"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   2. קונטיינר דף הבית
+   ========================================================================== */
+.clean-fullscreen-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fffaf5;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   3. אזור התמונות (Hero Section) - קצר יותר!
+   ========================================================================== */
+.clean-fullscreen-hero {
+  position: relative;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  
+  left: 50% !important;
+  right: 50% !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  
+  height: 58vh;               /* שונה מ-72 ל-58 כדי שהתמונה תיגמר מוקדם יותר */
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  box-sizing: border-box;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* תמונת הרקע - אנימציית Fade חלק ונורמלי */
+.clean-hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out; /* החלפת תמונות חלקה */
+  z-index: 1;
+}
+
+.clean-hero-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+/* שכבת פילטר כהה מעל התמונה */
+.clean-hero-color-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(59, 47, 39, 0.55);
+  z-index: 3;
+}
+
+/* קונטיינר הטקסט */
+.clean-hero-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  color: #ffffff;
+  padding: 0 20px;
+  margin-bottom: 50px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.clean-main-title {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+}
+
+.clean-subtitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+/* ==========================================================================
+   4. קונטיינר ועיצובי העיגולים הוורודים - עם צל היקפי דועך!
+   ========================================================================== */
+.promo-circles-container {
+  position: absolute;
+  bottom: -65px; /* מותאם לעיגול גדול יותר שיוצא חצי החוצה */
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  z-index: 10;
+  width: 100%;
+}
+
+.promo-circle {
+  background-color: #f3c1be; 
+  width: 155px;               /* הוגדל מ-115px ל-155px */
+  height: 155px;              /* הוגדל מ-115px ל-155px */
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #3b2f27;           /* צבע טקסט לבן כמו בהדמיה */
+  font-weight: 700;
+  font-size: 15px;            /* פונט מעט גדול וברור יותר */
+  text-align: center;
+  border: 5px solid #fffaf5;   /* מסגרת לבנה עבה ויוקרתית */
+  
+  /* צל היקפי שמתפשט שווה לכל הכיוונים (0 היסט) ורוטט באנימציה */
+  box-shadow: 0 0 25px 5px rgba(59, 47, 39, 0.2);
+  
+  animation: floating-shadow 3s infinite ease-in-out;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.promo-circle:hover {
+  transform: scale(1.06);
+  background-color: #eaacb0; 
+}
+
+/* הפיכת האייקונים לשחורים עם קווי מתאר בלבד */
+.circle-icon {
+  font-size: 42px;            /* אייקונים גדולים וברורים */
+  margin-bottom: 6px;
+  
+  /* הפיכה לצבע שחור */
+  filter: brightness(0); 
+  color:  #3b2f27;
+  
+  /* יצירת אפקט קווי מתאר (Outline) */
+  fill: none;
+  stroke: #3b2f27;
+  stroke-width: 2px;
+  
+  /* תמיכה באייקוני גופן (אם מדובר בטקסט/אימוג'י) */
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.5px #000000;
+}
+
+.promo-circle span {
+  display: block;
+  line-height: 1.3;
+  padding: 0 10px;
+}
+
+/* אנימציית צל היקפי מתרחב ורוטט (Glow דועך) */
+@keyframes floating-shadow {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 20px 3px rgba(59, 47, 39, 0.15);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 35px 10px rgba(59, 47, 39, 0.28); /* צל עמוק ורחב יותר מכל הכיוונים */
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px 3px rgba(59, 47, 39, 0.15);
+  }
+}
+
+/* ==========================================================================
+   5. אזור הפוטר והכפתור החום התחתון
+   ========================================================================== */
+.clean-footer-action {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 95px 0 40px 0;    /* רווח מוגדל שמותאם לעיגולים החדשים */
+  background: #fffaf5;
+  flex-grow: 1;
+  margin-top: 0 !important;
+}
+
+.clean-btn-luxury-oval {
+  background-color: #3b2f27 !important;
+  color: #fffaf5 !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  padding: 18px 95px !important;
+  border: none !important;
+  border-radius: 40px !important;
+  cursor: pointer !important;
+  box-shadow: 0 10px 28px rgba(59, 47, 39, 0.4) !important;
+  animation: aggressive-pulse 1.3s infinite ease-in-out;
+  transition: all 0.2s ease !important;
+}
+
+@keyframes aggressive-pulse {
+  0% { 
+    transform: scale(1); 
+    box-shadow: 0 10px 28px rgba(59, 47, 39, 0.4) !important;
+  }
+  50% { 
+    transform: scale(1.04); 
+    box-shadow: 0 14px 35px rgba(59, 47, 39, 0.6), 0 0 15px rgba(229, 176, 176, 0.3) !important;
+  }
+  100% { 
+    transform: scale(1); 
+    box-shadow: 0 10px 28px rgba(59, 47, 39, 0.4) !important;
+  }
+}
+
+/* ==========================================================================
+   6. רספונסיביות לטלפונים ניידים (Mobile)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .clean-fullscreen-hero {
+    height: 52vh;
+  }
+  
+  .clean-main-title {
+    font-size: 28px;
+  }
+  
+  .clean-subtitle {
+    font-size: 16px;
+  }
+  
+  .promo-circles-container {
+    gap: 10px;
+    bottom: -45px;
+  }
+  
+  .promo-circle {
+    width: 105px;             /* התאמה פרופורציונלית למסך קטן */
+    height: 105px;
+    font-size: 11px;
+    border: 3px solid #fffaf5;
+    box-shadow: 0 0 15px 3px rgba(59, 47, 39, 0.15);
+  }
+  
+  .circle-icon {
+    font-size: 28px;
+    margin-bottom: 2px;
+    -webkit-text-stroke: 1px #000000;
+  }
+  
+  .clean-footer-action {
+    padding: 70px 0 30px 0;
+  }
+  
+  .clean-btn-luxury-oval {
+    padding: 14px 60px !important;
+    font-size: 18px !important;
+  }
+}

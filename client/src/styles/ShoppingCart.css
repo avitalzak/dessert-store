@@ -1,0 +1,83 @@
+/* ===========================
+   ShoppingCart Page - Layout Fix + Divider
+=========================== */
+
+.kiosk-cart-page-wrapper {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #fffdfb;
+}
+
+.kiosk-cart-main-layout {
+    display: flex;
+    flex-direction: row-reverse; 
+    justify-content: center; 
+    align-items: flex-start; 
+    width: 100%;
+    max-width: 1200px; 
+    margin: 40px auto; 
+    padding: 0 30px; 
+    gap: 0; /* ביטלנו את ה-gap כדי שנוכל לשלוט בריווח המדויק סביב הפס */
+    box-sizing: border-box;
+}
+
+/* הגדרה כללית לשני הפנאלים */
+.kiosk-cart-right-panel,
+.kiosk-cart-left-panel {
+    flex: 1; 
+    min-width: 320px; 
+    max-width: 550px; 
+    box-sizing: border-box;
+}
+
+/* הפאנל הימני (סל הקניות) - מוסיפים לו קו שמאלי וריווח */
+.kiosk-cart-right-panel {
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid #f3e5d8; /* הפס המפריד בצבע התואם לעיצוב שלך */
+    padding-left: 40px; /* ריווח בין תוכן הסל לפס */
+}
+
+/* הפאנל השמאלי (טופס תשלום) - מוסיפים לו ריווח מימין מהפס */
+.kiosk-cart-left-panel {
+    padding-right: 40px; /* ריווח בין הפס לטופס התשלום */
+}
+
+.kiosk-panel-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f3e5d8;
+    color: #6c5d53;
+}
+
+/* התאמה למסכים קטנים - ביטול הפס כשהתצוגה הופכת לטור */
+@media (max-width: 992px) {
+    .kiosk-cart-main-layout {
+        flex-direction: column; 
+        align-items: center;
+        gap: 40px; /* החזרת הריווח בין הטורים האנכיים */
+        margin: 20px auto;
+    }
+    
+    .kiosk-cart-right-panel,
+    .kiosk-cart-left-panel {
+        width: 100%;
+        max-width: 600px; 
+        padding: 0; /* מאפס את הריווחים הצידיים של ה-Desktop */
+    }
+
+    .kiosk-cart-right-panel {
+        border-left: none; /* העלמת הפס האנכי בנייד/טאבלט */
+        border-bottom: 2px dashed #f3e5d8; /* אופציונלי: פס אופקי מפריד במקום */
+        padding-bottom: 30px;
+    }
+}

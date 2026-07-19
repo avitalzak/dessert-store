@@ -1,0 +1,184 @@
+/* ===========================
+   Summary
+=========================== */
+
+.kiosk-summary-container {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* ===========================
+   Hero Image
+=========================== */
+
+.kiosk-summary-hero-image {
+    width: 100%;
+    height: 200px;
+    background: #fff;
+    border: 1px solid #dcd1c4;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,.03);
+    margin-bottom: 20px;
+}
+
+.kiosk-summary-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.kiosk-hero-placeholder {
+    font-size: 70px;
+    line-height: 200px;
+}
+
+/* ===========================
+   Product Details
+=========================== */
+
+.kiosk-product-summary-name {
+    color: #4a3b32;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.kiosk-product-summary-description {
+    color: #836753;
+    font-size: 13px;
+    font-style: italic;
+    opacity: .8;
+    margin: 0 0 30px;
+}
+
+/* ===========================
+   Bill
+=========================== */
+
+.kiosk-summary-bill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.kiosk-summary-bill-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kiosk-bill-label {
+    color: #4a3b32;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.kiosk-bill-value {
+    color: #6d594c;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* ===========================
+   Divider
+=========================== */
+
+.kiosk-summary-divider {
+    width: 100%;
+    height: 1px;
+    background: #e6dbcf;
+    margin: 20px 0;
+}
+
+/* ===========================
+   Quantity
+=========================== */
+
+.kiosk-summary-quantity-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.kiosk-summary-quantity-control button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #cbb8a7;
+    border-radius: 50%;
+    background: #fffbf7;
+    color: #4a3b32;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.qty-number {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4a3b32;
+}
+
+/* ===========================
+   Action Buttons
+=========================== */
+
+.kiosk-summary-action-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.kiosk-summary-btn-primary,
+.kiosk-summary-btn-secondary {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.kiosk-summary-btn-primary {
+    background: #e5c3c3;
+    color: #614646;
+    border: none;
+    padding: 14px 0;
+    font-size: 16px;
+}
+
+.kiosk-summary-btn-primary:hover {
+    background: #dbb3b3;
+}
+
+.kiosk-summary-btn-secondary {
+    background: transparent;
+    color: #836753;
+    border: 1px solid #dcd1c4;
+    padding: 12px 0;
+    font-size: 15px;
+}
+
+.kiosk-summary-btn-secondary:hover {
+    background: rgba(131,103,83,.04);
+}
+
+.kiosk-summary-btn-danger {
+    background: none;
+    border: none;
+    color: #ba7878;
+    font-size: 13px;
+    margin-top: 10px;
+    cursor: pointer;
+    text-decoration: underline;
+}

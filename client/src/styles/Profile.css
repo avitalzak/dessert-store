@@ -1,0 +1,57 @@
+.profile-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    direction: rtl;
+    padding: 50px 30px 30px;
+}
+
+
+.profile-content {
+    text-align: center;
+    color: #5a3425;
+}
+
+
+.profile-content h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #8b4f3d;
+    font-weight: bold;
+}
+
+
+.profile-details {
+    font-size: 18px;
+    line-height: 2;
+}
+
+
+.profile-details p {
+    margin: 8px 0;
+}
+
+
+.profile-details strong {
+    color: #a05a45;
+}
+
+
+.profile-content button {
+    margin-top: 35px;
+    padding: 12px 35px;
+    border: none;
+    border-radius: 25px;
+    background-color: #b76e79;
+    color: white;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+.profile-content button:hover {
+    background-color: #8b4f3d;
+    transform: scale(1.05);
+}

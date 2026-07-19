@@ -1,0 +1,133 @@
+/* סרגל הניווט - נשאר צר, מיישר את האלמנטים במפלס אחיד */
+.topbar {
+  display: flex;
+  justify-content: space-between; /* דוחף את הקטלוג לימין ואת העגלה לשמאל */
+  align-items: center;            /* מיישר את כל הצדדים באותו גובה */
+  padding: 8px 24px;              /* פדינג קטן לשמירה על פס צר */
+  background: #fffaf5; 
+  width: 100%;
+  position: relative;             /* מאפשר ללוגו להתמרכז בצורה מוחלטת */
+  z-index: 1000;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(74, 59, 50, 0.08); 
+}
+
+/* שורת הניווט הראשית */
+.topbar-nav-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+/* הלוגו המרכזי - גדול יותר, ב-2 שורות ובאותו מפלס */
+.logo-french {
+  color: #3b2f27; 
+  font-size: 19px;         /* הגדלת הפונט בצורה משמעותית למראה בולט */
+  font-weight: 800;        /* הדגשה מוגברת (Bold חזק יותר) */
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.1;        /* צמצום המרווח האנכי בין 2 המילים להתאמה לפס הצר */
+  
+  /* מיקום מדויק במרכז המפלס של הבר */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* ממרכז את הלוגו מתמטית בדיוק באמצע הבר */
+  
+  /* פיצול ל-2 שורות */
+  display: block;
+  max-width: 150px;        /* רוחב מדויק שמפצל את LA CRÉATION ואת DÉLICIEUSE */
+  margin: 0;
+}
+
+/* קטלוג בצד ימין */
+.logo {
+  color: #3b2f27 !important;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* עגלה ואישי בצד שמאל */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+
+.icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #3b2f27 !important;
+  font-size: 11px;
+  font-weight: 600;
+  gap: 2px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.icon-btn svg {
+  font-size: 19px;
+  color: #3b2f27 !important;
+}
+
+.icon-btn:hover, 
+.icon-btn:active,
+.icon-btn.active {
+  color: #8c6f5e !important; /* גוון חום בהיר מעודן */
+}
+
+.icon-btn:hover svg, 
+.icon-btn:active svg,
+.icon-btn.active svg {
+  color: #8c6f5e !important;
+}
+
+/* מסגרת התוכן שמתחת לנאב-בר - היא עצמה לעולם לא גוללת! */
+.page-content {
+  flex: 1 1 auto;   /* תופס בדיוק את השטח שנשאר מתחת לניווט */
+  min-height: 0;    /* קריטי - בלי זה flex item לא יכול להתכווץ */
+  overflow: hidden; /* המסגרת החיצונית קבועה, לא גוללת */
+  display: flex;
+  flex-direction: column;
+}
+
+/* ברירת מחדל: הדף שנטען (הילד הישיר של page-content) ממלא את כל הגובה,
+   וגולל בעצמו פנימית אם התוכן שלו ארוך. זה חל אוטומטית על כל עמוד "פשוט"
+   (בית, קטגוריות, מוצרים וכו') */
+.page-content > * {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* דפים עם מבנה פנימי משלהם (תפריט צד / כפתורי טאבים קבועים) דורסים את
+   ברירת המחדל למעלה ע"י class ספציפי (ראה admin-container, user-page-container) */
+
+/* ---------- דף הניהול (Admin) ---------- */
+.admin-container {
+    height: 100%;
+    overflow: hidden;      /* המסגרת של הניהול עצמה לא גוללת */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.admin-tabs {
+    flex-shrink: 0;        /* שורת הכפתורים תמיד קבועה למעלה */
+}
+
+.admin-content {
+    flex: 1 1 auto;        /* תופס את כל השטח שנשאר */
+    min-height: 0;
+    overflow-y: auto;      /* <-- כאן קורית הגלילה הפנימית של הטאב הפעיל */
+    overflow-x: hidden;
+}

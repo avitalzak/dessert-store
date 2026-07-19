@@ -1,0 +1,56 @@
+/* מיכל ראשי של אזור הניהול */
+.admin-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    direction: rtl; /* התאמה לעברית */
+    background-color: #fcf9f5; /* רקע חום בהיר מאוד/שמנת */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(139, 115, 85, 0.1);
+}
+
+/* סרגל הטאבים / כפתורים */
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #e8dfd8; /* קו מפריד חום בהיר */
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* עיצוב כללי לכפתורים */
+.admin-tabs button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background-color: #f3eae1; /* חום-אפרפר בהיר */
+    color: #6d5843; /* טקסט חום כהה */
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* אפקט מעבר עכבר (Hover) על כפתור */
+.admin-tabs button:hover {
+    background-color: #f7d6d8; /* ורוד בהיר בנגיעה */
+    color: #b35c6d; /* טקסט ורוד כהה יותר */
+}
+
+/* עיצוב כפתור כאשר הוא פעיל (כדי להחיל את זה, נצטרך להוסיף קלאס בקוד) */
+.admin-tabs button.active {
+    background-color: #e297a7; /* ורוד דומיננטי */
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(226, 151, 167, 0.4);
+}
+
+/* אזור תוכן הטאב המוצג */
+.admin-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #e8dfd8;
+    min-height: 300px;
+    color: #4a3b2c; /* צבע טקסט חום ניטרלי */
+}

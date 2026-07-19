@@ -1,0 +1,85 @@
+.product-card {
+    background: #fff;
+    border: 1px solid #e2d1d1;
+    border-radius: 24px;
+
+    width: 100%;
+    height: 300px;
+
+    padding: 0; 
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    text-align: center;
+    cursor: pointer;
+
+    overflow: hidden; 
+
+    /* אפקט הגדלה חלקה של הכרטיס */
+    transition: transform .3s ease, box-shadow .3s ease;
+    box-shadow: 0 4px 12px rgba(74,59,50,.08);
+}
+
+/* כשהעכבר מעל הכרטיס - הוא גדל מעט */
+.product-card:hover {
+    transform: scale(1.03); 
+    box-shadow: 0 8px 24px rgba(74,59,50,0.15); 
+}
+
+.product-image {
+    width: 100%;
+    height: 65%; 
+    display: block; 
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+
+.product-info {
+    width: 100%;
+    height: 35%;
+
+    display: flex;
+    /* חזרנו לסדר המקורי - מלמעלה למטה */
+    flex-direction: column; 
+    /* מפזר את האלמנטים באופן שווה (השם נדחף למעלה, המחיר למטה) */
+    justify-content: space-between; 
+    align-items: center;
+    
+    /* הוספנו ריווח פנימי גדול יותר למעלה ולמטה כדי "לדחוף" את הטקסטים פנימה */
+    padding: 15px 15px 18px 15px; 
+    box-sizing: border-box;
+}
+
+.product-info h3 {
+    /* המרג'ין העליון דוחף את שם המוצר קצת למטה, הרחק מהתמונה */
+    margin: 5px 0 0 0; 
+    color: #4a3b32;
+    font-size: 1.1rem;
+}
+
+.product-info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.price {
+    background: #f7eded;
+    color: #a37070;
+
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    
+    /* המרג'ין התחתון מקפיץ את המחיר מעט למעלה, הרחק מהקצה התחתון */
+    margin-bottom: 2px; 
+}

@@ -1,0 +1,106 @@
+/* ===========================
+   OptionCard
+=========================== */
+
+.kiosk-option-card {
+    background-color: #fffbf7;
+    border: 1px solid #dcd1c4;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: pointer;
+    transition: all .2s ease;
+    aspect-ratio: 1 / 1.35;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .02);
+    /* מאלץ את כל התוכן הפנימי (כולל התמונה) להישאר בתוך הפינות המעוגלות של הכרטיס */
+    overflow: hidden; 
+}
+
+.kiosk-option-card.is-selected {
+    border-color: #dbb3b3;
+    box-shadow: 0 4px 12px rgba(219, 179, 179, .2);
+}
+
+.kiosk-option-card.is-disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ===========================
+   Selection Dot
+=========================== */
+
+.kiosk-card-dot {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid #cbb8a7;
+    border-radius: 50%;
+    background: #fffbf7;
+    /* הועלה ל-30 כדי לוודא שהוא צף מעל ה-overflow: hidden של הכרטיס אם צריך */
+    z-index: 30; 
+    transition: .2s;
+}
+
+/* ===========================
+   Image
+=========================== */
+
+.kiosk-card-image-wrapper {
+    width: 100%;
+    /* שינוי הגובה ל-70% כדי לתת לתמונה נוכחות מקסימלית עד אזור הפיניש */
+    height: 70%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-bottom: 1px solid #f0e6dc;
+}
+
+.kiosk-card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    /* גורם לתמונה להתפרס בצורה מושלמת בלי לעוות אותה */
+    object-fit: cover; 
+}
+
+.kiosk-image-placeholder {
+    font-size: 45px;
+}
+
+/* ===========================
+   Footer
+=========================== */
+
+.kiosk-card-footer {
+    /* תופס את ה-30% הנותרים של הכרטיס */
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* ממרכז את הטקסט אנכית בחלק הלבן שנותר */
+    justify-content: center; 
+    background: #fffaf5;
+    padding: 8px;
+    transition: background-color .2s ease;
+}
+
+.kiosk-option-card.is-selected .kiosk-card-footer {
+    background: #f5d3d3;
+}
+
+.kiosk-card-label {
+    color: #2b201a;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.kiosk-card-mini-icon {
+    font-size: 11px;
+    opacity: .4;
+}

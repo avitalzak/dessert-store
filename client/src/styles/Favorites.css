@@ -1,0 +1,63 @@
+/* מיועד רק לקונטיינר של המועדפים */
+.favorites-page-container {
+    max-width: 600px !important;
+    margin: 40px auto !important;
+    padding: 20px !important;
+    direction: rtl !important;
+}
+
+.favorites-title {
+    text-align: center !important;
+    color: #4f4641 !important;
+    font-size: 26px !important;
+    margin-bottom: 30px !important;
+}
+
+.item-card {
+    background: #ffffff !important;
+    border: 1px solid #efe8e5 !important;
+    border-radius: 24px !important;
+    padding: 24px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 8px 20px rgba(141, 119, 104, 0.06) !important;
+}
+
+.item-name {
+    font-size: 20px !important;
+    color: #333 !important;
+    margin: 0 0 16px 0 !important;
+    font-weight: 700 !important;
+}
+
+.actions-row {
+    display: flex !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+}
+
+.btn-custom {
+    padding: 10px 20px !important;
+    border-radius: 14px !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+.btn-add {
+    background: #ff7597 !important;
+    color: #fff !important;
+}
+
+.btn-remove {
+    background: #fdfaf6 !important;
+    color: #ff7597 !important;
+    border: 1px solid #ff7597 !important;
+}
+
+.components-box {
+    background: #fdfaf6 !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+    border: 1px dashed #e6dcd5 !important;
+}

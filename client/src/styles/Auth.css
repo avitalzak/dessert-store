@@ -1,0 +1,106 @@
+/* משתני צבע מתוך האתר */
+:root {
+    --primary-chocolate: #3e322d; /* החום הכהה מהכפתור הראשי */
+    --accent-pink: #f4c2c2;        /* הורוד העדין מהעיגולים */
+    --white: #ffffff;
+    --text-dark: #2a221f;
+    --text-muted: #706561;
+}
+
+/* מיצוב האזור - ללא שום צבע רקע (שקוף, מקבל את רקע האתר) */
+.auth-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* כרטיס לבן נקי שמכיל את הטופס */
+.auth-card {
+    background: var(--white);
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(62, 50, 45, 0.08); /* צללית עדינה בצבע שוקולד מוחלש */
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    direction: rtl; /* התאמה מלאה לעברית */
+}
+
+/* כותרות */
+.auth-card h3 {
+    color: var(--primary-chocolate);
+    font-size: 24px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+/* מבנה הטופס והרווחים */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* עיצוב שדות הקלט */
+.auth-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid transparent;
+    border-radius: 25px; /* שדות עגולים ומעודנים בסגנון האתר */
+    background-color: #f1ebe4; /* שמנת עדינה בתוך השדה לקבלת קונטרסט */
+    color: var(--text-dark);
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+/* אפקט פוקוס בעת לחיצה על שדה קלט */
+.auth-input:focus {
+    outline: none;
+    border-color: var(--accent-pink);
+    background-color: var(--white);
+    box-shadow: 0 0 8px rgba(244, 194, 194, 0.6);
+}
+
+/* כפתור ההגשה הראשי (בצבע השוקולד) */
+.btn-submit {
+    background-color: var(--primary-chocolate);
+    color: var(--white);
+    border: none;
+    padding: 14px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-submit:hover {
+    background-color: #55453e;
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+/* כפתור הניווט המשני בתחתית */
+.btn-switch {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 10px;
+    transition: color 0.2s ease;
+}
+
+.btn-switch:hover {
+    color: var(--primary-chocolate);
+}

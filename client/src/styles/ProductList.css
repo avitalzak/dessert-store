@@ -1,0 +1,114 @@
+/* ===========================
+   Product List Layout
+=========================== */
+
+.products-page-layout {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    background-color: #fffaf5;
+    box-sizing: border-box;
+    position: relative;
+}
+
+
+/* ===========================
+   Products Grid Zone
+=========================== */
+
+.kiosk-grid-zone {
+    width: 60%;
+    overflow-y: auto;
+    padding: 60px 20px 60px 10px;
+    box-sizing: border-box;
+}
+
+
+/* ===========================
+   Product Grid
+=========================== */
+
+.kiosk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 30px;
+    width: 100%;
+}
+
+.kiosk-grid > * {
+    min-width: 0;
+}
+
+
+/* ===========================
+   Empty Preview Panel
+=========================== */
+
+.products-page-layout::before {
+    content: "בחר מאפה כדי להתחיל ✨";
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 35%;
+    height: calc(100% - 80px);
+
+    position: absolute;
+    top: 40px;
+    left: 30px;
+
+    background: #fff;
+
+    border: 1px solid #e2d1d1;
+    border-radius: 32px;
+
+    box-shadow: 0 10px 30px rgba(74, 59, 50, .03);
+
+    color: #8c766b;
+    font-size: 18px;
+    font-weight: 600;
+
+    box-sizing: border-box;
+}
+
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 900px) {
+
+    .kiosk-grid-zone {
+        width: 100%;
+        padding: 30px 15px;
+    }
+
+    .kiosk-grid {
+    display: block; /* במקום grid */
+    text-align: center; /* זה ימרכז את הילדים */
+    width: 100%;
+    }
+
+    .kiosk-grid > * {
+        display: inline-block; /* הופך את הכרטיסים לאלמנטים שניתן למרכז */
+        width: 200px; /* קבע רוחב ספציפי לכרטיס */
+        margin: 15px; /* מרווח במקום ה-gap */
+        text-align: right; /* כדי שהטקסט בתוך הכרטיס לא יהיה ממורכז */
+        vertical-align: top;
+    }
+    .products-page-layout::before {
+        display: none;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .kiosk-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

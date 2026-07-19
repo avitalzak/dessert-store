@@ -1,0 +1,30 @@
+/* סגנון כללי לטבלה */
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    color: #4a3a32; /* צבע הטקסט הכהה של האתר */
+}
+
+/* עיצוב כותרות הטבלה */
+.users-table th {
+    background-color: #f7dcdb; /* צבע ורוד בהיר של העיגולים באתר */
+    color: #4a3a32;
+    padding: 12px;
+    text-align: right;
+    border-bottom: 2px solid #4a3a32;
+}
+
+/* עיצוב שורות הטבלה */
+.users-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* אפקט ריחוף (Hover) לשורות */
+.users-table tr:hover {
+    background-color: #fcf5f5;
+}
+
+

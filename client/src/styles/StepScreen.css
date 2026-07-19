@@ -1,0 +1,34 @@
+/* ===========================
+   StepScreen
+=========================== */
+
+.kiosk-step-container {
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+}
+
+.kiosk-step-title {
+    color: #836753;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0 0 10px;
+}
+
+.kiosk-step-subtitle {
+    color: #5c4d42;
+    font-size: 14px;
+    margin: 0 0 35px;
+    opacity: .8;
+}
+
+/* ===========================
+   Options Grid
+=========================== */
+
+.kiosk-options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+}

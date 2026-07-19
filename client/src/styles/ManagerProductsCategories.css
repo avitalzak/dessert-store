@@ -1,0 +1,94 @@
+/* ManagerStyles.css */
+.manager-container {
+    padding: 20px;
+    color: #5d4037;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: sans-serif;
+}
+
+.form-wrapper {
+    background-color: #fffaf9;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #f8d7da;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.section-title {
+    margin-top: 0;
+    color: #8d6e63;
+    text-align: center;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #eecaca;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #8d6e63;
+    color: white;
+    margin-top: 15px;
+}
+
+.delete-btn {
+    background-color: #ef9a9a;
+    color: #5d4037;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #f8d7da;
+}
+
+.step-box {
+    border: 1px solid #f8d7da;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: white;
+}
+
+.flex-row {
+    display: flex;
+    gap: 10px;
+}
+
+/* עיצוב כפתור בחירת קובץ מותאם */
+.file-upload-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px dashed #8d6e63; /* גבול מקווקו שמרמז על העלאת קובץ */
+    border-radius: 6px;
+    background-color: #fff;
+    color: #8d6e63;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+.file-upload-btn:hover {
+    background-color: #f8d7da; /* אפקט מעבר תואם בצבעי האתר */
+}

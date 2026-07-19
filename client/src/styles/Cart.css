@@ -1,0 +1,114 @@
+/* ===========================
+   Cart
+=========================== */
+
+.kiosk-cart-items-scroll {
+    /* הגדרת גובה מקסימלי סביר עם גלילה פנימית רק לרשימת הפריטים */
+    max-height: 500px; 
+    overflow-y: auto;
+    padding-left: 10px;
+    padding-right: 5px;
+}
+
+.kiosk-cart-item-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 0;
+    background: transparent;
+    border-bottom: 1px solid #f3e5d8;
+}
+
+.kiosk-cart-item-card:last-child {
+    border-bottom: none;
+}
+
+.kiosk-item-main-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kiosk-item-name {
+    margin: 0;
+    color: #6c5d53;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.kiosk-item-price {
+    color: #6c5d53;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.kiosk-item-components-box {
+    padding: 4px 0;
+    color: #9a8a7f;
+    font-size: .9rem;
+}
+
+.kiosk-item-component-line {
+    margin: 4px 0;
+}
+
+.kiosk-item-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.kiosk-item-btn-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background: none;
+    border: none;
+    color: #9a8a7f;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.kiosk-item-btn-delete:hover {
+    color: #e3b3b3;
+    transform: scale(1.1);
+}
+
+.kiosk-cart-qty-selector {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.kiosk-cart-qty-selector button {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid #6c5d53;
+    border-radius: 4px;
+    color: #6c5d53;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.kiosk-cart-qty-selector button:hover {
+    background: #f3e5d8;
+}
+
+.kiosk-qty-val {
+    color: #6c5d53;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.kiosk-cart-status.empty {
+    text-align: center;
+    color: #9a8a7f;
+    padding: 40px 0;
+}

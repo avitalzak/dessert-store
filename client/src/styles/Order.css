@@ -1,0 +1,111 @@
+/* הגדרת משתני צבעים לצורך עקביות */
+:root {
+  --light-brown-bg: #fdfaf6;      /* רקע כללי בהיר מאוד */
+  --primary-brown: #8d7768;       /* חום כהה יותר לכפתורים וטקסט */
+  --accent-brown: #dccbc0;        /* חום בהיר/ניוד לאלמנטים משניים */
+  --text-color: #5a4b42;          /* טקסט חום עמוק ונעים */
+}
+
+.la-creation-details {
+  background-color: var(--light-brown-bg);
+  padding: 20px;
+  border-radius: 15px;
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.details-main-header h2 {
+  color: var(--primary-brown);
+  border-bottom: 2px solid var(--accent-brown);
+  padding-bottom: 10px;
+}
+
+
+.btn-back {
+  background-color: transparent;
+  color: var(--primary-brown);
+  border: 1px solid var(--primary-brown);
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s;
+}
+
+.btn-back:hover {
+  background-color: var(--primary-brown);
+  color: white;
+}
+
+.btn-reorder-action {
+  background-color: var(--primary-brown);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+.order-footer-summary-grid {
+  border-top: 1px solid var(--accent-brown);
+  margin-top: 20px;
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+
+
+
+/* עדכון ה-CSS לכרטיסים מרווחים יותר ועיצוב לבבות */
+
+.waffle-item-card {
+  background: #ffffff;
+  border: 1px solid #f0e6e0;
+  border-radius: 16px;
+  margin-bottom: 25px; /* הגדלת המרווח בין כרטיס לכרטיס */
+  padding: 25px;       /* הגדלת המרווח הפנימי */
+  box-shadow: 0 6px 12px rgba(141, 119, 104, 0.08);
+}
+
+.waffle-details-box {
+  padding-right: 20px;
+  line-height: 1.8; /* הגדלת המרווח בין שורות הטקסט למניעת צפיפות */
+}
+
+.waffle-component-tag {
+  background-color: #f7ede8; /* גוון חום ורדרד בהיר מאוד */
+  color: #5a4b42;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.95em;
+  margin: 5px;
+  display: inline-block;
+}
+
+/* עיצוב הלבבות */
+.btn-fav-heart {
+  background: none;
+  border: 1px solid #ffb6c1; /* מסגרת ורודה */
+  color: #ffb6c1;           /* לב ורוד ריק */
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 1.5em;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.heart-filled {
+  background-color: #ffb6c1; /* לב ורוד מלא */
+  color: white;
+  border-color: #ffb6c1;
+}
+
+.waffle-actions-row {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}

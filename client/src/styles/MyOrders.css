@@ -1,0 +1,135 @@
+/* מיכל ההזמנות הכללי - נקי לחלוטין */
+.orders-container-single {
+    max-width: 800px;
+    margin: 0 auto;
+    direction: rtl;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* הפנל הראשי - הוסר הרקע, הצל והמלבן המקיף */
+.orders-main-panel {
+    background-color: transparent; 
+    padding: 0;
+    border: none; 
+}
+
+/* כותרות */
+.sidebar-title, .details-main-header h2 {
+    color: #6b5b5b;
+    margin-bottom: 24px;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+/* רשימת הכרטיסיות */
+.orders-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* כרטיסיית הזמנה - ללא רקע לבן, יושבת ישירות על רקע העמוד עם קו תחתון עדין */
+.order-summary-card {
+    background: transparent; /* ללא רקע מרובע */
+    border: none;
+    border-bottom: 1px solid #dfc5a3; /* קו מפריד עדין */
+    border-radius: 0; /* ביטול עיגול פינות של הריבוע */
+    padding: 20px 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* הסרת הקו מהאלמנט האחרון ברשימה */
+.order-summary-card:last-child {
+    border-bottom: none;
+}
+
+.order-summary-card:hover {
+    transform: translateX(-4px); /* אפקט היסט שמאלה עדין במקום ריחופ כרטיס */
+    opacity: 0.85;
+}
+
+/* כותרת כרטיסייה ורודה ועדינה */
+.order-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff0f0;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #cc9999;
+}
+
+.order-summary-body {
+    margin: 14px 4px;
+    font-size: 14px;
+    color: #8a7a7a;
+    line-height: 1.5;
+}
+
+.order-summary-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    font-weight: 600;
+}
+
+.order-status-badge {
+    background-color: #fff0f0;
+    color: #cc9999;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+}
+
+.order-price {
+    font-size: 16px;
+    color: #cc9999;
+}
+
+/* ==========================================
+   רכיב דפדוף (Pagination) נקי
+   ========================================== */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    padding: 15px 0;
+}
+
+.pagination-btn {
+    background: transparent;
+    border: 1px solid #dfc5a3;
+    color: #4a3b2c;
+    min-width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: #dfc5a3;
+    color: #ffffff;
+}
+
+.pagination-btn.active {
+    background-color: #4a3b2c;
+    color: #ffffff;
+    border-color: #4a3b2c;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: #e2e2e2;
+}

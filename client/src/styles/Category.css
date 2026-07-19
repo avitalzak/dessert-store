@@ -1,0 +1,80 @@
+מיכל כרטיסים רשת רספונסיבית
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    direction: rtl;
+}
+
+/* עיצוב הכרטיס המרכזי */
+.category-card {
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 16px;
+    overflow: hidden; /* שומר על פינות מעוגלות גם לתמונה */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+}
+
+/* אפקט ריחוף (Hover) על הכרטיס */
+.category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* מעטפת התמונה - שומרת על יחס גובה-רוחב קבוע */
+.category-image-wrapper {
+    width: 100%;
+    position: relative;
+    padding-top: 75px; /* יחס של 4:3 בערך, מבטיח שכל התמונות יהיו באותו גודל */
+    overflow: hidden;
+    background-color: #f9f9f9;
+}
+
+/* עיצוב התמונה עצמה */
+.category-image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* מותח וממלא את השטח בצורה אסתטית בלי לעוות */
+    transition: transform 0.5s ease;
+}
+
+/* אפקט זום עדין לתמונה כשהעכבר מעל הכרטיס */
+.category-card:hover .category-image-wrapper img {
+    transform: scale(1.05);
+}
+
+/* אזור הטקסט והמידע בתחתית הכרטיס */
+.category-info {
+    padding: 15px;
+    text-align: center;
+    background-color: #ffffff;
+    border-top: 1px solid #f5f5f5;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* עיצוב כותרת הקטגוריה */
+.category-info h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: #2c3e50;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+/* שינוי צבע הטקסט בריחוף */
+.category-card:hover .category-info h3 {
+    color: #c9a054; /* צבע זהב/חום יוקרתי, מתאים לעיצובי קולינריה ותפריטים */
+}

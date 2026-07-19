@@ -1,0 +1,60 @@
+.user-page-container {
+    display: flex;
+    gap: 40px; /* מרווח נדיב ונקי בין התפריט לתוכן */
+    direction: rtl;
+    padding: 20px 0; /* מוריד שוליים מיותרים מהצדדים */
+    max-width: 100%; /* תופס את מלוא רוחב העמוד הזמין */
+    font-family: sans-serif;
+    height: 100%;       /* ממלא את כל הגובה שקיבל מ-page-content */
+    overflow: hidden;   /* השורה עצמה (תפריט+תוכן) לא גוללת בכלל */
+    box-sizing: border-box;
+}
+
+/* תפריט הצד - נשאר צמוד, קבוע במקומו, ולעולם לא גולל עם התוכן */
+.side-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 14px; /* מרווחים נקיים בין הכפתורים */
+    min-width: 180px; /* רוחב קבוע קטן לתפריט שלא יתפרס לרוחב */
+    flex-shrink: 0; /* מונע מהתפריט להתכווץ */
+    overflow: hidden; /* התפריט עצמו קבוע, לא גולל */
+}
+
+/* עיצוב כללי לכפתורים בתפריט */
+.menu-button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    color: #6e5d53;
+    font-weight: normal;
+    text-align: right;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+/* אפקט מעבר בעכבר (Hover) רק לכפתור שלא פעיל */
+.menu-button:hover:not(.active) {
+    background-color: #fcf8f5;
+}
+
+/* עיצוב ייחודי לכפתור הפעיל הנוכחי */
+.menu-button.active {
+    background-color: #e8c5c5;
+    color: #4a3b32;
+    font-weight: bold;
+}
+
+/* אזור הצגת התוכן הראשי - זהו האזור היחיד שגולל בעמוד הזה */
+.content-display-area {
+    flex: 1 1 auto; /* תופס את כל שאר שטח המסך שנותר */
+    min-height: 0;  /* קריטי כדי שיוכל להתכווץ ולגלול בפועל */
+    background-color: transparent; /* ללא רקע שונה */
+    border: none; /* ללא מסגרת בכלל */
+    padding: 0; /* ללא מרווחים פנימיים כפולים */
+    height: 100%;
+    overflow-y: auto;   /* <-- כאן קורית הגלילה הפנימית */
+    overflow-x: hidden;
+    box-sizing: border-box;
+}

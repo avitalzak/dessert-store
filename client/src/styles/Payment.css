@@ -1,0 +1,116 @@
+/* ===========================
+   Payment
+=========================== */
+
+.kiosk-payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.kiosk-pay-section-title {
+    margin: 0 0 12px;
+    color: #6c5d53;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.kiosk-custom-toggle-group {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.kiosk-toggle-btn {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #fff;
+    border: 1px solid #f3e5d8;
+    border-radius: 8px;
+    color: #6c5d53;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.kiosk-toggle-btn:hover {
+    background: #fffdfb;
+    border-color: #e3b3b3;
+}
+
+.kiosk-toggle-btn.active {
+    background: #e3b3b3;
+    border-color: #e3b3b3;
+    color: #fff;
+}
+
+.kiosk-credit-card-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.kiosk-credit-card-inputs input {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #f3e5d8;
+    border-radius: 8px;
+    background: #fff;
+    color: #6c5d53;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.kiosk-credit-card-inputs input:focus {
+    border-color: #e3b3b3;
+    background: #fffdfb;
+}
+
+.kiosk-card-row-split {
+    display: flex;
+    gap: 15px;
+}
+
+.kiosk-pay-summary-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding: 20px 0;
+    border-top: 2px dashed #f3e5d8;
+}
+
+.kiosk-total-text-label {
+    color: #6c5d53;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.kiosk-actual-final-price {
+    color: #6c5d53;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.kiosk-btn-submit-order {
+    width: 100%;
+    padding: 16px;
+    background: #e3b3b3;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.kiosk-btn-submit-order:hover {
+    background: #d49f9f;
+}

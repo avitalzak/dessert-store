@@ -100,7 +100,7 @@ const SCOOP_PHOTOS = [
     ["תות", "scoop_strawberry"],
 ]
 const FRUIT_PHOTOS = [
-    ["מנגו", { asset: "t_mango", cm: 2.6, count: 4 }],
+    ["מנגו", { asset: "t_mango", cm: 3.6, count: 4 }],
     ["פסיפלורה", { asset: "f_passionfruit", cm: 4.2, count: 2 }],
     ["קיווי", { asset: "f_kiwi", cm: 4, count: 3 }],
     ["בננה", { asset: "f_banana", cm: 3.2, count: 4 }],
@@ -210,7 +210,8 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
     // פיזור חתיכות כך שלא יעלו אחת על השנייה. pick(rand) מחזיר נקודה מועמדת
     const placed = []
     // spacing = כמה רווח לדרוש בין חתיכות (קטן = מותר לעלות קצת אחת על השנייה, כמו בערימה)
-    const scatter = (it, spec, pick, { countScale = 1, spacing = 0.85 } = {}) => {
+    // even = כל חתיכה באותו גודל (בלי זה חתיכה קטנה בתמונה יוצאת קטנה גם במנה)
+    const scatter = (it, spec, pick, { countScale = 1, spacing = 0.85, even = false } = {}) => {
         const info = manifest[spec.asset]
         if (!info || info.type !== "pieces" || !info.pieces.length) return null
         const ref = median(info.pieces.map(p => Math.max(p.w, p.h)))
@@ -222,7 +223,7 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
         const count = Math.max(2, Math.round(spec.count * countScale))
         for (let i = 0; i < count; i++) {
             const piece = info.pieces[(i + Math.floor(rand() * info.pieces.length)) % info.pieces.length]
-            const size = sizeOf(piece, spec.cm * (conf.cmScale || 1) * (0.9 + rand() * 0.2), ref)
+            const size = sizeOf(piece, spec.cm * (conf.cmScale || 1) * (0.9 + rand() * 0.2), even ? Math.max(piece.w, piece.h) : ref)
             const r = Math.max(size.w, size.h / aspect) / 2
             let best = null
             for (let t = 0; t < 40; t++) {
@@ -262,10 +263,10 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
         scene.syrups.push({ ...it, area, edge, drip, angle: idx * 1.15 - 0.15 })
     }
 
-    const scatterToppings = (pick, countScale) => {
+    const scatterToppings = (pick, countScale, opts) => {
         ofKind("topping").forEach(it => {
             const spec = find(TOPPING_PHOTOS, it.label)
-            const tp = spec && scatter(it, spec, pick, { countScale })
+            const tp = spec && scatter(it, spec, pick, { countScale, ...opts })
             if (tp) scene.toppings.push(tp)
         })
     }
@@ -351,7 +352,7 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
                 const { mid, half } = halfAt(y)
                 const g = (rand() + rand() + rand()) / 1.5 - 1
                 return [mid + g * half * 0.7, y]
-            }, { spacing: 0.45 })
+            }, { spacing: 0.45, even: true })
             if (tp) {
                 pile += tp.pieces.length
                 scene.toppings.push(tp)
@@ -368,15 +369,16 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
         const fruits = ofKind("fruit")
         const color = smoothieColor(fruits, ofKind("liquid")[0])
         if (color) scene.tint = { points: conf.glass, color }
-        // פרוסת הפרי הראשון על שפת הכוס
+        // פרוסת הפרי הראשון על שפת הכוס (החתיכה הכי גדולה בתמונה, לא שארית)
         const first = fruits[0] && find(FRUIT_PHOTOS, fruits[0].label)
         const firstInfo = first && manifest[first.asset]
         if (firstInfo?.pieces?.length) {
-            const piece = firstInfo.pieces[0]
+            const piece = firstInfo.pieces.reduce((a, b) => (b.w * b.h > a.w * a.h ? b : a))
             const size = sizeOf(piece, first.cm * 0.9, Math.max(piece.w, piece.h))
             scene.toppings.push({ ...fruits[0], key: "garnish-" + fruits[0].key, pieces: [{ file: piece.file, ...conf.rimSpot, ...size, rot: 24, delay: 150 }] })
         }
-        scatterToppings(inEllipse(conf.surface), 0.55)
+        // הרבה תוספות נערמות למעלה, כמו בשייק אמיתי
+        scatterToppings(inEllipse(conf.surface), 1.6, { spacing: 0.5 })
         ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, { ...conf.surface, rx: conf.surface.rx * 0.8, ry: conf.surface.ry * 0.8 }))
         ofKind("whipTop").forEach(it => addScoop(it, 0.5, conf.surface.cy + 0.04, 6))
     }

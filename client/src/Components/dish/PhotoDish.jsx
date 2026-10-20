@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useId, useMemo, useRef, useState } from "react"
 import { usePresence } from "./usePresence"
-import { buildPhotoScene, assetsForProduct, DISH_DIR, PHOTO_DISHES } from "./photoScene"
-import { detectDish } from "./dishScene"
+import { buildPhotoScene, assetsForProduct, DISH_DIR } from "./photoScene"
+import { buildDrizzle, syrupLook } from "./drizzle"
 
 // מנה מצולמת: תמונת הבסיס + כל רכיב כתמונה גזורה שנוחתת עליה.
 // מיקומים ב-% מהתמונה, כך שהכל מתכווץ יחד בכל גודל מסך.
@@ -18,26 +18,79 @@ function Sprite({ box: { x, y, w, h }, anchorY = 0.5, z, className, style, child
     )
 }
 
+// זילוף סירופ: הקו "נמזג" מההתחלה עד הסוף, ואז הטפטופים נוזלים מעבר לשפה
+function Drizzle({ syrup, aspect, z, className, onLanded, onClick, title }) {
+    const id = "dz" + useId().replace(/[^a-zA-Z0-9_-]/g, "")
+    const dz = useMemo(() => buildDrizzle(syrup, aspect), [syrup, aspect])
+    const look = syrupLook(syrup.label)
+    const w = dz.width
+    const line = (stroke, width, extra) => (
+        <>
+            <path d={dz.d} stroke={stroke} strokeWidth={width} {...extra} />
+            {dz.drips.map((dr, i) => <path key={i} className="pd-drip" d={dr.d} stroke={stroke} strokeWidth={width * 0.85} {...extra} />)}
+        </>
+    )
+    const blobs = (fill, scale, dx = 0, dy = 0) => (
+        <>
+            {[dz.start, dz.end].map(([x, y], i) => <circle key={i} cx={x + dx} cy={y + dy} r={w * 0.62 * scale} fill={fill} />)}
+            {dz.drips.map((dr, i) => <circle key={"d" + i} className="pd-drip" cx={dr.end[0] + dx} cy={dr.end[1] + dy} r={dr.r * scale} fill={fill} />)}
+        </>
+    )
+    return (
+        <div className="pd-drizzle-wrap" style={{ zIndex: z }}>
+            <svg className={`pd-drizzle ${className}`} viewBox={dz.viewBox} preserveAspectRatio="none"
+                fill="none" strokeLinecap="round" strokeLinejoin="round"
+                onAnimationEnd={e => e.target === e.currentTarget && onLanded?.()}>
+                <defs>
+                    <filter id={`${id}-blur`} x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation={w * 0.25} /></filter>
+                    {/* המסכה "מציירת" את הקו בהדרגה, כאילו הסירופ נמזג עכשיו */}
+                    <mask id={`${id}-pour`} maskUnits="userSpaceOnUse">
+                        <path className="pd-pour-line" d={dz.d} pathLength="1" stroke="#fff" strokeWidth={w * 3} />
+                        {blobs("#fff", 1.6)}
+                        {dz.drips.map((dr, i) => <path key={i} className="pd-pour-drip" d={dr.d} pathLength="1" stroke="#fff" strokeWidth={w * 3} />)}
+                    </mask>
+                </defs>
+                <g mask={`url(#${id}-pour)`}>
+                    <g filter={`url(#${id}-blur)`} transform={`translate(${w * 0.25} ${w * 0.45})`} opacity=".35">
+                        {line("#2a1204", w * 1.1)}{blobs("#2a1204", 1.05)}
+                    </g>
+                    <g opacity={look.opacity}>
+                        {line(look.edge, w * 1.18)}{blobs(look.edge, 1.12)}
+                        {line(look.color, w)}{blobs(look.color, 1)}
+                        {line(look.core, w * 0.42, { opacity: 0.7 })}
+                    </g>
+                    {/* ברק של סירופ מבריק */}
+                    <g transform={`translate(${-w * 0.16} ${-w * 0.2})`} opacity=".55">
+                        <path d={dz.d} stroke="#fff" strokeWidth={w * 0.22} strokeDasharray={dz.gloss} />
+                        {blobs("#fff", 0.25, -w * 0.12, -w * 0.12)}
+                    </g>
+                </g>
+                {/* אזור לחיצה רחב יותר מהקו עצמו */}
+                <path className="pd-drizzle-hit" d={dz.d} stroke="transparent" strokeWidth={w * 2.5} onClick={onClick}>
+                    {title && <title>{title}</title>}
+                </path>
+            </svg>
+        </div>
+    )
+}
+
 // רכיבים שכבר נחתו על המנה (לכל מוצר), כדי שבמעבר למסך הסיכום הם לא ייפלו שוב.
 // נשמר מחוץ לקומפוננטה כי במסך הסיכום המנה נבנית מחדש.
 const landedByProduct = new Map()
 
-// בסיכום של שייק: כמה זמן מראים את הכוס עם הפירות והנוזל לפני שהכל מתערבל
-const BLEND_DELAY_MS = 1300
-
 const polygon = points => `polygon(${points.map(([x, y]) => `${pct(x)} ${pct(y)}`).join(", ")})`
 
 export default function PhotoDish({ product, selections, manifest, onRemove, final = false, className = "" }) {
-    // שייק בסיכום: מתחילים מהכוס עם הפירות והנוזל, ואחרי רגע הכל מתערבל לשייק מוכן
-    const blendIntro = final && detectDish(product) === "shake" && !!manifest[PHOTO_DISHES.shake.base]
-    const [blendNow, setBlendNow] = useState(!blendIntro)
+    const scene = useMemo(() => buildPhotoScene(product, selections, manifest, { final }), [product, selections, manifest, final])
+
+    // השייק התערבל עכשיו (מעבר לשלב התוספות) - הכוס רועדת רגע. במסך שנפתח כבר מוכן - לא
+    const wasBlended = useRef(scene.blended)
+    const justBlended = scene.blended && !wasBlended.current
+    const [blending, setBlending] = useState(false)
     useEffect(() => {
-        if (blendNow) return
-        const t = setTimeout(() => setBlendNow(true), BLEND_DELAY_MS)
-        return () => clearTimeout(t)
-    }, [blendNow])
-    const showFinal = final && blendNow
-    const scene = useMemo(() => buildPhotoScene(product, selections, manifest, { final: showFinal }), [product, selections, manifest, showFinal])
+        wasBlended.current = scene.blended
+        if (justBlended) setBlending(true)
+    }, [scene.blended, justBlended])
 
     const spreads = usePresence(scene.spreads)
     const toppings = usePresence(scene.toppings)
@@ -81,7 +134,7 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
     const onTop = scene.front?.points ? 800 : 0
 
     return (
-        <div className={`pd-dish ${onRemove ? "is-interactive" : ""} ${blendIntro && scene.blended ? "is-blending" : ""} ${className}`}
+        <div className={`pd-dish ${onRemove ? "is-interactive" : ""} ${blending && scene.blended ? "is-blending" : ""} ${className}`}
             // מנות גבוהות (בלנדר, כוס) מוגבלות בגובה כדי שתמיד ייכנסו במסך
             style={{ paddingTop: pct(scene.padTop / scene.aspect), maxWidth: `min(var(--pd-max, 420px), calc(var(--pd-max-h, 62vh) * ${(scene.aspect / (1 + scene.padTop)).toFixed(3)}))` }}
             role="img" aria-label={`${product?.name}: ${[...scene.toppings, ...scene.syrups, ...scene.scoops].map(i => i.label).join(", ")}`}>
@@ -136,10 +189,9 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
             ))}
 
             {syrups.map(sy => (
-                <Sprite key={sy.key} box={sy} z={onTop + 500} className={cls(sy, "pd-pour")} onLanded={animDone(sy)} onClick={click(sy)} title={title(sy)}>
-                    <img className="pd-syrup" src={DISH_DIR + sy.file} alt="" draggable="false"
-                        style={sy.flip ? { transform: "scaleX(-1)" } : undefined} />
-                </Sprite>
+                <Drizzle key={sy.key} syrup={sy} aspect={scene.aspect} z={onTop + 500}
+                    className={sy.leaving ? "pd-drizzle-leave" : cls(sy, "pd-drizzle-in")}
+                    onLanded={animDone(sy)} onClick={click(sy)} title={title(sy)} />
             ))}
 
             {scoops.map((sc, i) => (

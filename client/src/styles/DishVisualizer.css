@@ -477,11 +477,11 @@
     border-radius: 0 0 40% 40%;
     opacity: .85;
     transform-origin: top;
-    animation: pdPour 1.1s ease-in-out both;
+    animation: pdLiquidPour 1.1s ease-in-out both;
     pointer-events: none;
 }
 
-@keyframes pdPour {
+@keyframes pdLiquidPour {
     0% { transform: scaleY(0); opacity: .85; }
     25% { transform: scaleY(1); }
     75% { opacity: .85; transform: scaleY(1); }
@@ -595,14 +595,78 @@
 }
 
 /* סירופ שנשפך משמאל לימין */
-.pd-pour {
-    animation: pdPour 1.1s cubic-bezier(.45, .05, .35, 1) both;
-    filter: drop-shadow(0 1.5px 1px rgba(30, 12, 2, .45));
+/* זילוף סירופ: שכבת SVG על כל המנה, רק הקו עצמו לחיץ */
+.pd-drizzle-wrap {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
 }
 
-@keyframes pdPour {
-    from { clip-path: inset(0 100% 0 0); }
-    to { clip-path: inset(0 0 0 0); }
+.pd-drizzle {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.pd-drizzle-hit {
+    pointer-events: stroke;
+}
+
+.pd-dish.is-interactive .pd-drizzle-hit {
+    cursor: pointer;
+}
+
+.pd-dish.is-interactive .pd-drizzle:hover {
+    filter: drop-shadow(0 0 5px rgba(255, 240, 210, .95));
+}
+
+/* האנימציה של ה-svg עצמו רק מודיעה מתי הזילוף "נחת"; הציור קורה במסכה */
+.pd-drizzle-in {
+    animation: pdDrizzleIn 1.6s linear both;
+}
+
+@keyframes pdDrizzleIn {
+    from { opacity: .999; }
+}
+
+.pd-drizzle-in .pd-pour-line {
+    stroke-dasharray: 1;
+    animation: pdPourLine 1.15s cubic-bezier(.45, .1, .4, 1) both;
+}
+
+@keyframes pdPourLine {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+}
+
+/* הטפטופים והטיפות בקצוות מופיעים רק אחרי שהקו הגיע אליהם */
+.pd-drizzle-in .pd-pour-drip {
+    stroke-dasharray: 1;
+    animation: pdPourLine .5s ease-in 1.05s both;
+}
+
+.pd-drizzle-in mask circle {
+    animation: pdFadeIn .3s ease-out 1s both;
+}
+
+.pd-drizzle-in mask .pd-drip {
+    animation-delay: 1.4s;
+}
+
+.pd-drizzle-in.pd-settled,
+.pd-drizzle-in.pd-settled .pd-pour-line,
+.pd-drizzle-in.pd-settled .pd-pour-drip,
+.pd-drizzle-in.pd-settled mask circle {
+    animation: none;
+}
+
+.pd-drizzle-leave {
+    animation: pdFadeOut .35s ease-in both;
+}
+
+@keyframes pdFadeOut {
+    to { opacity: 0; }
 }
 
 /* ממרח שמתפזר מהמרכז */

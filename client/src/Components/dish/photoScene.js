@@ -32,14 +32,16 @@ export function useManifest() {
 // toppingScale = כמה יותר חתיכות תוספת מפזרים (מנה גדולה = מנה נדיבה)
 export const PHOTO_DISHES = {
     waffle: {
-        kind: "plate", base: "waffle_base", perCm: 0.785 / 18, squash: 0.62, toppingScale: 1.7,
+        kind: "plate", base: "waffle_base", perCm: 0.785 / 18, squash: 0.62, toppingScale: 1.7, drip: 0.03,
         surface: { cx: 0.5, cy: 0.41, rx: 0.33, ry: 0.28 },
         // הגלידה בצד הצלחת, ליד הוופל; כדור נוסף יורד לאורך שפת הצלחת
         scoop: { x: 0.8, y: 0.4, step: [-0.19, 0.06] },
     },
     pancake: {
-        kind: "plate", base: "pancake_base", perCm: 1 / 26, squash: 0.6, toppingScale: 1.5,
+        kind: "plate", base: "pancake_base", perCm: 1 / 26, squash: 0.6, toppingScale: 1.5, drip: 0.12,
         surface: { cx: 0.505, cy: 0.25, rx: 0.21, ry: 0.13 },
+        // כל הפנקייק העליון (הסירופ מכסה אותו ונוזל במורד הערימה)
+        syrupSurface: { cx: 0.5, cy: 0.29, rx: 0.27, ry: 0.2 },
         scoop: { x: 0.53, y: 0.31 },
     },
     crepe: {
@@ -51,8 +53,8 @@ export const PHOTO_DISHES = {
     // גביע זכוכית: הכדורים יושבים בתוכו, והחלק הקדמי של הזכוכית עובר מעליהם
     // rim = אליפסת שפת הגביע (מרכז y וחצי-גובה)
     icecream: { kind: "cup", base: "icecream_cup", perCm: 1 / 12, squash: 0.6, rim: { cy: 0.18, ry: 0.155 }, padTop: 0.3 },
-    // שייק בכוס: בזמן הבנייה - כוס ריקה, הפירות נערמים בתחתיתה והנוזל נמזג מעליהם;
-    // בסיכום - הכל "נטחן" והכוס מלאה שייק בצבע הפירות
+    // שייק בכוס: בשלבי הפירות והנוזל - כוס ריקה, הפירות נערמים בתחתיתה והנוזל נמזג מעליהם;
+    // בשלב התוספות ובסיכום - הכל "נטחן" והכוס מלאה שייק בצבע הפירות
     shake: {
         kind: "shake", base: "shake_glass_empty", perCm: 0.1, squash: 0.5, padTop: 0.12,
         // פנים הכוס הריקה (פוליגון: למעלה-שמאל, למעלה-ימין, למטה-ימין, למטה-שמאל)
@@ -111,12 +113,6 @@ const FRUIT_PHOTOS = [
     ["אפרסק", { asset: "t_peach", cm: 4.2, count: 3 }],
     ["אוכמניות", { asset: "t_blueberries", cm: 1.6, count: 7 }],
 ]
-const SYRUP_PHOTOS = [
-    ["שוקולד לבן", "syrup_white_chocolate"],
-    ["שוקולד", "syrup_chocolate"],
-    ["מייפל", "syrup_maple"],
-    ["פיסטוק", "syrup_pistachio"],
-]
 const find = (rules, label) => rules.find(([k]) => label.includes(k))?.[1]
 
 const median = arr => [...arr].sort((a, b) => a - b)[Math.floor(arr.length / 2)]
@@ -140,7 +136,7 @@ export function assetsForProduct(product, manifest) {
         for (const o of step.options) {
             const label = o.label.trim()
             const kind = classify(o, step, dish)
-            const name = kind === "syrup" ? find(SYRUP_PHOTOS, label)
+            const name = kind === "syrup" ? null // סירופ מצויר בקוד, בלי תמונה
                 : kind === "fruit" ? find(FRUIT_PHOTOS, label)?.asset
                 : kind === "scoop" ? find(SCOOP_PHOTOS, label)
                 : kind === "whip" || kind === "whipTop" ? "whipped_cream"
@@ -193,7 +189,7 @@ const LIQUID_LOOK = {
 // final = בשייק: להציג את הכוס המוכנה (אחרי הבלנדר) במקום הכוס עם הפירות והנוזל
 export function buildPhotoScene(product, selections, manifest, { final = false } = {}) {
     const { dish, conf: dishConf } = photoDishFor(product, manifest)
-    // שייק "טחון" = בסיכום, או כשאין עדיין תמונה של כוס ריקה
+    // שייק "טחון" = בשלב התוספות ובסיכום, או כשאין עדיין תמונה של כוס ריקה
     const isFinalShake = dish === "shake" && (final || !manifest[dishConf.base])
     const conf = isFinalShake ? { ...dishConf, ...dishConf.final, kind: "shakeFinal" } : dishConf
     const baseInfo = manifest[conf.base]
@@ -270,14 +266,10 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
         return sc
     }
 
-    const addSyrup = (it, idx, x, y, w, squash) => {
-        const name = find(SYRUP_PHOTOS, it.label)
-        const info = name && manifest[name]
-        if (!info) return
-        scene.syrups.push({
-            ...it, file: info.file, x: x + idx * 0.02, y: y + idx * 0.015, w,
-            h: (info.h / info.w) * w * squash * aspect, flip: idx % 2 === 1,
-        })
+    // זילוף סירופ: area = האליפסה שעליה מזלפים, edge = שפת המנה (משם הטפטופים יורדים),
+    // drip = אורך הטפטופים (שבר מגובה המסגרת). כל סירופ נוסף מזולף בזווית אחרת, כמו רשת
+    const addSyrup = (it, idx, area, { edge = null, drip = 0 } = {}) => {
+        scene.syrups.push({ ...it, area, edge, drip, angle: idx * 1.15 - 0.15 })
     }
 
     const scatterToppings = (pick, countScale) => {
@@ -303,7 +295,9 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
             scene.spreads.push({ ...it, file: info.file, x: s.cx, y: s.cy, w, h: (info.h / info.w) * w * conf.squash * aspect })
         })
         scatterToppings(inEllipse(s), conf.toppingScale || 1)
-        ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, s.cx + 0.03, s.cy + 0.03, s.rx * 2 * 0.86, conf.squash))
+        const ss = conf.syrupSurface || s
+        ofKind("syrup").forEach((it, idx) => addSyrup(it, idx,
+            { cx: ss.cx + 0.01, cy: ss.cy + 0.01, rx: ss.rx * 0.8, ry: ss.ry * 0.8 }, { edge: ss, drip: conf.drip || 0 }))
     }
 
     // ===== גביע גלידה =====
@@ -338,8 +332,13 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
         if (bodies.length) {
             const minX = Math.min(...bodies.map(b => b.x - b.w / 2))
             const maxX = Math.max(...bodies.map(b => b.x + b.w / 2))
-            const y = Math.min(...bodies.map(b => b.y - b.h * 0.45))
-            ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, (minX + maxX) / 2, y + 0.05, (maxX - minX) * 0.7, 0.55))
+            // על הכיפה של הכדורים (העוגן של כדור = 82% מגובהו), עם טפטופים שנוזלים במורד הכדור
+            const h = Math.max(...bodies.map(b => b.h))
+            const y = Math.min(...bodies.map(b => b.y - b.h * 0.6))
+            const rx = (maxX - minX) * 0.36, ry = h * 0.17
+            const area = { cx: (minX + maxX) / 2, cy: y, rx, ry }
+            ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, area,
+                { edge: { ...area, rx: rx * 1.2, ry: ry * 1.4 }, drip: h * 0.3 }))
         }
     }
 
@@ -392,12 +391,12 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
                 surface: { cx: 0.5, cy, rx, ry },
                 points: [...arc(0.5, cy, rx, ry, Math.PI, 2 * Math.PI), ...arc(0.5, floor.cy, fx, floor.ry, 0, Math.PI)],
             }
-            // תוספות צפות על פני הנוזל (עד שהכל ייטחן בסיכום)
+            // תוספות צפות על פני הנוזל (אם יש כאלה לפני שהכל נטחן)
             const floats = { cx: 0.5, cy, rx: rx * 0.75, ry: ry * 0.6 }
             const before = scene.toppings.length
             scatterToppings(inEllipse(floats), 0.5)
             scene.toppings.slice(before).forEach(tp => { tp.float = true })
-            ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, 0.5, cy, rx * 1.4, conf.squash))
+            ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, { cx: 0.5, cy, rx: rx * 0.7, ry: ry * 0.7 }))
         }
 
         // הזכוכית הקדמית מעל הפירות, כדי שייראו בתוך הכוס
@@ -419,7 +418,7 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
             scene.toppings.push({ ...fruits[0], key: "garnish-" + fruits[0].key, pieces: [{ file: piece.file, ...conf.rimSpot, ...size, rot: 24, delay: 150 }] })
         }
         scatterToppings(inEllipse(conf.surface), 0.55)
-        ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, 0.5, conf.surface.cy, 0.6, conf.squash))
+        ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, { ...conf.surface, rx: conf.surface.rx * 0.8, ry: conf.surface.ry * 0.8 }))
         ofKind("whipTop").forEach(it => addScoop(it, 0.5, conf.surface.cy + 0.04, 6))
     }
 

@@ -10,6 +10,7 @@ export default function DishPreview() {
     const dispatch = useDispatch()
     const selectedProduct = useSelector(s => s.products.selectedProduct)
     const selections = useSelector(s => s.products.selections)
+    const currentStepIndex = useSelector(s => s.products.currentStepIndex)
 
     if (!selectedProduct) return null
 
@@ -21,7 +22,9 @@ export default function DishPreview() {
 
     return (
         <div className="dish-stage">
-            <DishView product={selectedProduct} selections={selections} onRemove={remove} />
+            {/* בשלב האחרון (תוספות) השייק מתערבל, והתוספות יושבות מעליו */}
+            <DishView product={selectedProduct} selections={selections} onRemove={remove}
+                final={currentStepIndex >= selectedProduct.steps.length - 1} />
 
             <div className="dish-stage-info">
                 <h3 className="dish-stage-title">המנה שלך</h3>

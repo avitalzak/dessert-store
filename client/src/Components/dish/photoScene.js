@@ -51,12 +51,17 @@ export const PHOTO_DISHES = {
     // גביע זכוכית: הכדורים יושבים בתוכו, והחלק הקדמי של הזכוכית עובר מעליהם
     // rim = אליפסת שפת הגביע (מרכז y וחצי-גובה)
     icecream: { kind: "cup", base: "icecream_cup", perCm: 1 / 12, squash: 0.6, rim: { cy: 0.18, ry: 0.155 }, padTop: 0.3 },
-    // שייק בכוס: בשלב הפירות - כוס ריקה שהפירות נערמים בתחתיתה;
-    // כשבוחרים בסיס נוזלי - הפירות "נטחנים" והכוס מלאה שייק בצבע הפירות
+    // שייק בכוס: בזמן הבנייה - כוס ריקה, הפירות נערמים בתחתיתה והנוזל נמזג מעליהם;
+    // בסיכום - הכל "נטחן" והכוס מלאה שייק בצבע הפירות
     shake: {
         kind: "shake", base: "shake_glass_empty", perCm: 0.1, squash: 0.5, padTop: 0.12,
         // פנים הכוס הריקה (פוליגון: למעלה-שמאל, למעלה-ימין, למטה-ימין, למטה-שמאל)
         inside: [[0.07, 0.12], [0.93, 0.12], [0.8, 0.9], [0.2, 0.9]],
+        // דפנות הכוס (x של הדופן השמאלית בשני גבהים) ותחתית הפנים - בשביל הנוזל
+        walls: { y0: 0.18, x0: 0.05, y1: 0.86, x1: 0.235 },
+        floor: { cy: 0.82, ry: 0.05 },
+        // יחס גובה/רוחב (בפיקסלים) של אליפסת פני הנוזל בזווית הצילום
+        tilt: 0.5,
         final: { base: "shake_glass_full", perCm: 0.1, cmScale: 0.6, squash: 0.5, padTop: 0.12,
             glass: [[0.02, 0.05], [0.98, 0.05], [0.9, 0.97], [0.1, 0.97]],
             surface: { cx: 0.5, cy: 0.16, rx: 0.36, ry: 0.1 },
@@ -178,13 +183,18 @@ function smoothieColor(fruits, liquidItem) {
     return look ? mix(avg, look.mixWith, look.amount * 0.6) : avg
 }
 
-// final = בשייק: להציג את הכוס המוכנה במקום הבלנדר
+// איך כל נוזל נראה בתוך הכוס (צבע + כמה הוא אטום)
+const LIQUID_LOOK = {
+    milk: { color: "#fffaf2", opacity: 0.8 },
+    oj: { color: "#ffa634", opacity: 0.62 },
+    water: { color: "#bfe3f5", opacity: 0.42 },
+}
+
+// final = בשייק: להציג את הכוס המוכנה (אחרי הבלנדר) במקום הכוס עם הפירות והנוזל
 export function buildPhotoScene(product, selections, manifest, { final = false } = {}) {
     const { dish, conf: dishConf } = photoDishFor(product, manifest)
-    // שייק "טחון" = בשלב התוספות/סיכום, כשנבחר בסיס נוזלי, או כשאין עדיין תמונה של כוס ריקה
-    const chosenLiquid = dish === "shake" && (product.steps || []).some((step, i) =>
-        (selections?.[i] || []).some(o => o && classify(o, step, dish) === "liquid"))
-    const isFinalShake = dish === "shake" && (final || chosenLiquid || !manifest[dishConf.base])
+    // שייק "טחון" = בסיכום, או כשאין עדיין תמונה של כוס ריקה
+    const isFinalShake = dish === "shake" && (final || !manifest[dishConf.base])
     const conf = isFinalShake ? { ...dishConf, ...dishConf.final, kind: "shakeFinal" } : dishConf
     const baseInfo = manifest[conf.base]
     const aspect = baseInfo.w / baseInfo.h // רוחב חלקי גובה
@@ -202,7 +212,7 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
     const scene = {
         aspect, base: baseInfo.file, padTop: conf.padTop || 0,
         spreads: [], toppings: [], syrups: [], scoops: [],
-        front: null, tint: null, blended: false,
+        front: null, tint: null, blended: false, liquid: null,
     }
 
     // גודל תמונה בודדת כשבר מרוחב (w) ומגובה (h) הבסיס
@@ -358,6 +368,38 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
                 scene.toppings.push(tp)
             }
         })
+
+        // הבסיס הנוזלי: נמזג לכוס ומכסה את הפירות, עם פני נוזל קצת מעל הערימה
+        const liquidItem = ofKind("liquid")[0]
+        if (liquidItem) {
+            const look = LIQUID_LOOK[liquidOf(liquidItem.label).type] || LIQUID_LOOK.water
+            const { walls: w, floor } = conf
+            const wallAt = y => w.x0 + (w.x1 - w.x0) * (y - w.y0) / (w.y1 - w.y0) + 0.02
+            const pileTop = Math.min(floor.cy, ...scene.toppings.flatMap(tp => tp.pieces.map(p => p.y - p.h / 2)))
+            const cy = Math.max(0.3, Math.min(0.4, pileTop - 0.08))
+            const rx = 0.5 - wallAt(cy)
+            const ry = rx * conf.tilt * aspect
+            const fx = 0.5 - wallAt(floor.cy)
+            // קו המתאר: חצי האליפסה האחורי של פני הנוזל, הדפנות, וחצי האליפסה הקדמי של התחתית
+            const arc = (cx, cy, rx, ry, from, to) => Array.from({ length: 17 }, (_, i) => {
+                const a = from + (to - from) * i / 16
+                return [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry]
+            })
+            scene.liquid = {
+                key: liquidItem.key, label: liquidItem.label, stepIndex: liquidItem.stepIndex,
+                ...look,
+                top: mix(look.color, "#ffffff", 0.35),
+                surface: { cx: 0.5, cy, rx, ry },
+                points: [...arc(0.5, cy, rx, ry, Math.PI, 2 * Math.PI), ...arc(0.5, floor.cy, fx, floor.ry, 0, Math.PI)],
+            }
+            // תוספות צפות על פני הנוזל (עד שהכל ייטחן בסיכום)
+            const floats = { cx: 0.5, cy, rx: rx * 0.75, ry: ry * 0.6 }
+            const before = scene.toppings.length
+            scatterToppings(inEllipse(floats), 0.5)
+            scene.toppings.slice(before).forEach(tp => { tp.float = true })
+            ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, 0.5, cy, rx * 1.4, conf.squash))
+        }
+
         // הזכוכית הקדמית מעל הפירות, כדי שייראו בתוך הכוס
         scene.front = { file: baseInfo.file, points: null, opacity: 0.45 }
     }

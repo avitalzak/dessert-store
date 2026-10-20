@@ -4,7 +4,7 @@ import { useManifest, photoDishFor } from "./photoScene"
 
 // בוחר איך להציג את המנה: אם יש לה תמונות אמיתיות - מנה מצולמת,
 // אחרת - האיור המצויר (עד שיהיו תמונות גם לה).
-// final: בשייק - להציג את הכוס המוכנה (בשלב התוספות ובסיכום) במקום הבלנדר.
+// final: בשייק (בסיכום) - לערבל את הפירות והנוזל לכוס שייק מוכנה.
 export default function DishView(props) {
     const manifest = useManifest()
     if (!manifest) return <div className="pd-loading" />

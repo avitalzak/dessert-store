@@ -433,6 +433,77 @@
     100% { transform: rotate(900deg) scale(1.1); opacity: 0; }
 }
 
+/* הבסיס הנוזלי בכוס השייק (לפני הערבול) */
+.pd-liquid {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+/* כל הנוזל עולה מהתחתית עד הגובה שלו */
+.pd-liquid-rise {
+    position: absolute;
+    inset: 0;
+    animation: pdLiquidRise .9s cubic-bezier(.3, .7, .4, 1) .15s both;
+}
+
+@keyframes pdLiquidRise {
+    from { transform: translateY(var(--rise)); }
+}
+
+.pd-liquid-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: background-color .6s, opacity .6s;
+    /* קצת צל בצדדים, כמו נוזל בכוס עגולה */
+    box-shadow: inset 18px 0 22px -12px rgba(0, 0, 0, .12), inset -18px 0 22px -12px rgba(0, 0, 0, .12);
+}
+
+.pd-liquid-top {
+    position: absolute;
+    border-radius: 50%;
+    transition: background-color .6s, opacity .6s;
+    box-shadow: inset 0 -3px 6px rgba(255, 255, 255, .6), 0 2px 4px rgba(0, 0, 0, .08);
+}
+
+/* זרם הנוזל שנמזג מלמעלה לרגע */
+.pd-liquid-stream {
+    position: absolute;
+    left: 48.5%;
+    width: 3%;
+    top: 0;
+    border-radius: 0 0 40% 40%;
+    opacity: .85;
+    transform-origin: top;
+    animation: pdPour 1.1s ease-in-out both;
+    pointer-events: none;
+}
+
+@keyframes pdPour {
+    0% { transform: scaleY(0); opacity: .85; }
+    25% { transform: scaleY(1); }
+    75% { opacity: .85; transform: scaleY(1); }
+    100% { transform: scaleY(1) scaleX(.2); opacity: 0; }
+}
+
+/* הכוס רועדת קצת בזמן הערבול */
+.pd-dish.is-blending .pd-frame {
+    animation: pdBlendShake .7s ease-in-out;
+}
+
+@keyframes pdBlendShake {
+    0%, 100% { transform: none; }
+    15%, 55% { transform: translateX(-1.5%) rotate(-1deg); }
+    35%, 75% { transform: translateX(1.5%) rotate(1deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pd-liquid-rise, .pd-liquid-stream, .pd-dish.is-blending .pd-frame { animation: none; }
+    .pd-liquid-stream { display: none; }
+}
+
 .pd-loading {
     width: 100%;
     aspect-ratio: 1.4;

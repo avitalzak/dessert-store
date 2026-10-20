@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { usePresence } from "./usePresence"
-import { buildPhotoScene, assetsForProduct, DISH_DIR } from "./photoScene"
+import { buildPhotoScene, assetsForProduct, DISH_DIR, PHOTO_DISHES } from "./photoScene"
+import { detectDish } from "./dishScene"
 
 // מנה מצולמת: תמונת הבסיס + כל רכיב כתמונה גזורה שנוחתת עליה.
 // מיקומים ב-% מהתמונה, כך שהכל מתכווץ יחד בכל גודל מסך.
@@ -21,10 +22,22 @@ function Sprite({ box: { x, y, w, h }, anchorY = 0.5, z, className, style, child
 // נשמר מחוץ לקומפוננטה כי במסך הסיכום המנה נבנית מחדש.
 const landedByProduct = new Map()
 
+// בסיכום של שייק: כמה זמן מראים את הכוס עם הפירות והנוזל לפני שהכל מתערבל
+const BLEND_DELAY_MS = 1300
+
 const polygon = points => `polygon(${points.map(([x, y]) => `${pct(x)} ${pct(y)}`).join(", ")})`
 
 export default function PhotoDish({ product, selections, manifest, onRemove, final = false, className = "" }) {
-    const scene = useMemo(() => buildPhotoScene(product, selections, manifest, { final }), [product, selections, manifest, final])
+    // שייק בסיכום: מתחילים מהכוס עם הפירות והנוזל, ואחרי רגע הכל מתערבל לשייק מוכן
+    const blendIntro = final && detectDish(product) === "shake" && !!manifest[PHOTO_DISHES.shake.base]
+    const [blendNow, setBlendNow] = useState(!blendIntro)
+    useEffect(() => {
+        if (blendNow) return
+        const t = setTimeout(() => setBlendNow(true), BLEND_DELAY_MS)
+        return () => clearTimeout(t)
+    }, [blendNow])
+    const showFinal = final && blendNow
+    const scene = useMemo(() => buildPhotoScene(product, selections, manifest, { final: showFinal }), [product, selections, manifest, showFinal])
 
     const spreads = usePresence(scene.spreads)
     const toppings = usePresence(scene.toppings)
@@ -68,7 +81,7 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
     const onTop = scene.front?.points ? 800 : 0
 
     return (
-        <div className={`pd-dish ${onRemove ? "is-interactive" : ""} ${className}`}
+        <div className={`pd-dish ${onRemove ? "is-interactive" : ""} ${blendIntro && scene.blended ? "is-blending" : ""} ${className}`}
             // מנות גבוהות (בלנדר, כוס) מוגבלות בגובה כדי שתמיד ייכנסו במסך
             style={{ paddingTop: pct(scene.padTop / scene.aspect), maxWidth: `min(var(--pd-max, 420px), calc(var(--pd-max-h, 62vh) * ${(scene.aspect / (1 + scene.padTop)).toFixed(3)}))` }}
             role="img" aria-label={`${product?.name}: ${[...scene.toppings, ...scene.syrups, ...scene.scoops].map(i => i.label).join(", ")}`}>
@@ -89,6 +102,25 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
                 }} />
             )}
 
+            {/* הבסיס הנוזלי בכוס השייק: נמזג מלמעלה, עולה מהתחתית ומכסה את הפירות */}
+            {scene.liquid && (
+                <div className="pd-liquid" style={{ zIndex: 450, clipPath: polygon(scene.liquid.points) }}
+                    onClick={click(scene.liquid)} title={title(scene.liquid)}>
+                    <div className="pd-liquid-rise" style={{ "--rise": pct(1 - scene.liquid.surface.cy) }}>
+                        <div className="pd-liquid-body" style={{ top: pct(scene.liquid.surface.cy), background: scene.liquid.color, opacity: scene.liquid.opacity }} />
+                        <div className="pd-liquid-top" style={{
+                            left: pct(scene.liquid.surface.cx - scene.liquid.surface.rx), top: pct(scene.liquid.surface.cy - scene.liquid.surface.ry),
+                            width: pct(scene.liquid.surface.rx * 2), height: pct(scene.liquid.surface.ry * 2),
+                            background: scene.liquid.top, opacity: Math.min(1, scene.liquid.opacity + 0.1),
+                        }} />
+                    </div>
+                </div>
+            )}
+            {scene.liquid && (
+                <div key={"pour-" + scene.liquid.key} className="pd-liquid-stream"
+                    style={{ zIndex: 460, height: pct(scene.liquid.surface.cy), background: scene.liquid.color }} />
+            )}
+
             {spreads.map(sp => (
                 <Sprite key={sp.key} box={sp} z={1} className={cls(sp, "pd-spread")} onLanded={animDone(sp)} onClick={click(sp)} title={title(sp)}>
                     <img src={DISH_DIR + sp.file} alt="" draggable="false" />
@@ -96,7 +128,7 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
             ))}
 
             {pieces.map((p, i) => (
-                <Sprite key={p.k} box={p} z={onTop + 10 + i} className={cls(p.item, "pd-drop", p.k)} onLanded={animDone(p.item, p.k)}
+                <Sprite key={p.k} box={p} z={onTop + (p.item.float ? 500 : 10) + i} className={cls(p.item, "pd-drop", p.k)} onLanded={animDone(p.item, p.k)}
                     style={{ "--d": `${p.item.leaving ? 0 : p.delay}ms`, "--r": `${p.rot}deg` }}
                     onClick={click(p.item)} title={title(p.item)}>
                     <img className="pd-piece" src={DISH_DIR + p.file} alt="" draggable="false" />

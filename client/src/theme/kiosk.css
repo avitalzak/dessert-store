@@ -2164,11 +2164,18 @@ html.atelier.kiosk .kiosk-btn-submit-order {
     }
 
     html.atelier.kiosk .kiosk-cart-main-layout {
+        flex: none;
         height: auto;
     }
 
     html.atelier.kiosk .kiosk-cart-left-panel {
         flex-basis: auto;
+        overflow: visible;
+    }
+
+    /* בטור אחד העגלה לא מתכווצת ולא גוללת בעצמה - אחרת הכרטיסים עולים על הכותרת */
+    html.atelier.kiosk .kiosk-cart-right-panel {
+        flex: none;
         overflow: visible;
     }
 

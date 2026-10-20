@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { goToNextStep, goToPrevStep, toggleOption, startBuild } from "../redux/Slice/productSlice"
 import DishPreview from "./DishPreview"
-import StepScreen from "./StepScreen"
+import StepScreen from "./stepScreen"
 import "../styles/ProductBuilder.css"
 import "../styles/DishVisualizer.css"
 

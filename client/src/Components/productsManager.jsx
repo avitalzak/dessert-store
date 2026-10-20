@@ -2,7 +2,7 @@ import { API_URL } from "../API/config"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AddProduct, DeleteProduct, GetProducts } from "../redux/Slice/productSlice"
-import CategoriesManager from "./CategoriesManager"
+import CategoriesManager from "./categoriesManager"
 import { GetCategories } from "../redux/Slice/categorySlice"
 import "../styles/ManagerProductsCategories.css"
 

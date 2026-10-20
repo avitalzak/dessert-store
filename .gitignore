@@ -27,3 +27,7 @@ server/node_modules/
 
 client/dist/
 server/dist/
+# Local-only folders
+_backup_classic_design/
+dish-photos/
+.github/

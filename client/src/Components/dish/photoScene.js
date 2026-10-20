@@ -100,7 +100,7 @@ const SCOOP_PHOTOS = [
     ["תות", "scoop_strawberry"],
 ]
 const FRUIT_PHOTOS = [
-    ["מנגו", { asset: "t_mango", cm: 3.6, count: 4 }],
+    ["מנגו", { asset: "t_mango", cm: 3, count: 4 }],
     ["פסיפלורה", { asset: "f_passionfruit", cm: 4.2, count: 2 }],
     ["קיווי", { asset: "f_kiwi", cm: 4, count: 3 }],
     ["בננה", { asset: "f_banana", cm: 3.2, count: 4 }],

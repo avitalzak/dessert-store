@@ -1206,59 +1206,44 @@
   "type": "pieces",
   "pieces": [
    {
-    "file": "t_mango_0.webp",
-    "w": 59,
+    "file": "t_mango_0.webp?v=2517054",
+    "w": 168,
+    "h": 161
+   },
+   {
+    "file": "t_mango_1.webp?v=2517054",
+    "w": 179,
+    "h": 151
+   },
+   {
+    "file": "t_mango_2.webp?v=2517054",
+    "w": 137,
+    "h": 189
+   },
+   {
+    "file": "t_mango_3.webp?v=2517054",
+    "w": 138,
     "h": 162
    },
    {
-    "file": "t_mango_1.webp",
-    "w": 148,
-    "h": 98
+    "file": "t_mango_4.webp?v=2517054",
+    "w": 192,
+    "h": 173
    },
    {
-    "file": "t_mango_2.webp",
-    "w": 85,
-    "h": 166
+    "file": "t_mango_5.webp?v=2517054",
+    "w": 157,
+    "h": 204
    },
    {
-    "file": "t_mango_3.webp",
-    "w": 161,
-    "h": 155
+    "file": "t_mango_6.webp?v=2517054",
+    "w": 176,
+    "h": 186
    },
    {
-    "file": "t_mango_4.webp",
-    "w": 71,
-    "h": 138
-   },
-   {
-    "file": "t_mango_5.webp",
-    "w": 91,
-    "h": 57
-   },
-   {
-    "file": "t_mango_6.webp",
-    "w": 49,
-    "h": 72
-   },
-   {
-    "file": "t_mango_7.webp",
-    "w": 153,
-    "h": 66
-   },
-   {
-    "file": "t_mango_8.webp",
-    "w": 53,
-    "h": 139
-   },
-   {
-    "file": "t_mango_9.webp",
-    "w": 70,
-    "h": 65
-   },
-   {
-    "file": "t_mango_10.webp",
-    "w": 55,
-    "h": 79
+    "file": "t_mango_7.webp?v=2517054",
+    "w": 175,
+    "h": 172
    }
   ],
   "src": [

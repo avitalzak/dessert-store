@@ -90,6 +90,7 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
     useEffect(() => {
         wasBlended.current = scene.blended
         if (justBlended) setBlending(true)
+        else if (!scene.blended) setBlending(false)
     }, [scene.blended, justBlended])
 
     const spreads = usePresence(scene.spreads)
@@ -144,7 +145,7 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
             <img key={scene.base} className="pd-base" src={DISH_DIR + scene.base} alt="" draggable="false" />
 
             {/* מערבולת קצרה כשהפירות "נטחנים" לשייק */}
-            {scene.blended && <div key="swirl" className="pd-swirl" />}
+            {blending && scene.blended && <div key="swirl" className="pd-swirl" />}
 
             {/* צבע השייק המוכן: צובע את השייק הלבן שבכוס לפי הפירות */}
             {scene.tint && (

@@ -74,41 +74,6 @@ function Drizzle({ syrup, aspect, z, className, onLanded, onClick, title }) {
     )
 }
 
-// הבסיס הנוזלי בכוס השייק: זרם נמזג מלמעלה, הנוזל עולה מהתחתית ומכסה את הפירות,
-// עם עומק, השתקפויות של הזכוכית, קצף/בועות וגלים קטנים במקום שבו הזרם פוגע
-function Liquid({ liquid: lq, onClick, title }) {
-    const s = lq.surface
-    const dot = (b, i, cls) => (
-        <span key={i} className={cls} style={{ left: pct(b.x - b.r), top: pct(b.y - b.r * 0.6), width: pct(b.r * 2), height: pct(b.r * 1.2), "--i": i }} />
-    )
-    const ellipse = { left: pct(s.cx - s.rx), top: pct(s.cy - s.ry), width: pct(s.rx * 2), height: pct(s.ry * 2) }
-    // גם הנוזל עצמו בצורת הכוס, כדי שבזמן העלייה פני הנוזל יישארו אליפסה ולא קו ישר
-    const shape = polygon(lq.points)
-    // הזרם נעלם בתוך הנוזל (מתחת לפני הנוזל הסופיים)
-    const fade = `linear-gradient(180deg, #000 ${(s.cy / lq.floor * 100).toFixed(1)}%, transparent)`
-    return (
-        <>
-            {/* key לפי הנוזל: כשמחליפים נוזל הוא נמזג מחדש */}
-            <div key={"pour-" + lq.key} className="pd-liquid-stream"
-                style={{ zIndex: 440, height: pct(lq.floor), maskImage: fade, WebkitMaskImage: fade, "--c": lq.color, "--c2": lq.shallow, "--o": Math.max(0.55, lq.opacity) }} />
-            <div className="pd-liquid" style={{ zIndex: 450, clipPath: shape }} onClick={onClick} title={title}>
-                <div key={lq.key} className="pd-liquid-rise" style={{ "--rise": pct(1 - s.cy) }}>
-                    <div className="pd-liquid-body" style={{
-                        top: 0, clipPath: shape, opacity: lq.opacity, backdropFilter: `blur(${lq.blur}px)`, WebkitBackdropFilter: `blur(${lq.blur}px)`,
-                        background: `linear-gradient(180deg, ${lq.shallow}, ${lq.color} 35%, ${lq.deep})`,
-                    }} />
-                    {/* צל בצדדים והשתקפות אורכית, כמו נוזל בכוס עגולה */}
-                    <div className="pd-liquid-shade" style={{ top: 0, clipPath: shape }} />
-                    {lq.bubbles.map((b, i) => dot(b, i, "pd-bubble"))}
-                    <div className="pd-liquid-top" style={{ ...ellipse, "--top": lq.top, opacity: 0.35 + lq.opacity * 0.5 }} />
-                    {lq.foam.map((b, i) => dot(b, "f" + i, "pd-foam"))}
-                    {[0, 1, 2].map(i => <div key={"r" + i} className="pd-ripple" style={{ ...ellipse, "--i": i }} />)}
-                </div>
-            </div>
-        </>
-    )
-}
-
 // רכיבים שכבר נחתו על המנה (לכל מוצר), כדי שבמעבר למסך הסיכום הם לא ייפלו שוב.
 // נשמר מחוץ לקומפוננטה כי במסך הסיכום המנה נבנית מחדש.
 const landedByProduct = new Map()
@@ -118,7 +83,7 @@ const polygon = points => `polygon(${points.map(([x, y]) => `${pct(x)} ${pct(y)}
 export default function PhotoDish({ product, selections, manifest, onRemove, final = false, className = "" }) {
     const scene = useMemo(() => buildPhotoScene(product, selections, manifest, { final }), [product, selections, manifest, final])
 
-    // השייק התערבל עכשיו (מעבר לשלב התוספות) - הכוס רועדת רגע. במסך שנפתח כבר מוכן - לא
+    // השייק התערבל עכשיו (נבחר בסיס נוזלי) - הכוס רועדת רגע. במסך שנפתח כבר מוכן - לא
     const wasBlended = useRef(scene.blended)
     const justBlended = scene.blended && !wasBlended.current
     const [blending, setBlending] = useState(false)
@@ -192,7 +157,6 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
             )}
 
             {/* הבסיס הנוזלי בכוס השייק: נמזג מלמעלה, עולה מהתחתית ומכסה את הפירות */}
-            {scene.liquid && <Liquid liquid={scene.liquid} onClick={click(scene.liquid)} title={title(scene.liquid)} />}
 
             {spreads.map(sp => (
                 <Sprite key={sp.key} box={sp} z={1} className={cls(sp, "pd-spread")} onLanded={animDone(sp)} onClick={click(sp)} title={title(sp)}>
@@ -201,7 +165,7 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
             ))}
 
             {pieces.map((p, i) => (
-                <Sprite key={p.k} box={p} z={onTop + (p.item.float ? 500 : 10) + i} className={cls(p.item, "pd-drop", p.k)} onLanded={animDone(p.item, p.k)}
+                <Sprite key={p.k} box={p} z={onTop + 10 + i} className={cls(p.item, "pd-drop", p.k)} onLanded={animDone(p.item, p.k)}
                     style={{ "--d": `${p.item.leaving ? 0 : p.delay}ms`, "--r": `${p.rot}deg` }}
                     onClick={click(p.item)} title={title(p.item)}>
                     <img className="pd-piece" src={DISH_DIR + p.file} alt="" draggable="false" />

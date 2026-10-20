@@ -22,7 +22,7 @@ export default function DishPreview() {
 
     return (
         <div className="dish-stage">
-            {/* בשלב האחרון (תוספות) השייק מתערבל, והתוספות יושבות מעליו */}
+            {/* שייק: מתערבל כשבוחרים נוזל, ולכל המאוחר בשלב האחרון (התוספות יושבות מעליו) */}
             <DishView product={selectedProduct} selections={selections} onRemove={remove}
                 final={currentStepIndex >= selectedProduct.steps.length - 1} />
 

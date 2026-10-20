@@ -382,6 +382,26 @@
     width: 100%;
 }
 
+/* קש בשייק: יורד לתוך הכוס כשהשייק מוכן */
+.pd-straw {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    stroke-linecap: butt;
+    animation: pdStrawIn .6s .3s cubic-bezier(.2, .8, .3, 1) backwards;
+}
+
+@keyframes pdStrawIn {
+    from { transform: translate(6%, -14%); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pd-straw { animation: none; }
+}
+
 /* צבע השייק: נצבע על השייק הלבן ושומר על המרקם שלו */
 .pd-tint {
     position: absolute;

@@ -62,7 +62,8 @@ export const PHOTO_DISHES = {
         final: { base: "shake_glass_full", perCm: 0.1, cmScale: 0.6, squash: 0.5, padTop: 0.12,
             glass: [[0.02, 0.05], [0.98, 0.05], [0.9, 0.97], [0.1, 0.97]],
             surface: { cx: 0.5, cy: 0.16, rx: 0.36, ry: 0.1 },
-            rimSpot: { x: 0.9, y: 0.13 } },
+            // קש: נכנס לשייק (from) ויוצא מעל הכוס (to, y שלילי = מעל התמונה)
+            straw: { from: [0.58, 0.23], to: [0.8, -0.1] } },
     },
 }
 
@@ -198,7 +199,7 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
     const scene = {
         aspect, base: baseInfo.file, padTop: conf.padTop || 0,
         spreads: [], toppings: [], syrups: [], scoops: [],
-        front: null, tint: null, blended: false,
+        front: null, tint: null, blended: false, straw: null,
     }
 
     // גודל תמונה בודדת כשבר מרוחב (w) ומגובה (h) הבסיס
@@ -369,14 +370,7 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
         const fruits = ofKind("fruit")
         const color = smoothieColor(fruits, ofKind("liquid")[0])
         if (color) scene.tint = { points: conf.glass, color }
-        // פרוסת הפרי הראשון על שפת הכוס (החתיכה הכי גדולה בתמונה, לא שארית)
-        const first = fruits[0] && find(FRUIT_PHOTOS, fruits[0].label)
-        const firstInfo = first && manifest[first.asset]
-        if (firstInfo?.pieces?.length) {
-            const piece = firstInfo.pieces.reduce((a, b) => (b.w * b.h > a.w * a.h ? b : a))
-            const size = sizeOf(piece, first.cm * 0.9, Math.max(piece.w, piece.h))
-            scene.toppings.push({ ...fruits[0], key: "garnish-" + fruits[0].key, pieces: [{ file: piece.file, ...conf.rimSpot, ...size, rot: 24, delay: 150 }] })
-        }
+        scene.straw = conf.straw
         // הרבה תוספות נערמות למעלה, כמו בשייק אמיתי
         scatterToppings(inEllipse(conf.surface), 1.6, { spacing: 0.5 })
         ofKind("syrup").forEach((it, idx) => addSyrup(it, idx, { ...conf.surface, rx: conf.surface.rx * 0.8, ry: conf.surface.ry * 0.8 }))

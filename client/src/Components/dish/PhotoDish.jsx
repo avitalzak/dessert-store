@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react"
+import { useEffect, useId, useMemo, useState } from "react"
 import { usePresence } from "./usePresence"
 import { buildPhotoScene, assetsForProduct, DISH_DIR } from "./photoScene"
 import { buildDrizzle, syrupLook } from "./drizzle"
@@ -74,6 +74,38 @@ function Drizzle({ syrup, aspect, z, className, onLanded, onClick, title }) {
     )
 }
 
+// קש מפוספס בשייק: מצויר בקוד. נקודות כשבר מרוחב/גובה המסגרת, כמו כל השאר
+function Straw({ straw: { from, to }, aspect, z }) {
+    const id = "st" + useId().replace(/[^a-zA-Z0-9_-]/g, "")
+    const h = 100 / aspect
+    const [x1, y1, x2, y2] = [from[0] * 100, from[1] * h, to[0] * 100, to[1] * h]
+    const w = 4.2
+    const line = (stroke, width, extra) =>
+        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={stroke} strokeWidth={width} {...extra} />
+    return (
+        <svg className="pd-straw" viewBox={`0 0 100 ${h}`} preserveAspectRatio="none" style={{ zIndex: z }}>
+            {/* הקצה התחתון נעלם בהדרגה, כאילו הקש שקוע בשייק */}
+            <defs>
+                <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1={x1} y1={y1} x2={x2} y2={y2}>
+                    <stop offset="0" stopColor="#fff" stopOpacity="0" />
+                    <stop offset="0.14" stopColor="#fff" stopOpacity="1" />
+                </linearGradient>
+                <mask id={`${id}-m`} maskUnits="userSpaceOnUse"><rect x="-50" y={-h} width="200" height={h * 3} fill={`url(#${id}-g)`} /></mask>
+            </defs>
+            <g mask={`url(#${id}-m)`}>
+            {line("#00000022", w * 1.25, { transform: "translate(0.8 0.6)" })}
+            {line("#fdfaf6", w)}
+            {line("#e0444e", w, { strokeDasharray: `${w * 0.8} ${w * 0.8}` })}
+            {/* ברק לאורך הקש */}
+            {line("#ffffff", w * 0.22, { opacity: 0.7, transform: `translate(${-w * 0.25} ${-w * 0.1})` })}
+            {/* פתח הקש למעלה */}
+            <ellipse cx={x2} cy={y2} rx={w * 0.5} ry={w * 0.22} fill="#b8323a"
+                transform={`rotate(${(Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI + 90} ${x2} ${y2})`} />
+            </g>
+        </svg>
+    )
+}
+
 // רכיבים שכבר נחתו על המנה (לכל מוצר), כדי שבמעבר למסך הסיכום הם לא ייפלו שוב.
 // נשמר מחוץ לקומפוננטה כי במסך הסיכום המנה נבנית מחדש.
 const landedByProduct = new Map()
@@ -84,14 +116,13 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
     const scene = useMemo(() => buildPhotoScene(product, selections, manifest, { final }), [product, selections, manifest, final])
 
     // השייק התערבל עכשיו (נבחר בסיס נוזלי) - הכוס רועדת רגע. במסך שנפתח כבר מוכן - לא
-    const wasBlended = useRef(scene.blended)
-    const justBlended = scene.blended && !wasBlended.current
+    // (עדכון state בזמן הציור כשהערך משתנה - הדרך ש-React ממליץ עליה לזכור ערך קודם)
+    const [wasBlended, setWasBlended] = useState(scene.blended)
     const [blending, setBlending] = useState(false)
-    useEffect(() => {
-        wasBlended.current = scene.blended
-        if (justBlended) setBlending(true)
-        else if (!scene.blended) setBlending(false)
-    }, [scene.blended, justBlended])
+    if (scene.blended !== wasBlended) {
+        setWasBlended(scene.blended)
+        setBlending(scene.blended)
+    }
 
     const spreads = usePresence(scene.spreads)
     const toppings = usePresence(scene.toppings)
@@ -177,6 +208,9 @@ export default function PhotoDish({ product, selections, manifest, onRemove, fin
                     className={sy.leaving ? "pd-drizzle-leave" : cls(sy, "pd-drizzle-in")}
                     onLanded={animDone(sy)} onClick={click(sy)} title={title(sy)} />
             ))}
+
+            {/* הקש: מעל התוספות והסירופ, מתחת לקצפת */}
+            {scene.straw && <Straw straw={scene.straw} aspect={scene.aspect} z={onTop + 550} />}
 
             {scoops.map((sc, i) => (
                 <Sprite key={sc.key} box={sc} anchorY={0.82} z={(sc.kind === "whipTop" ? onTop + 1000 : 600) + i} className={cls(sc, "pd-scoop")} onLanded={animDone(sc)} onClick={click(sc)} title={title(sc)}>

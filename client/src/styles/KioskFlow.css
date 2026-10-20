@@ -1,0 +1,283 @@
+/* ==========================================================================
+   חלונות העמדה: "עדיין כאן?", בחירת שולחן, מסך סיום הזמנה
+   ========================================================================== */
+
+.kf-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(20, 14, 17, 0.55);
+    backdrop-filter: blur(4px);
+    direction: rtl;
+    animation: kf-fade 0.2s ease-out both;
+}
+
+.kf-overlay-solid {
+    background: var(--at-cream, #fffaf5);
+    backdrop-filter: none;
+}
+
+.kf-card {
+    width: min(460px, 100%);
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 36px 32px 28px;
+    box-sizing: border-box;
+    border-radius: 28px;
+    background: #fff;
+    color: #22191d;
+    text-align: center;
+    box-shadow: 0 30px 70px -24px rgba(34, 25, 29, 0.45);
+    animation: kf-pop 0.32s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+.kf-overlay-solid .kf-card {
+    box-shadow: none;
+    background: transparent;
+}
+
+.kf-card h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+    color: inherit;
+}
+
+.kf-card p {
+    margin: 0 0 22px;
+    font-size: 17px;
+    line-height: 1.5;
+    color: #6b5a61;
+}
+
+/* --- כפתורים --- */
+
+.kf-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.kf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 60px;
+    padding: 0 28px;
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.kf-btn:active {
+    transform: scale(0.97);
+}
+
+.kf-btn-primary {
+    background: #e94e77;
+    color: #fff;
+}
+
+.kf-btn-ghost {
+    background: transparent;
+    color: #6b5a61;
+}
+
+.kf-full {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* --- "עדיין כאן?" --- */
+
+.kf-idle-ring {
+    --p: 1;
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: conic-gradient(#e94e77 calc(var(--p) * 360deg), #f3e3e8 0);
+    transition: background 1s linear;
+}
+
+.kf-idle-ring span {
+    position: absolute;
+    inset: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 40px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- בחירת שולחן --- */
+
+.kf-badge-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 14px;
+    border-radius: 50%;
+    background: #ffe6ee;
+    color: #e94e77;
+    font-size: 28px;
+}
+
+.kf-table-display {
+    margin: 0 auto 18px;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: #22191d;
+}
+
+.kf-table-display.is-empty {
+    color: #d8c8ce;
+}
+
+.kf-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    direction: ltr;
+}
+
+.kf-keypad button {
+    height: 68px;
+    border: 0;
+    border-radius: 18px;
+    background: #f6eef1;
+    color: #22191d;
+    font: inherit;
+    font-size: 28px;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.1s ease, background 0.15s ease;
+}
+
+.kf-keypad button:active {
+    transform: scale(0.94);
+    background: #ffe6ee;
+}
+
+.kf-keypad .kf-key-muted {
+    background: transparent;
+    color: #6b5a61;
+}
+
+.kf-keypad .kf-key-ok {
+    background: #e94e77;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.kf-keypad .kf-key-ok:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+/* מספר השולחן שנבחר, בתוך כפתור "לשבת במקום" */
+.kf-table-chip {
+    display: inline-block;
+    margin-inline-start: 6px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: rgba(233, 78, 119, 0.14);
+    font-size: 0.85em;
+    font-weight: 700;
+}
+
+/* --- מסך סיום --- */
+
+.kf-done {
+    width: min(560px, 100%);
+}
+
+.kf-done-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    margin-bottom: 16px;
+    border-radius: 50%;
+    background: #2e9e6a;
+    color: #fff;
+    font-size: 34px;
+    animation: kf-pop 0.45s 0.1s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+.kf-done-label {
+    display: block;
+    margin-top: 18px;
+    font-size: 17px;
+    color: #6b5a61;
+}
+
+.kf-done-number {
+    margin: 4px 0 22px;
+    font-size: 120px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    color: #e94e77;
+}
+
+.kf-done-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+    text-align: right;
+}
+
+.kf-done-steps li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid rgba(34, 25, 29, 0.08);
+    font-size: 17px;
+}
+
+.kf-done-steps svg {
+    flex-shrink: 0;
+    font-size: 22px;
+    color: #e94e77;
+}
+
+@keyframes kf-fade {
+    from { opacity: 0; }
+}
+
+@keyframes kf-pop {
+    from { opacity: 0; transform: scale(0.9); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kf-overlay, .kf-card, .kf-done-check { animation: none; }
+}

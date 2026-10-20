@@ -2,9 +2,10 @@ import { useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { goToNextStep, goToPrevStep, toggleOption, startBuild } from "../redux/Slice/productSlice"
-// import DishPreview from "./DishPreview"
+import DishPreview from "./DishPreview"
 import StepScreen from "./StepScreen"
 import "../styles/ProductBuilder.css"
+import "../styles/DishVisualizer.css"
 
 export default function ProductBuilder() {
     const { productId } = useParams()
@@ -42,6 +43,15 @@ export default function ProductBuilder() {
     //האם הוא יכול להמשיך כי הוא בחר כבר
     const canProceed = chosenInStep.length >= currentStep.minSelect
 
+    // פירוט המנה בתחתית המסך - כל הבחירות עד עכשיו, לפי שלבים
+    const pickedGroups = selectedProduct.steps
+        .map((step, stepIndex) => ({
+            stepIndex,
+            title: step.title,
+            options: selections[stepIndex] || []
+        }))
+        .filter(group => group.options.length > 0)
+
     const handleNext = () => {
         if (isLastStep) {
             //בשלב האחרון - ניווט לסיכום 
@@ -56,15 +66,63 @@ export default function ProductBuilder() {
         <div className="kiosk-builder-wrapper">
 
             <main className="kiosk-main-content">
+              <div className="builder-layout">
+                <div className="builder-steps">
+                <div className="at-progress atelier-only">
+                    <span className="at-progress-name">{selectedProduct.name}</span>
+                    <div className="at-progress-track">
+                        {selectedProduct.steps.map((_, i) => (
+                            <span key={i} className={i <= currentStepIndex ? "on" : ""} />
+                        ))}
+                    </div>
+                    <span className="at-progress-count">
+                        {String(currentStepIndex + 1).padStart(2, "0")} / {String(selectedProduct.steps.length).padStart(2, "0")}
+                    </span>
+                </div>
                 <StepScreen
                     step={currentStep}
+                    product={selectedProduct}
                     chosen={chosenInStep}
                     onToggle={(option) => dispatch(toggleOption({ stepIndex: currentStepIndex, option }))}
                 />
+                </div>
+
+                {/* המנה נבנית ויזואלית מול המשתמש */}
+                <aside className="builder-stage">
+                    <DishPreview />
+                </aside>
+              </div>
             </main>
 
 
             <footer className="kiosk-footer-bar">
+                <div className="build-breakdown kiosk-only">
+                    <div className="bb-head">
+                        <span className="bb-name">{selectedProduct.name}</span>
+                        <span className="bb-price">₪{selectedProduct.price}</span>
+                    </div>
+                    <div className="bb-chips">
+                        {pickedGroups.length === 0 ? (
+                            <span className="bb-empty">בחרו רכיבים והם יופיעו כאן</span>
+                        ) : pickedGroups.map(group => (
+                            <span key={group.stepIndex} className="bb-group">
+                                <span className="bb-step">{group.title}</span>
+                                {group.options.map(option => (
+                                    <button
+                                        key={option.label}
+                                        className="bb-chip"
+                                        onClick={() => dispatch(toggleOption({ stepIndex: group.stepIndex, option }))}
+                                        aria-label={`הסרת ${option.label}`}
+                                    >
+                                        {option.label}
+                                        <span className="bb-x">×</span>
+                                    </button>
+                                ))}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
                 <div className="kiosk-nav-buttons">
                         {currentStepIndex > 0 && (
                             <button className="kiosk-btn-back" onClick={() => dispatch(goToPrevStep())}>

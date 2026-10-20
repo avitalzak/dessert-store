@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { GetCategories } from "../redux/Slice/categorySlice"
 import "../styles/CategotyA.css"
+import { useImagesReady } from "../Services/useImagesReady"
 
 export default function CategoryList() {
     const dispatch = useDispatch()
@@ -10,6 +11,9 @@ export default function CategoryList() {
 
     const categories = useSelector(state => state.categories.categories)
     const { loading, error } = useSelector(state => state.categories)
+
+    // כל הכרטיסים מופיעים יחד, רק אחרי שכל התמונות נטענו
+    const imagesReady = useImagesReady((categories || []).map(c => c.image))
 
 
     useEffect(() => {
@@ -25,7 +29,12 @@ export default function CategoryList() {
     if (!categories || categories.length === 0) return <p>אין קטגוריות להצגה</p>
 
     return (
-        <div className="categories-grid">
+        <div className={`categories-grid ${imagesReady ? "" : "is-pending"}`}>
+            <header className="at-page-head atelier-only">
+                <span className="at-eyebrow">Étape 01 — La carte</span>
+                <h1 className="at-page-title">מה מתחשק לכם היום?</h1>
+                <p className="at-page-lede">בחרו קטגוריה ונתחיל להרכיב יחד</p>
+            </header>
             {categories.map(cat => (
                 <div key={cat._id} className="category-card" onClick={() => handleCategoryClick(cat)}>
                     <div className="category-image-wrapper">

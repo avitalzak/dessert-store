@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_URL } from "./config";
 
 const api = axios.create({
-    baseURL: 'http://localhost:1234',
+    baseURL: API_URL,
     validateStatus: (status) => (status >= 200 && status < 300) || status === 304
 })
 

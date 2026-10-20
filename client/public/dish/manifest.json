@@ -1,0 +1,1457 @@
+{
+ "scoop_vanilla": {
+  "type": "single",
+  "file": "scoop_vanilla.webp",
+  "w": 868,
+  "h": 886,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   62,
+   948,
+   69,
+   937
+  ]
+ },
+ "syrup_chocolate": {
+  "type": "single",
+  "file": "syrup_chocolate.webp",
+  "w": 801,
+  "h": 744,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   122,
+   866,
+   92,
+   893
+  ]
+ },
+ "t_blueberries": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_blueberries_0.webp",
+    "w": 175,
+    "h": 288
+   },
+   {
+    "file": "t_blueberries_1.webp",
+    "w": 138,
+    "h": 128
+   },
+   {
+    "file": "t_blueberries_2.webp",
+    "w": 143,
+    "h": 138
+   },
+   {
+    "file": "t_blueberries_3.webp",
+    "w": 155,
+    "h": 147
+   },
+   {
+    "file": "t_blueberries_4.webp",
+    "w": 154,
+    "h": 147
+   },
+   {
+    "file": "t_blueberries_5.webp",
+    "w": 164,
+    "h": 161
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_oreo": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_oreo_0.webp",
+    "w": 99,
+    "h": 84
+   },
+   {
+    "file": "t_oreo_1.webp",
+    "w": 120,
+    "h": 127
+   },
+   {
+    "file": "t_oreo_2.webp",
+    "w": 112,
+    "h": 81
+   },
+   {
+    "file": "t_oreo_3.webp",
+    "w": 46,
+    "h": 43
+   },
+   {
+    "file": "t_oreo_4.webp",
+    "w": 113,
+    "h": 142
+   },
+   {
+    "file": "t_oreo_5.webp",
+    "w": 102,
+    "h": 126
+   },
+   {
+    "file": "t_oreo_6.webp",
+    "w": 102,
+    "h": 136
+   },
+   {
+    "file": "t_oreo_7.webp",
+    "w": 100,
+    "h": 97
+   },
+   {
+    "file": "t_oreo_8.webp",
+    "w": 136,
+    "h": 99
+   },
+   {
+    "file": "t_oreo_9.webp",
+    "w": 100,
+    "h": 81
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_pretzel": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_pretzel_0.webp",
+    "w": 183,
+    "h": 162
+   },
+   {
+    "file": "t_pretzel_1.webp",
+    "w": 177,
+    "h": 162
+   },
+   {
+    "file": "t_pretzel_2.webp",
+    "w": 183,
+    "h": 154
+   },
+   {
+    "file": "t_pretzel_3.webp",
+    "w": 188,
+    "h": 172
+   },
+   {
+    "file": "t_pretzel_4.webp",
+    "w": 189,
+    "h": 175
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_strawberry_halves": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_strawberry_halves_0.webp",
+    "w": 166,
+    "h": 200
+   },
+   {
+    "file": "t_strawberry_halves_1.webp",
+    "w": 168,
+    "h": 176
+   },
+   {
+    "file": "t_strawberry_halves_2.webp",
+    "w": 159,
+    "h": 213
+   },
+   {
+    "file": "t_strawberry_halves_3.webp",
+    "w": 179,
+    "h": 184
+   },
+   {
+    "file": "t_strawberry_halves_4.webp",
+    "w": 164,
+    "h": 179
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "waffle_base": {
+  "type": "single",
+  "file": "waffle_base.webp",
+  "w": 905,
+  "h": 650,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   174,
+   824,
+   47,
+   952
+  ]
+ },
+ "whipped_cream": {
+  "type": "single",
+  "file": "whipped_cream.webp",
+  "w": 705,
+  "h": 651,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   170,
+   821,
+   154,
+   859
+  ]
+ },
+ "chocolate_spread": {
+  "type": "single",
+  "file": "chocolate_spread.webp",
+  "w": 868,
+  "h": 833,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   84,
+   917,
+   60,
+   928
+  ]
+ },
+ "scoop_chocolate": {
+  "type": "single",
+  "file": "scoop_chocolate.webp",
+  "w": 751,
+  "h": 735,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   136,
+   871,
+   113,
+   864
+  ]
+ },
+ "scoop_dulce": {
+  "type": "single",
+  "file": "scoop_dulce.webp",
+  "w": 608,
+  "h": 630,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   183,
+   813,
+   205,
+   813
+  ]
+ },
+ "scoop_lotus": {
+  "type": "single",
+  "file": "scoop_lotus.webp",
+  "w": 688,
+  "h": 691,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   154,
+   845,
+   153,
+   841
+  ]
+ },
+ "scoop_strawberry": {
+  "type": "single",
+  "file": "scoop_strawberry.webp",
+  "w": 557,
+  "h": 567,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   209,
+   776,
+   215,
+   772
+  ]
+ },
+ "syrup_maple": {
+  "type": "single",
+  "file": "syrup_maple.webp",
+  "w": 867,
+  "h": 722,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   139,
+   861,
+   66,
+   933
+  ]
+ },
+ "syrup_white_chocolate": {
+  "type": "single",
+  "file": "syrup_white_chocolate.webp",
+  "w": 807,
+  "h": 615,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   192,
+   807,
+   94,
+   901
+  ]
+ },
+ "t_chocolate_chips": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_chocolate_chips_0.webp",
+    "w": 78,
+    "h": 70
+   },
+   {
+    "file": "t_chocolate_chips_1.webp",
+    "w": 83,
+    "h": 66
+   },
+   {
+    "file": "t_chocolate_chips_2.webp",
+    "w": 99,
+    "h": 123
+   },
+   {
+    "file": "t_chocolate_chips_3.webp",
+    "w": 150,
+    "h": 148
+   },
+   {
+    "file": "t_chocolate_chips_4.webp",
+    "w": 79,
+    "h": 74
+   },
+   {
+    "file": "t_chocolate_chips_5.webp",
+    "w": 84,
+    "h": 79
+   },
+   {
+    "file": "t_chocolate_chips_6.webp",
+    "w": 83,
+    "h": 80
+   },
+   {
+    "file": "t_chocolate_chips_7.webp",
+    "w": 132,
+    "h": 116
+   },
+   {
+    "file": "t_chocolate_chips_8.webp",
+    "w": 85,
+    "h": 74
+   },
+   {
+    "file": "t_chocolate_chips_9.webp",
+    "w": 84,
+    "h": 71
+   },
+   {
+    "file": "t_chocolate_chips_10.webp",
+    "w": 86,
+    "h": 71
+   },
+   {
+    "file": "t_chocolate_chips_11.webp",
+    "w": 88,
+    "h": 81
+   },
+   {
+    "file": "t_chocolate_chips_12.webp",
+    "w": 87,
+    "h": 80
+   },
+   {
+    "file": "t_chocolate_chips_13.webp",
+    "w": 84,
+    "h": 78
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_flake": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_flake_0.webp",
+    "w": 217,
+    "h": 161
+   },
+   {
+    "file": "t_flake_1.webp",
+    "w": 209,
+    "h": 181
+   },
+   {
+    "file": "t_flake_2.webp",
+    "w": 188,
+    "h": 167
+   },
+   {
+    "file": "t_flake_3.webp",
+    "w": 188,
+    "h": 181
+   },
+   {
+    "file": "t_flake_4.webp",
+    "w": 164,
+    "h": 150
+   },
+   {
+    "file": "t_flake_5.webp",
+    "w": 173,
+    "h": 172
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_lentils": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_lentils_0.webp",
+    "w": 150,
+    "h": 196
+   },
+   {
+    "file": "t_lentils_1.webp",
+    "w": 179,
+    "h": 249
+   },
+   {
+    "file": "t_lentils_2.webp",
+    "w": 101,
+    "h": 80
+   },
+   {
+    "file": "t_lentils_3.webp",
+    "w": 102,
+    "h": 80
+   },
+   {
+    "file": "t_lentils_4.webp",
+    "w": 102,
+    "h": 84
+   },
+   {
+    "file": "t_lentils_5.webp",
+    "w": 104,
+    "h": 84
+   },
+   {
+    "file": "t_lentils_6.webp",
+    "w": 90,
+    "h": 74
+   },
+   {
+    "file": "t_lentils_7.webp",
+    "w": 106,
+    "h": 87
+   },
+   {
+    "file": "t_lentils_8.webp",
+    "w": 105,
+    "h": 88
+   },
+   {
+    "file": "t_lentils_9.webp",
+    "w": 90,
+    "h": 75
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_marshmallow": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_marshmallow_0.webp",
+    "w": 76,
+    "h": 95
+   },
+   {
+    "file": "t_marshmallow_1.webp",
+    "w": 88,
+    "h": 83
+   },
+   {
+    "file": "t_marshmallow_2.webp",
+    "w": 92,
+    "h": 93
+   },
+   {
+    "file": "t_marshmallow_3.webp",
+    "w": 95,
+    "h": 88
+   },
+   {
+    "file": "t_marshmallow_4.webp",
+    "w": 96,
+    "h": 95
+   },
+   {
+    "file": "t_marshmallow_5.webp",
+    "w": 86,
+    "h": 97
+   },
+   {
+    "file": "t_marshmallow_6.webp",
+    "w": 99,
+    "h": 95
+   },
+   {
+    "file": "t_marshmallow_7.webp",
+    "w": 97,
+    "h": 89
+   },
+   {
+    "file": "t_marshmallow_8.webp",
+    "w": 102,
+    "h": 97
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_pecan": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_pecan_0.webp",
+    "w": 131,
+    "h": 188
+   },
+   {
+    "file": "t_pecan_1.webp",
+    "w": 131,
+    "h": 190
+   },
+   {
+    "file": "t_pecan_2.webp",
+    "w": 131,
+    "h": 187
+   },
+   {
+    "file": "t_pecan_3.webp",
+    "w": 131,
+    "h": 193
+   },
+   {
+    "file": "t_pecan_4.webp",
+    "w": 134,
+    "h": 191
+   },
+   {
+    "file": "t_pecan_5.webp",
+    "w": 130,
+    "h": 186
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_sprinkles": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_sprinkles_0.webp",
+    "w": 71,
+    "h": 40
+   },
+   {
+    "file": "t_sprinkles_1.webp",
+    "w": 44,
+    "h": 57
+   },
+   {
+    "file": "t_sprinkles_2.webp",
+    "w": 76,
+    "h": 40
+   },
+   {
+    "file": "t_sprinkles_3.webp",
+    "w": 39,
+    "h": 60
+   },
+   {
+    "file": "t_sprinkles_4.webp",
+    "w": 48,
+    "h": 68
+   },
+   {
+    "file": "t_sprinkles_5.webp",
+    "w": 64,
+    "h": 53
+   },
+   {
+    "file": "t_sprinkles_6.webp",
+    "w": 82,
+    "h": 36
+   },
+   {
+    "file": "t_sprinkles_7.webp",
+    "w": 52,
+    "h": 57
+   },
+   {
+    "file": "t_sprinkles_8.webp",
+    "w": 69,
+    "h": 62
+   },
+   {
+    "file": "t_sprinkles_9.webp",
+    "w": 38,
+    "h": 58
+   },
+   {
+    "file": "t_sprinkles_10.webp",
+    "w": 119,
+    "h": 57
+   },
+   {
+    "file": "t_sprinkles_11.webp",
+    "w": 67,
+    "h": 55
+   },
+   {
+    "file": "t_sprinkles_12.webp",
+    "w": 38,
+    "h": 53
+   },
+   {
+    "file": "t_sprinkles_13.webp",
+    "w": 39,
+    "h": 66
+   },
+   {
+    "file": "t_sprinkles_14.webp",
+    "w": 38,
+    "h": 59
+   },
+   {
+    "file": "t_sprinkles_15.webp",
+    "w": 65,
+    "h": 63
+   },
+   {
+    "file": "t_sprinkles_16.webp",
+    "w": 66,
+    "h": 69
+   },
+   {
+    "file": "t_sprinkles_17.webp",
+    "w": 74,
+    "h": 37
+   },
+   {
+    "file": "t_sprinkles_18.webp",
+    "w": 99,
+    "h": 36
+   },
+   {
+    "file": "t_sprinkles_19.webp",
+    "w": 83,
+    "h": 71
+   },
+   {
+    "file": "t_sprinkles_20.webp",
+    "w": 55,
+    "h": 67
+   },
+   {
+    "file": "t_sprinkles_21.webp",
+    "w": 69,
+    "h": 62
+   },
+   {
+    "file": "t_sprinkles_22.webp",
+    "w": 61,
+    "h": 56
+   },
+   {
+    "file": "t_sprinkles_23.webp",
+    "w": 76,
+    "h": 50
+   },
+   {
+    "file": "t_sprinkles_24.webp",
+    "w": 43,
+    "h": 61
+   },
+   {
+    "file": "t_sprinkles_25.webp",
+    "w": 55,
+    "h": 61
+   },
+   {
+    "file": "t_sprinkles_26.webp",
+    "w": 63,
+    "h": 50
+   },
+   {
+    "file": "t_sprinkles_27.webp",
+    "w": 60,
+    "h": 40
+   },
+   {
+    "file": "t_sprinkles_28.webp",
+    "w": 71,
+    "h": 59
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "crepe_base": {
+  "type": "single",
+  "file": "crepe_base.webp",
+  "w": 878,
+  "h": 561,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   218,
+   779,
+   61,
+   939
+  ]
+ },
+ "f_banana": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "f_banana_0.webp",
+    "w": 160,
+    "h": 126
+   },
+   {
+    "file": "f_banana_1.webp",
+    "w": 167,
+    "h": 124
+   },
+   {
+    "file": "f_banana_2.webp",
+    "w": 172,
+    "h": 142
+   },
+   {
+    "file": "f_banana_3.webp",
+    "w": 191,
+    "h": 162
+   },
+   {
+    "file": "f_banana_4.webp",
+    "w": 196,
+    "h": 155
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "f_kiwi": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "f_kiwi_0.webp",
+    "w": 363,
+    "h": 322
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "f_passionfruit": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "f_passionfruit_0.webp",
+    "w": 244,
+    "h": 235
+   },
+   {
+    "file": "f_passionfruit_1.webp",
+    "w": 240,
+    "h": 232
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "icecream_cup": {
+  "type": "single",
+  "file": "icecream_cup.webp?v=2435574",
+  "w": 730,
+  "h": 815,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   98,
+   913,
+   131,
+   861
+  ]
+ },
+ "pancake_base": {
+  "type": "single",
+  "file": "pancake_base.webp",
+  "w": 920,
+  "h": 621,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   189,
+   810,
+   40,
+   960
+  ]
+ },
+ "scoop_berries": {
+  "type": "single",
+  "file": "scoop_berries.webp",
+  "w": 677,
+  "h": 685,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   169,
+   854,
+   157,
+   834
+  ]
+ },
+ "scoop_oreo": {
+  "type": "single",
+  "file": "scoop_oreo.webp",
+  "w": 695,
+  "h": 736,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   140,
+   876,
+   148,
+   843
+  ]
+ },
+ "scoop_passionfruit": {
+  "type": "single",
+  "file": "scoop_passionfruit.webp",
+  "w": 682,
+  "h": 687,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   153,
+   840,
+   160,
+   842
+  ]
+ },
+ "scoop_strawberry_banana": {
+  "type": "single",
+  "file": "scoop_strawberry_banana.webp",
+  "w": 709,
+  "h": 713,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   144,
+   857,
+   141,
+   850
+  ]
+ },
+ "shake_glass_full": {
+  "type": "single",
+  "file": "shake_glass_full.webp",
+  "w": 502,
+  "h": 844,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   99,
+   943,
+   250,
+   752
+  ]
+ },
+ "syrup_pistachio": {
+  "type": "single",
+  "file": "syrup_pistachio.webp",
+  "w": 788,
+  "h": 775,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   116,
+   891,
+   104,
+   892
+  ]
+ },
+ "t_almonds": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_almonds_0.webp",
+    "w": 76,
+    "h": 128
+   },
+   {
+    "file": "t_almonds_1.webp",
+    "w": 97,
+    "h": 112
+   },
+   {
+    "file": "t_almonds_2.webp",
+    "w": 103,
+    "h": 109
+   },
+   {
+    "file": "t_almonds_3.webp",
+    "w": 77,
+    "h": 128
+   },
+   {
+    "file": "t_almonds_4.webp",
+    "w": 125,
+    "h": 80
+   },
+   {
+    "file": "t_almonds_5.webp",
+    "w": 123,
+    "h": 81
+   },
+   {
+    "file": "t_almonds_6.webp",
+    "w": 103,
+    "h": 116
+   },
+   {
+    "file": "t_almonds_7.webp",
+    "w": 104,
+    "h": 111
+   },
+   {
+    "file": "t_almonds_8.webp",
+    "w": 77,
+    "h": 128
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_chocolate_chunks": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_chocolate_chunks_0.webp",
+    "w": 176,
+    "h": 128
+   },
+   {
+    "file": "t_chocolate_chunks_1.webp",
+    "w": 181,
+    "h": 148
+   },
+   {
+    "file": "t_chocolate_chunks_2.webp",
+    "w": 168,
+    "h": 160
+   },
+   {
+    "file": "t_chocolate_chunks_3.webp",
+    "w": 184,
+    "h": 141
+   },
+   {
+    "file": "t_chocolate_chunks_4.webp",
+    "w": 196,
+    "h": 161
+   },
+   {
+    "file": "t_chocolate_chunks_5.webp",
+    "w": 198,
+    "h": 160
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_click_balls": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_click_balls_0.webp",
+    "w": 104,
+    "h": 106
+   },
+   {
+    "file": "t_click_balls_1.webp",
+    "w": 159,
+    "h": 153
+   },
+   {
+    "file": "t_click_balls_2.webp",
+    "w": 102,
+    "h": 102
+   },
+   {
+    "file": "t_click_balls_3.webp",
+    "w": 100,
+    "h": 102
+   },
+   {
+    "file": "t_click_balls_4.webp",
+    "w": 117,
+    "h": 161
+   },
+   {
+    "file": "t_click_balls_5.webp",
+    "w": 104,
+    "h": 106
+   },
+   {
+    "file": "t_click_balls_6.webp",
+    "w": 136,
+    "h": 159
+   },
+   {
+    "file": "t_click_balls_7.webp",
+    "w": 101,
+    "h": 103
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_coconut": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_coconut_0.webp",
+    "w": 203,
+    "h": 129
+   },
+   {
+    "file": "t_coconut_1.webp",
+    "w": 140,
+    "h": 162
+   },
+   {
+    "file": "t_coconut_2.webp",
+    "w": 91,
+    "h": 139
+   },
+   {
+    "file": "t_coconut_3.webp",
+    "w": 101,
+    "h": 166
+   },
+   {
+    "file": "t_coconut_4.webp",
+    "w": 201,
+    "h": 120
+   },
+   {
+    "file": "t_coconut_5.webp",
+    "w": 158,
+    "h": 119
+   },
+   {
+    "file": "t_coconut_6.webp",
+    "w": 77,
+    "h": 152
+   },
+   {
+    "file": "t_coconut_7.webp",
+    "w": 85,
+    "h": 179
+   },
+   {
+    "file": "t_coconut_8.webp",
+    "w": 146,
+    "h": 155
+   },
+   {
+    "file": "t_coconut_9.webp",
+    "w": 101,
+    "h": 125
+   },
+   {
+    "file": "t_coconut_10.webp",
+    "w": 103,
+    "h": 142
+   },
+   {
+    "file": "t_coconut_11.webp",
+    "w": 160,
+    "h": 170
+   },
+   {
+    "file": "t_coconut_12.webp",
+    "w": 187,
+    "h": 81
+   },
+   {
+    "file": "t_coconut_13.webp",
+    "w": 161,
+    "h": 104
+   },
+   {
+    "file": "t_coconut_14.webp",
+    "w": 114,
+    "h": 73
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_mango": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_mango_0.webp",
+    "w": 59,
+    "h": 162
+   },
+   {
+    "file": "t_mango_1.webp",
+    "w": 148,
+    "h": 98
+   },
+   {
+    "file": "t_mango_2.webp",
+    "w": 85,
+    "h": 166
+   },
+   {
+    "file": "t_mango_3.webp",
+    "w": 161,
+    "h": 155
+   },
+   {
+    "file": "t_mango_4.webp",
+    "w": 71,
+    "h": 138
+   },
+   {
+    "file": "t_mango_5.webp",
+    "w": 91,
+    "h": 57
+   },
+   {
+    "file": "t_mango_6.webp",
+    "w": 49,
+    "h": 72
+   },
+   {
+    "file": "t_mango_7.webp",
+    "w": 153,
+    "h": 66
+   },
+   {
+    "file": "t_mango_8.webp",
+    "w": 53,
+    "h": 139
+   },
+   {
+    "file": "t_mango_9.webp",
+    "w": 70,
+    "h": 65
+   },
+   {
+    "file": "t_mango_10.webp",
+    "w": 55,
+    "h": 79
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_peach": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_peach_0.webp",
+    "w": 192,
+    "h": 159
+   },
+   {
+    "file": "t_peach_1.webp",
+    "w": 187,
+    "h": 155
+   },
+   {
+    "file": "t_peach_2.webp",
+    "w": 179,
+    "h": 151
+   },
+   {
+    "file": "t_peach_3.webp",
+    "w": 194,
+    "h": 148
+   },
+   {
+    "file": "t_peach_4.webp",
+    "w": 192,
+    "h": 150
+   },
+   {
+    "file": "t_peach_5.webp",
+    "w": 205,
+    "h": 149
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_raisins": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_raisins_0.webp",
+    "w": 69,
+    "h": 103
+   },
+   {
+    "file": "t_raisins_1.webp",
+    "w": 85,
+    "h": 95
+   },
+   {
+    "file": "t_raisins_2.webp",
+    "w": 79,
+    "h": 95
+   },
+   {
+    "file": "t_raisins_3.webp",
+    "w": 77,
+    "h": 91
+   },
+   {
+    "file": "t_raisins_4.webp",
+    "w": 94,
+    "h": 85
+   },
+   {
+    "file": "t_raisins_5.webp",
+    "w": 103,
+    "h": 74
+   },
+   {
+    "file": "t_raisins_6.webp",
+    "w": 106,
+    "h": 71
+   },
+   {
+    "file": "t_raisins_7.webp",
+    "w": 79,
+    "h": 102
+   },
+   {
+    "file": "t_raisins_8.webp",
+    "w": 76,
+    "h": 94
+   },
+   {
+    "file": "t_raisins_9.webp",
+    "w": 94,
+    "h": 84
+   },
+   {
+    "file": "t_raisins_10.webp",
+    "w": 84,
+    "h": 89
+   },
+   {
+    "file": "t_raisins_11.webp",
+    "w": 80,
+    "h": 99
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "t_strawberry_bits": {
+  "type": "pieces",
+  "pieces": [
+   {
+    "file": "t_strawberry_bits_0.webp",
+    "w": 94,
+    "h": 83
+   },
+   {
+    "file": "t_strawberry_bits_1.webp",
+    "w": 99,
+    "h": 90
+   },
+   {
+    "file": "t_strawberry_bits_2.webp",
+    "w": 93,
+    "h": 98
+   },
+   {
+    "file": "t_strawberry_bits_3.webp",
+    "w": 114,
+    "h": 86
+   },
+   {
+    "file": "t_strawberry_bits_4.webp",
+    "w": 103,
+    "h": 102
+   },
+   {
+    "file": "t_strawberry_bits_5.webp",
+    "w": 89,
+    "h": 94
+   },
+   {
+    "file": "t_strawberry_bits_6.webp",
+    "w": 93,
+    "h": 103
+   },
+   {
+    "file": "t_strawberry_bits_7.webp",
+    "w": 103,
+    "h": 103
+   },
+   {
+    "file": "t_strawberry_bits_8.webp",
+    "w": 106,
+    "h": 104
+   },
+   {
+    "file": "t_strawberry_bits_9.webp",
+    "w": 101,
+    "h": 105
+   },
+   {
+    "file": "t_strawberry_bits_10.webp",
+    "w": 115,
+    "h": 100
+   }
+  ],
+  "src": [
+   560,
+   560
+  ]
+ },
+ "shake_glass_empty": {
+  "type": "single",
+  "file": "shake_glass_empty.webp?v=2435574",
+  "w": 504,
+  "h": 846,
+  "src": [
+   1000,
+   1000
+  ],
+  "box": [
+   98,
+   944,
+   248,
+   752
+  ]
+ }
+}

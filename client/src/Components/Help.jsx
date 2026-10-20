@@ -14,13 +14,13 @@ export default function HelpButton() {
   } 
 
   return (
-    <div style={styles.container}>
+    <div className="help-fab" style={styles.container}>
       {!isSent ? (
-        <button style={styles.button} onClick={handleHelpClick}>
+        <button className="help-fab-btn" style={styles.button} onClick={handleHelpClick}>
           צריך עזרה? 🍦
         </button>
       ) : (
-        <div style={styles.successMessage}>
+        <div className="help-fab-done" style={styles.successMessage}>
           הקריאה נשלחה בהצלחה!
         </div>
       )}

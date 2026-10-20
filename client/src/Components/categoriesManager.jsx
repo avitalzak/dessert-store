@@ -1,3 +1,4 @@
+import { API_URL } from "../API/config"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AddCategory, DeleteCategory, GetCategories } from "../redux/Slice/categorySlice"
@@ -25,9 +26,10 @@ export default function CategoryManager() {
         const data = new FormData()
         data.append("image", imageFile)
         const response = await fetch (
-            "http://localhost:1234/upload",
+            `${API_URL}/upload`,
             {
                 method: "POST",
+                headers: { Authorization: `Bearer ${localStorage.getItem("jwtToken")}` },
                 body: data
             }
         )

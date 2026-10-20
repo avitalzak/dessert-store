@@ -114,3 +114,10 @@
 .kiosk-btn-submit-order:hover {
     background: #d49f9f;
 }
+/* סל ריק: מסך התשלום כבוי ולא לחיץ */
+.kiosk-payment-form.is-disabled {
+    opacity: 0.45;
+    filter: grayscale(0.6);
+    pointer-events: none;
+    user-select: none;
+}

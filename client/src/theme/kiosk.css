@@ -1,0 +1,3454 @@
+/* ==========================================================================
+   KIOSK — עמדת הזמנה אמיתית
+   --------------------------------------------------------------------------
+   בהשראת עמדות ההזמנה בחנויות: רקע בהיר ונקי, גופן אחד (Rubik),
+   כרטיסים לבנים, תמונות גדולות, כפתורים שחורים גדולים ופס הזמנה קבוע.
+   בלי אפקטים - רק משוב עדין בלחיצה. נבנה מעל ערכת atelier.
+   ========================================================================== */
+
+html:not(.kiosk) .kiosk-only {
+    display: none !important;
+}
+
+/* כפתור ה-"+" על כרטיס מוצר קיים רק ב-rose וב-kiosk */
+html:not(.rose):not(.kiosk) .product-add {
+    display: none !important;
+}
+
+html.atelier.kiosk {
+    --at-paper: #fff7f2;
+    --at-paper-deep: #fdece4;
+    --at-card: #ffffff;
+    --at-ink: #22191d;
+    --at-ink-soft: #4d3f45;
+    --at-ink-mute: #85777d;
+    --at-line: rgba(34, 25, 29, 0.08);
+    --at-line-strong: rgba(34, 25, 29, 0.16);
+    --at-accent: #d62f4f;
+    --at-brass: #e94e77;
+    --at-cream: #ffffff;
+
+    --at-serif: "Fredoka", "Rubik", system-ui, sans-serif;
+    --at-french: "Fredoka", "Rubik", system-ui, sans-serif;
+    --at-sans: "Rubik", "Heebo", system-ui, sans-serif;
+    --k-display: "Fredoka", "Rubik", system-ui, sans-serif;
+    --at-gutter: 40px;
+
+    --k-brand: #e94e77;
+    --k-brand-dark: #cf3a63;
+    --k-brand-soft: #ffe6ee;
+    --k-pistachio: #dff0d6;
+    --k-peach: #ffe3d1;
+    --k-lilac: #ece4fb;
+    --k-radius: 24px;
+    --k-radius-sm: 16px;
+    --k-shadow: 0 1px 2px rgba(34, 25, 29, 0.04), 0 10px 26px -12px rgba(233, 78, 119, 0.22);
+    --k-shadow-up: 0 -8px 24px -12px rgba(34, 25, 29, 0.14);
+}
+
+/* ==========================================================================
+   בסיס
+   ========================================================================== */
+
+html.atelier.kiosk body {
+    background: var(--at-paper);
+    font-family: var(--at-sans);
+}
+
+html.atelier.kiosk body::after {
+    display: none;
+}
+
+html.atelier.kiosk .page-content > * {
+    animation: kiosk-fade 0.25s ease-out both;
+}
+
+html.atelier.kiosk .page-content > p,
+html.atelier.kiosk .page-content > div:not([class]) {
+    font-family: var(--at-sans);
+    font-size: 22px;
+    font-weight: 500;
+}
+
+/* כל הכותרות: Rubik עבה וברורה */
+html.atelier.kiosk h1,
+html.atelier.kiosk h2,
+html.atelier.kiosk h3,
+html.atelier.kiosk .at-page-title,
+html.atelier.kiosk .kiosk-step-title,
+html.atelier.kiosk .kiosk-panel-title,
+html.atelier.kiosk .kiosk-product-summary-name,
+html.atelier.kiosk .auth-card h3,
+html.atelier.kiosk .profile-content h2,
+html.atelier.kiosk .sidebar-title,
+html.atelier.kiosk .details-main-header h2,
+html.atelier.kiosk .favorites-title,
+html.atelier.kiosk .message-popup h3,
+html.atelier.kiosk .delete-popup h3,
+html.atelier.kiosk .persuasion-card h2 {
+    font-family: var(--at-sans) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.015em !important;
+    color: var(--at-ink) !important;
+    text-shadow: none !important;
+}
+
+/* בלי כותרות-על בצרפתית */
+html.atelier.kiosk .at-eyebrow,
+html.atelier.kiosk .topbar .logo-tagline {
+    display: none !important;
+}
+
+html.atelier.kiosk .at-page-head {
+    gap: 4px;
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+    border-bottom: 0;
+}
+
+html.atelier.kiosk .at-page-title {
+    margin: 0;
+    font-size: 42px;
+    line-height: 1.1;
+}
+
+html.atelier.kiosk .at-page-lede {
+    font-size: 18px;
+    color: var(--at-ink-mute);
+}
+
+/* מחירים */
+html.atelier.kiosk .product-info .price,
+html.atelier.kiosk .kiosk-item-price,
+html.atelier.kiosk .kiosk-actual-final-price,
+html.atelier.kiosk .order-price,
+html.atelier.kiosk .kiosk-old-price-strikethrough {
+    font-family: var(--at-sans);
+    font-style: normal;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   כפתורים - שחור מלא, מעוגל, גדול למגע
+   ========================================================================== */
+
+html.atelier.kiosk .kiosk-btn-next,
+html.atelier.kiosk .kiosk-summary-btn-primary,
+html.atelier.kiosk .kiosk-btn-submit-order,
+html.atelier.kiosk .btn-submit,
+html.atelier.kiosk .btn-add,
+html.atelier.kiosk .btn-reorder-action,
+html.atelier.kiosk .submit-btn,
+html.atelier.kiosk .message-popup button,
+html.atelier.kiosk .persuasion-yes,
+html.atelier.kiosk .order-bar-btn {
+    background: var(--at-ink) !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    font-family: var(--at-sans) !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+    transition: transform 0.12s ease, background-color 0.2s ease !important;
+}
+
+html.atelier.kiosk .kiosk-btn-next:hover:not(:disabled),
+html.atelier.kiosk .kiosk-summary-btn-primary:hover,
+html.atelier.kiosk .kiosk-btn-submit-order:hover,
+html.atelier.kiosk .btn-submit:hover {
+    background: #27272a !important;
+}
+
+html.atelier.kiosk .kiosk-btn-next:disabled,
+html.atelier.kiosk .kiosk-btn-submit-order:disabled {
+    background: #d4d4d8 !important;
+    color: #fff !important;
+}
+
+html.atelier.kiosk .kiosk-btn-back,
+html.atelier.kiosk .kiosk-summary-btn-secondary,
+html.atelier.kiosk .delete-cancel,
+html.atelier.kiosk .persuasion-no,
+html.atelier.kiosk .btn-remove,
+html.atelier.kiosk .btn-back,
+html.atelier.kiosk .profile-content button {
+    background: #fff !important;
+    color: var(--at-ink) !important;
+    border: 2px solid var(--at-line-strong) !important;
+    border-radius: 999px !important;
+    font-family: var(--at-sans) !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+}
+
+html.atelier.kiosk .delete-confirm {
+    background: var(--at-accent) !important;
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+}
+
+/* משוב לחיצה עדין על כל דבר שאפשר ללחוץ עליו */
+html.atelier.kiosk button:active:not(:disabled),
+html.atelier.kiosk .category-card:active,
+html.atelier.kiosk .product-card:active,
+html.atelier.kiosk .kiosk-option-card:active,
+html.atelier.kiosk .order-summary-card:active {
+    transform: scale(0.97) !important;
+}
+
+html.atelier.kiosk .kiosk-summary-quantity-control button,
+html.atelier.kiosk .kiosk-cart-qty-selector button {
+    background: #fff;
+    border: 2px solid var(--at-line-strong);
+    color: var(--at-ink);
+    font-weight: 500;
+}
+
+html.atelier.kiosk .kiosk-summary-quantity-control button:active,
+html.atelier.kiosk .kiosk-cart-qty-selector button:active {
+    background: var(--at-ink);
+    border-color: var(--at-ink);
+    color: #fff;
+}
+
+/* ==========================================================================
+   סרגל עליון
+   ========================================================================== */
+
+html.atelier.kiosk .topbar {
+    height: 80px;
+    background: #fff;
+    border-bottom: 1px solid var(--at-line);
+}
+
+html.atelier.kiosk .logo-french {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.14em;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .icon-btn {
+    font-family: var(--at-sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+html.atelier.kiosk .icon-btn svg {
+    font-size: 21px;
+}
+
+html.atelier.kiosk .icon-btn::after {
+    height: 3px;
+    border-radius: 3px;
+    background: var(--k-brand);
+}
+
+html.atelier.kiosk .icon-btn.active::after {
+    width: 28px;
+}
+
+html.atelier.kiosk .topbar-greeting p {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .help-fab-btn,
+html.atelier.kiosk .help-fab-done {
+    padding: 12px 22px !important;
+    border: 2px solid var(--at-line-strong) !important;
+    font-family: var(--at-sans) !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+}
+
+html.atelier.kiosk .help-fab-done {
+    background: var(--at-ink) !important;
+    border-color: var(--at-ink) !important;
+}
+
+/* טאבלט לאורך: הלוגו עולה לשורה משלו והאייקונים יורדים מתחתיו, אז הסרגל צריך לגדול */
+@media (max-width: 900px) {
+    html.atelier.kiosk .topbar {
+        height: auto;
+        padding-top: 62px;
+        padding-bottom: 10px;
+    }
+
+    html.atelier.kiosk .logo-french {
+        top: 30px;
+    }
+}
+
+/* ==========================================================================
+   מסך פתיחה - סרטון במסך מלא וכפתור אחד גדול
+   ========================================================================== */
+
+html.atelier.kiosk .clean-fullscreen-container {
+    background: #000 !important;
+}
+
+html.atelier.kiosk .clean-fullscreen-hero::after {
+    display: none;
+}
+
+html.atelier.kiosk .clean-hero-color-overlay {
+    z-index: 4;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.6) 38%, rgba(0, 0, 0, 0.1) 70%);
+}
+
+html.atelier.kiosk .clean-hero-content {
+    z-index: 8;
+    right: 0;
+    left: 0;
+    bottom: 200px;
+    max-width: none;
+    margin: 0 auto;
+    text-align: center;
+    animation: kiosk-up 0.8s 0.1s ease-out both;
+}
+
+html.atelier.kiosk .clean-main-title {
+    font-family: var(--at-sans);
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff !important;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+
+html.atelier.kiosk .clean-title-brand {
+    margin-top: 8px;
+    font-family: "Playfair Display", serif;
+    font-weight: 600;
+    font-size: 0.62em;
+    letter-spacing: 0.12em;
+    text-align: center;
+    color: #fff;
+}
+
+html.atelier.kiosk .clean-subtitle {
+    margin-top: 6px;
+    font-size: 22px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+html.atelier.kiosk .promo-circles-container {
+    display: none;
+}
+
+html.atelier.kiosk .clean-footer-action {
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 80px !important;
+    width: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    z-index: 8;
+    animation: kiosk-up 0.8s 0.25s ease-out both;
+}
+
+html.atelier.kiosk .clean-btn-luxury-oval {
+    gap: 16px;
+    padding: 26px 80px !important;
+    background: #fff !important;
+    color: var(--at-ink) !important;
+    border-radius: 999px !important;
+    font-family: var(--at-sans) !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    animation: kiosk-breathe 2.4s ease-in-out infinite !important;
+}
+
+html.atelier.kiosk .clean-btn-luxury-oval::after {
+    animation: none;
+}
+
+/* הסרטון */
+html.atelier.kiosk .hero-film {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #000;
+    z-index: 1;
+}
+
+html.atelier.kiosk .film-shot {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+html.atelier.kiosk .film-shot.is-current {
+    opacity: 1;
+    z-index: 2;
+}
+
+html.atelier.kiosk .film-shot.is-leaving {
+    z-index: 1;
+}
+
+html.atelier.kiosk .film-frame {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+}
+
+html.atelier.kiosk .film-pan.is-current .film-frame,
+html.atelier.kiosk .film-pan.is-leaving .film-frame {
+    animation: kfilm-pan var(--dur) cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+html.atelier.kiosk .film-close-a.is-current .film-frame,
+html.atelier.kiosk .film-close-a.is-leaving .film-frame,
+html.atelier.kiosk .film-push.is-current .film-frame,
+html.atelier.kiosk .film-push.is-leaving .film-frame {
+    animation: kfilm-zoom-in var(--dur) linear forwards;
+}
+
+html.atelier.kiosk .film-close-b.is-current .film-frame,
+html.atelier.kiosk .film-close-b.is-leaving .film-frame {
+    animation: kfilm-zoom-out var(--dur) linear forwards;
+}
+
+html.atelier.kiosk .film-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    z-index: 3;
+    transition: opacity 1s ease;
+}
+
+html.atelier.kiosk .hero-film.has-video .film-video {
+    opacity: 1;
+}
+
+/* כרטיס מוצר קטן בפינה בזמן התקריב - כמו בפרסומות בעמדות */
+html.atelier.kiosk .film-caption {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 8;
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: baseline;
+    gap: 2px 18px;
+    padding: 18px 24px;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.4);
+    text-align: right;
+    animation: kiosk-caption 3.8s ease both;
+}
+
+html.atelier.kiosk .film-caption-n {
+    grid-column: 1 / -1;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--k-brand);
+}
+
+html.atelier.kiosk .film-caption-n::before {
+    content: "מהתפריט · ";
+}
+
+html.atelier.kiosk .film-caption-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .film-caption-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .film-progress {
+    display: none;
+}
+
+/* ==========================================================================
+   קטגוריות
+   ========================================================================== */
+
+html.atelier.kiosk .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 22px;
+    padding: 40px var(--at-gutter) 48px;
+}
+
+html.atelier.kiosk .category-card {
+    aspect-ratio: auto;
+    background: #fff;
+    border-radius: var(--k-radius);
+    box-shadow: var(--k-shadow);
+    animation: kiosk-up 0.35s ease-out both !important;
+    transition: transform 0.12s ease;
+}
+
+html.atelier.kiosk .category-card::before {
+    display: none;
+}
+
+html.atelier.kiosk .category-image-wrapper {
+    position: relative;
+    inset: auto;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    background: var(--at-paper-deep);
+}
+
+html.atelier.kiosk .category-card:hover img {
+    transform: none;
+}
+
+html.atelier.kiosk .category-info {
+    position: static;
+    padding: 18px 20px;
+    background: #fff;
+}
+
+html.atelier.kiosk .category-info h3 {
+    font-size: 24px;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .category-info::after {
+    content: "←";
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--at-ink);
+    color: #fff;
+    font-size: 18px;
+    opacity: 1;
+}
+
+/* ==========================================================================
+   מוצרים
+   ========================================================================== */
+
+html.atelier.kiosk .kiosk-grid,
+html.atelier.kiosk .categories-grid {
+    grid-auto-rows: max-content;
+}
+
+html.atelier.kiosk .kiosk-grid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+    padding: 36px var(--at-gutter) 48px;
+}
+
+/* לשוניות קטגוריות בראש העמוד */
+html.atelier.kiosk .kiosk-cat-tabs {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+}
+
+html.atelier.kiosk .kiosk-cat-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+html.atelier.kiosk .kiosk-cat-tabs button {
+    flex: 0 0 auto;
+    height: 52px;
+    padding: 0 26px;
+    background: #fff;
+    border: 2px solid var(--at-line);
+    border-radius: 999px;
+    color: var(--at-ink);
+    font-family: var(--at-sans);
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+html.atelier.kiosk .kiosk-cat-tabs button.active {
+    background: var(--at-ink);
+    border-color: var(--at-ink);
+    color: #fff;
+}
+
+html.atelier.kiosk .product-card {
+    position: relative;
+    background: #fff;
+    border-radius: var(--k-radius);
+    box-shadow: var(--k-shadow);
+    overflow: hidden;
+    animation: kiosk-up 0.35s ease-out both !important;
+    transition: transform 0.12s ease;
+}
+
+html.atelier.kiosk .product-image {
+    aspect-ratio: 1 / 1;
+    border-radius: 0;
+    background: var(--at-paper-deep);
+}
+
+html.atelier.kiosk .product-card:hover .product-image img {
+    transform: none;
+}
+
+html.atelier.kiosk .product-info {
+    padding: 16px 18px 20px;
+    gap: 4px;
+}
+
+html.atelier.kiosk .product-info h3 {
+    grid-column: 1 / -1;
+    font-size: 21px;
+    font-weight: 600 !important;
+}
+
+html.atelier.kiosk .product-info p {
+    grid-row: 2;
+    font-size: 15px;
+    color: var(--at-ink-mute);
+}
+
+html.atelier.kiosk .product-info .price {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: 10px;
+    font-size: 22px;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .product-add {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--at-ink);
+    color: #fff;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+/* טעינה: שלד אפור, ואז כל הכרטיסים מופיעים יחד */
+html.atelier.kiosk .is-pending .category-card,
+html.atelier.kiosk .is-pending .product-card,
+html.atelier.kiosk .is-pending .kiosk-option-card {
+    animation: kiosk-skeleton 1.3s ease-in-out infinite !important;
+    background: linear-gradient(100deg, #ececee 30%, #f7f7f8 50%, #ececee 70%) !important;
+    background-size: 300% 100% !important;
+    box-shadow: none !important;
+}
+
+html.atelier.kiosk .is-pending .category-card > *,
+html.atelier.kiosk .is-pending .product-card > *,
+html.atelier.kiosk .is-pending .kiosk-option-card > *,
+html.atelier.kiosk .is-pending .kiosk-option-card::after {
+    visibility: hidden;
+}
+
+html.atelier.kiosk .category-card,
+html.atelier.kiosk .product-card,
+html.atelier.kiosk .kiosk-option-card {
+    animation-delay: 0s !important;
+}
+
+/* ==========================================================================
+   פס "ההזמנה שלי" בתחתית
+   ========================================================================== */
+
+.order-bar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: 96px;
+    padding: 0 var(--at-gutter, 48px);
+    background: #fff;
+    border-top: 1px solid var(--at-line);
+    box-shadow: var(--k-shadow-up);
+    font-family: var(--at-sans);
+    animation: kiosk-bar-in 0.35s ease-out both;
+}
+
+.order-bar-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.order-bar-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--at-ink-mute);
+}
+
+.order-bar-count {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--at-ink);
+}
+
+.order-bar-total {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--at-ink);
+}
+
+.order-bar-btn {
+    margin-inline-start: auto;
+    height: 64px;
+    padding: 0 40px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   בניית מנה
+   ========================================================================== */
+
+html.atelier.kiosk .kiosk-builder-wrapper,
+html.atelier.kiosk .kiosk-cart-page-wrapper {
+    background: var(--at-paper);
+}
+
+html.atelier.kiosk .kiosk-main-content {
+    padding: 28px var(--at-gutter) 32px;
+}
+
+html.atelier.kiosk .at-progress {
+    margin-bottom: 26px;
+    gap: 18px;
+}
+
+html.atelier.kiosk .at-progress-name {
+    font-family: var(--at-sans);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .at-progress-track span {
+    height: 6px;
+    border-radius: 6px;
+    background: #e4e4e7;
+}
+
+html.atelier.kiosk .at-progress-track span.on {
+    background: var(--at-ink);
+}
+
+html.atelier.kiosk .at-progress-count {
+    font-family: var(--at-sans);
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--at-ink-mute);
+}
+
+html.atelier.kiosk .kiosk-step-title {
+    font-size: 40px;
+    margin-bottom: 4px;
+}
+
+html.atelier.kiosk .kiosk-step-subtitle {
+    font-size: 18px;
+    margin-bottom: 22px;
+}
+
+html.atelier.kiosk .kiosk-options-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+html.atelier.kiosk .kiosk-option-card {
+    aspect-ratio: 5 / 6;
+    background: #fff;
+    border: 0;
+    border-radius: var(--k-radius);
+    box-shadow: var(--k-shadow);
+    outline: 3px solid transparent;
+    outline-offset: -3px;
+    animation: kiosk-up 0.3s ease-out both !important;
+    transition: transform 0.12s ease, outline-color 0.15s ease;
+}
+
+html.atelier.kiosk .kiosk-option-card.is-selected {
+    outline-color: var(--at-ink);
+    box-shadow: var(--k-shadow);
+}
+
+html.atelier.kiosk .kiosk-card-image-wrapper {
+    height: 70%;
+    background: var(--at-paper-deep);
+}
+
+html.atelier.kiosk .kiosk-option-card.is-selected .kiosk-card-image-wrapper img {
+    transform: none;
+}
+
+html.atelier.kiosk .kiosk-card-footer,
+html.atelier.kiosk .kiosk-option-card.is-selected .kiosk-card-footer {
+    align-items: center;
+    gap: 2px;
+    background: #fff;
+}
+
+html.atelier.kiosk .kiosk-card-label,
+html.atelier.kiosk .kiosk-option-card.is-selected .kiosk-card-label {
+    font-family: var(--at-sans);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .kiosk-card-price {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--at-ink-mute);
+}
+
+html.atelier.kiosk .kiosk-option-card::after {
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    background: var(--at-ink);
+    color: #fff;
+    font-size: 17px;
+    transition: opacity 0.15s ease, transform 0.2s ease;
+}
+
+html.atelier.kiosk .kiosk-footer-bar {
+    padding: 16px var(--at-gutter);
+    background: #fff;
+    border-top: 1px solid var(--at-line);
+    box-shadow: var(--k-shadow-up);
+}
+
+html.atelier.kiosk .kiosk-btn-next {
+    height: 66px;
+    font-size: 21px;
+}
+
+html.atelier.kiosk .kiosk-btn-back {
+    height: 66px;
+    font-size: 19px;
+}
+
+/* במת התצוגה החיה של המנה */
+html.atelier.kiosk .dish-stage,
+html.atelier.kiosk .kiosk-summary-hero-image.has-dish {
+    background: #fff;
+    border: 0;
+    border-radius: 24px;
+    box-shadow: var(--k-shadow);
+}
+
+html.atelier.kiosk .dish-stage-title {
+    font-family: var(--at-sans);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .dish-chip {
+    border-radius: 999px;
+    background: var(--at-paper);
+    border-color: transparent;
+    color: var(--at-ink);
+    font-size: 14px;
+}
+
+/* ==========================================================================
+   סיכום מנה
+   ========================================================================== */
+
+html.atelier.kiosk .kiosk-summary-container .kiosk-step-title {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    color: var(--at-ink-mute) !important;
+}
+
+html.atelier.kiosk .kiosk-summary-hero-image {
+    border-radius: 24px;
+    background: var(--at-paper-deep);
+}
+
+html.atelier.kiosk .kiosk-product-summary-name {
+    font-size: 48px;
+}
+
+html.atelier.kiosk .kiosk-product-summary-description {
+    font-family: var(--at-sans);
+    font-style: normal;
+    font-size: 16px;
+    color: var(--at-ink-mute);
+}
+
+html.atelier.kiosk .kiosk-summary-bill-list {
+    padding: 4px 22px;
+    border: 0;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+}
+
+html.atelier.kiosk .kiosk-summary-bill-row:last-child {
+    border-bottom: 0;
+}
+
+html.atelier.kiosk .kiosk-summary-bill-row::before {
+    display: none;
+}
+
+html.atelier.kiosk .kiosk-bill-label {
+    font-weight: 600;
+}
+
+html.atelier.kiosk .qty-number {
+    font-family: var(--at-sans);
+    font-weight: 600;
+    font-size: 22px;
+}
+
+html.atelier.kiosk .kiosk-summary-btn-danger {
+    color: var(--at-accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   עגלה ותשלום
+   ========================================================================== */
+
+html.atelier.kiosk .kiosk-cart-right-panel {
+    padding: 40px var(--at-gutter) 40px 40px;
+}
+
+html.atelier.kiosk .kiosk-panel-title-wrapper {
+    border-bottom: 0;
+    padding-bottom: 8px;
+}
+
+html.atelier.kiosk .kiosk-panel-title {
+    font-size: 40px;
+}
+
+html.atelier.kiosk .kiosk-cart-item-card {
+    margin: 12px 0;
+    padding: 20px 22px;
+    border: 0;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+    animation: none;
+}
+
+html.atelier.kiosk .kiosk-cart-item-card:last-child {
+    border-bottom: 0;
+}
+
+html.atelier.kiosk .kiosk-item-name {
+    font-family: var(--at-sans);
+    font-size: 22px;
+    font-weight: 600;
+}
+
+html.atelier.kiosk .kiosk-item-price {
+    font-size: 22px;
+}
+
+html.atelier.kiosk .kiosk-item-btn-delete {
+    text-decoration: none;
+    font-weight: 500;
+    color: var(--at-accent);
+}
+
+html.atelier.kiosk .kiosk-qty-val {
+    font-family: var(--at-sans);
+    font-weight: 600;
+}
+
+html.atelier.kiosk .kiosk-cart-status.empty {
+    font-family: var(--at-sans);
+    font-size: 22px;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .kiosk-cart-left-panel {
+    padding: 40px;
+    background: #fff;
+    border-right: 1px solid var(--at-line);
+}
+
+html.atelier.kiosk .kiosk-pay-section-title {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .kiosk-toggle-btn {
+    height: 64px;
+    background: #fff;
+    border: 2px solid var(--at-line-strong);
+    border-radius: var(--k-radius-sm);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn.active {
+    background: var(--at-ink);
+    border-color: var(--at-ink);
+    color: #fff;
+}
+
+html.atelier.kiosk .kiosk-credit-card-inputs input,
+html.atelier.kiosk .auth-input,
+html.atelier.kiosk .input-field,
+html.atelier.kiosk .file-upload-btn,
+html.atelier.kiosk .users-table select {
+    background: var(--at-paper);
+    border: 2px solid transparent;
+    border-radius: var(--k-radius-sm);
+    color: var(--at-ink);
+    font-family: var(--at-sans);
+}
+
+html.atelier.kiosk .kiosk-credit-card-inputs input:focus,
+html.atelier.kiosk .auth-input:focus,
+html.atelier.kiosk .input-field:focus {
+    background: #fff;
+    border-color: var(--at-ink);
+    box-shadow: none;
+}
+
+html.atelier.kiosk .kiosk-pay-summary-block {
+    border-top: 1px solid var(--at-line);
+}
+
+html.atelier.kiosk .kiosk-total-text-label {
+    font-family: var(--at-sans);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+html.atelier.kiosk .kiosk-actual-final-price {
+    font-size: 44px;
+}
+
+html.atelier.kiosk .kiosk-btn-submit-order {
+    height: 70px;
+    font-size: 21px;
+}
+
+/* ==========================================================================
+   אזור אישי, הזמנות, מועדפים
+   ========================================================================== */
+
+html.atelier.kiosk .user-page-container {
+    padding-top: 40px;
+    gap: 40px;
+}
+
+html.atelier.kiosk .side-menu {
+    gap: 6px;
+    padding-left: 0;
+    border-left: 0;
+}
+
+html.atelier.kiosk .menu-button {
+    padding: 16px 20px;
+    border: 0;
+    border-radius: var(--k-radius-sm);
+    font-family: var(--at-sans);
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--at-ink-soft);
+}
+
+html.atelier.kiosk .menu-button:hover:not(.active) {
+    background: #fff;
+}
+
+html.atelier.kiosk .menu-button.active {
+    padding-right: 20px;
+    background: var(--at-ink);
+    color: #fff;
+    font-weight: 600;
+}
+
+html.atelier.kiosk .menu-button.active::before {
+    display: none;
+}
+
+html.atelier.kiosk .auth-card {
+    padding: 40px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: var(--k-shadow);
+}
+
+html.atelier.kiosk .auth-card h3 {
+    font-size: 36px;
+}
+
+html.atelier.kiosk .btn-switch {
+    text-decoration: none;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .auth-error,
+html.atelier.kiosk .auth-success {
+    border-right: 0;
+    border-radius: var(--k-radius-sm);
+}
+
+html.atelier.kiosk .profile-details,
+html.atelier.kiosk .order-summary-card,
+html.atelier.kiosk .waffle-item-card,
+html.atelier.kiosk .item-card {
+    margin-bottom: 12px !important;
+    padding: 20px 22px !important;
+    background: #fff !important;
+    border: 0 !important;
+    border-radius: var(--k-radius) !important;
+    box-shadow: var(--k-shadow) !important;
+}
+
+html.atelier.kiosk .profile-details p:last-child,
+html.atelier.kiosk .order-summary-card:last-child {
+    border-bottom: 0;
+}
+
+html.atelier.kiosk .profile-details strong,
+html.atelier.kiosk .summary-col-label,
+html.atelier.kiosk .users-table th {
+    letter-spacing: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .order-summary-body,
+html.atelier.kiosk .waffle-item-name,
+html.atelier.kiosk .item-name {
+    font-family: var(--at-sans) !important;
+    font-weight: 600 !important;
+}
+
+html.atelier.kiosk .order-id,
+html.atelier.kiosk .order-number-tag,
+html.atelier.kiosk .waffle-item-qty,
+html.atelier.kiosk .summary-col-value {
+    font-family: var(--at-sans);
+    font-style: normal;
+    color: var(--at-ink-mute);
+}
+
+html.atelier.kiosk .order-status-badge {
+    border: 0;
+    border-radius: 999px;
+    background: var(--at-paper);
+    color: var(--at-ink-soft);
+    letter-spacing: 0;
+}
+
+html.atelier.kiosk .waffle-img-box {
+    border-radius: var(--k-radius-sm);
+}
+
+html.atelier.kiosk .waffle-component-tag {
+    border: 0;
+    border-radius: 999px;
+    background: var(--at-paper);
+}
+
+html.atelier.kiosk .btn-fav-heart {
+    border: 2px solid var(--at-line-strong);
+    color: var(--k-brand);
+}
+
+html.atelier.kiosk .btn-fav-heart.heart-filled {
+    background: var(--k-brand);
+    border-color: var(--k-brand);
+    color: #fff;
+}
+
+html.atelier.kiosk .pagination-btn {
+    border-radius: 50%;
+    font-family: var(--at-sans);
+    font-size: 17px;
+}
+
+html.atelier.kiosk .pagination-btn.active {
+    background: var(--at-ink);
+}
+
+html.atelier.kiosk .components-box {
+    border-top-color: var(--at-line) !important;
+}
+
+/* ==========================================================================
+   חלונות קופצים
+   ========================================================================== */
+
+html.atelier.kiosk .message-overlay,
+html.atelier.kiosk .delete-overlay,
+html.atelier.kiosk .persuasion-overlay {
+    background: rgba(0, 0, 0, 0.45) !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+html.atelier.kiosk .message-popup,
+html.atelier.kiosk .delete-popup,
+html.atelier.kiosk .persuasion-card {
+    background: #fff !important;
+    border-radius: 28px !important;
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.35) !important;
+    animation: kiosk-pop 0.25s ease-out both !important;
+}
+
+html.atelier.kiosk .message-popup h3,
+html.atelier.kiosk .delete-popup h3,
+html.atelier.kiosk .persuasion-card h2 {
+    font-size: 28px;
+}
+
+html.atelier.kiosk .birthday-banner-content {
+    background: #fff;
+    border: 0;
+    border-radius: 28px;
+    outline: 0;
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.35);
+}
+
+html.atelier.kiosk .birthday-text {
+    font-family: var(--at-sans);
+    font-weight: 700;
+}
+
+html.atelier.kiosk .discount-badge {
+    background: var(--k-brand);
+    border-radius: 999px;
+}
+
+html.atelier.kiosk .birthday-close-btn {
+    border-radius: 50%;
+}
+
+/* ==========================================================================
+   ניהול
+   ========================================================================== */
+
+html.atelier.kiosk .admin-tabs button {
+    font-family: var(--at-sans);
+    font-weight: 500;
+}
+
+html.atelier.kiosk .form-wrapper,
+html.atelier.kiosk .step-box {
+    background: #fff;
+    border: 0;
+    border-radius: var(--k-radius);
+    box-shadow: var(--k-shadow);
+}
+
+html.atelier.kiosk .btn {
+    border-radius: 999px;
+}
+
+/* ==========================================================================
+   אנימציות - קצרות ועדינות בלבד
+   ========================================================================== */
+
+@keyframes kiosk-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes kiosk-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes kiosk-pop {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes kiosk-bar-in {
+    from { transform: translateY(100%); }
+    to   { transform: none; }
+}
+
+@keyframes kiosk-skeleton {
+    from { background-position: 100% 0; }
+    to   { background-position: -200% 0; }
+}
+
+@keyframes kiosk-breathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+}
+
+@keyframes kiosk-caption {
+    0%   { opacity: 0; transform: translateY(12px); }
+    12%  { opacity: 1; transform: none; }
+    88%  { opacity: 1; transform: none; }
+    100% { opacity: 0; }
+}
+
+@keyframes kfilm-pan {
+    from { transform: scale(1.45) translate(13%, -7%); }
+    to   { transform: scale(1.45) translate(-13%, -7%); }
+}
+
+@keyframes kfilm-zoom-in {
+    from { transform: scale(1.04); }
+    to   { transform: scale(1.2); }
+}
+
+@keyframes kfilm-zoom-out {
+    from { transform: scale(1.2); }
+    to   { transform: scale(1.04); }
+}
+
+/* ==========================================================================
+   טאבלט לאורך
+   ========================================================================== */
+
+@media (max-width: 900px) {
+    html.atelier.kiosk .clean-main-title {
+        font-size: 46px;
+    }
+
+    html.atelier.kiosk .clean-hero-content {
+        padding: 0 32px;
+    }
+
+    html.atelier.kiosk .kiosk-grid,
+    html.atelier.kiosk .categories-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .order-bar {
+        height: auto;
+        flex-wrap: wrap;
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
+    .order-bar-btn {
+        width: 100%;
+    }
+}
+
+/* ==========================================================================
+   גרסה 2 - צבע מותג חם, גופן עגול ותפריט צד בסגנון עמדות מזון מהיר
+   ========================================================================== */
+
+/* כותרות בגופן עגול וידידותי */
+html.atelier.kiosk h1,
+html.atelier.kiosk h2,
+html.atelier.kiosk h3,
+html.atelier.kiosk .at-page-title,
+html.atelier.kiosk .kiosk-step-title,
+html.atelier.kiosk .kiosk-panel-title,
+html.atelier.kiosk .kiosk-product-summary-name,
+html.atelier.kiosk .auth-card h3,
+html.atelier.kiosk .profile-content h2,
+html.atelier.kiosk .sidebar-title,
+html.atelier.kiosk .favorites-title,
+html.atelier.kiosk .message-popup h3,
+html.atelier.kiosk .delete-popup h3,
+html.atelier.kiosk .persuasion-card h2,
+html.atelier.kiosk .clean-main-title,
+html.atelier.kiosk .order-bar-total,
+html.atelier.kiosk .product-info .price,
+html.atelier.kiosk .kiosk-actual-final-price {
+    font-family: var(--k-display) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+}
+
+/* כפתור ראשי: ורוד תות מלא */
+html.atelier.kiosk .kiosk-btn-next,
+html.atelier.kiosk .kiosk-summary-btn-primary,
+html.atelier.kiosk .kiosk-btn-submit-order,
+html.atelier.kiosk .btn-submit,
+html.atelier.kiosk .btn-add,
+html.atelier.kiosk .btn-reorder-action,
+html.atelier.kiosk .submit-btn,
+html.atelier.kiosk .message-popup button,
+html.atelier.kiosk .persuasion-yes,
+html.atelier.kiosk .order-bar-btn,
+html.atelier.kiosk .clean-btn-luxury-oval {
+    background: var(--k-brand) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 24px -10px rgba(233, 78, 119, 0.7) !important;
+}
+
+html.atelier.kiosk .kiosk-btn-next:hover:not(:disabled),
+html.atelier.kiosk .kiosk-summary-btn-primary:hover,
+html.atelier.kiosk .kiosk-btn-submit-order:hover,
+html.atelier.kiosk .btn-submit:hover {
+    background: var(--k-brand-dark) !important;
+}
+
+html.atelier.kiosk .kiosk-btn-next:disabled,
+html.atelier.kiosk .kiosk-btn-submit-order:disabled {
+    background: #ecdfe3 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn.active,
+html.atelier.kiosk .menu-button.active,
+html.atelier.kiosk .pagination-btn.active {
+    background: var(--k-brand);
+    border-color: var(--k-brand);
+    color: #fff;
+}
+
+html.atelier.kiosk .kiosk-option-card.is-selected {
+    outline-color: var(--k-brand);
+}
+
+html.atelier.kiosk .kiosk-option-card::after,
+html.atelier.kiosk .product-add,
+html.atelier.kiosk .category-info::after {
+    background: var(--k-brand);
+}
+
+html.atelier.kiosk .at-progress-track span.on {
+    background: var(--k-brand);
+}
+
+html.atelier.kiosk .kiosk-summary-quantity-control button,
+html.atelier.kiosk .kiosk-cart-qty-selector button {
+    color: var(--k-brand);
+    border-color: rgba(233, 78, 119, 0.35);
+}
+
+html.atelier.kiosk .kiosk-summary-quantity-control button:active,
+html.atelier.kiosk .kiosk-cart-qty-selector button:active {
+    background: var(--k-brand);
+    border-color: var(--k-brand);
+}
+
+/* סרגל עליון */
+html.atelier.kiosk .topbar {
+    border-bottom: 0;
+    box-shadow: 0 1px 0 var(--at-line), 0 6px 20px -14px rgba(233, 78, 119, 0.35);
+}
+
+html.atelier.kiosk .logo-french {
+    color: var(--k-brand);
+}
+
+html.atelier.kiosk .icon-btn.active,
+html.atelier.kiosk .icon-btn.active svg {
+    color: var(--k-brand) !important;
+}
+
+/* מסך פתיחה */
+html.atelier.kiosk .clean-btn-luxury-oval {
+    padding: 28px 90px !important;
+    font-family: var(--k-display) !important;
+    font-size: 27px !important;
+    font-weight: 600 !important;
+}
+
+html.atelier.kiosk .clean-main-title {
+    font-size: 64px;
+}
+
+html.atelier.kiosk .film-caption-n {
+    color: var(--k-brand);
+}
+
+html.atelier.kiosk .film-caption-name,
+html.atelier.kiosk .film-caption-price {
+    font-family: var(--k-display);
+    font-weight: 600;
+}
+
+html.atelier.kiosk .film-caption-price {
+    color: var(--k-brand);
+}
+
+/* קטגוריות: אריחים בצבעי פסטל */
+html.atelier.kiosk .category-card {
+    padding: 14px 14px 0;
+    background: var(--k-brand-soft);
+    box-shadow: none;
+}
+
+html.atelier.kiosk .category-card:nth-of-type(4n+2) { background: var(--k-pistachio); }
+html.atelier.kiosk .category-card:nth-of-type(4n+3) { background: var(--k-peach); }
+html.atelier.kiosk .category-card:nth-of-type(4n+4) { background: var(--k-lilac); }
+
+html.atelier.kiosk .category-image-wrapper {
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+html.atelier.kiosk .category-info {
+    padding: 18px 6px 20px;
+    background: transparent;
+}
+
+html.atelier.kiosk .category-info h3 {
+    font-size: 30px;
+}
+
+/* עמוד התפריט: סרגל קטגוריות בצד + רשת מוצרים */
+html.atelier.kiosk .kiosk-menu {
+    display: flex;
+    overflow: hidden;
+    padding: 0;
+}
+
+html.atelier.kiosk .kiosk-side {
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 14px;
+    overflow-y: auto;
+    background: #fff;
+    border-left: 1px solid var(--at-line);
+}
+
+html.atelier.kiosk .kiosk-side-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 8px 12px;
+    background: transparent;
+    border: 0;
+    border-radius: 20px;
+    color: var(--at-ink-soft);
+    font-family: var(--k-display);
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.atelier.kiosk .kiosk-side-img,
+html.atelier.kiosk .kiosk-side-icon {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--at-paper-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: var(--k-brand);
+    box-shadow: 0 0 0 3px transparent;
+    transition: box-shadow 0.2s ease;
+}
+
+html.atelier.kiosk .kiosk-side-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+html.atelier.kiosk .kiosk-side-item.active {
+    background: var(--k-brand-soft);
+    color: var(--k-brand-dark);
+    font-weight: 600;
+}
+
+html.atelier.kiosk .kiosk-side-item.active .kiosk-side-img,
+html.atelier.kiosk .kiosk-side-item.active .kiosk-side-icon {
+    box-shadow: 0 0 0 3px var(--k-brand);
+}
+
+html.atelier.kiosk .kiosk-menu .kiosk-grid {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    padding: 30px var(--at-gutter) 40px;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+html.atelier.kiosk .kiosk-cat-tabs,
+html.atelier.kiosk .at-page-lede {
+    display: none;
+}
+
+html.atelier.kiosk .at-page-title {
+    font-size: 40px;
+}
+
+/* כרטיס מוצר */
+html.atelier.kiosk .product-card {
+    padding: 10px 10px 0;
+    box-shadow: var(--k-shadow);
+}
+
+html.atelier.kiosk .product-image {
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+html.atelier.kiosk .product-info {
+    padding: 14px 8px 18px;
+}
+
+html.atelier.kiosk .product-info h3 {
+    font-size: 22px;
+    font-weight: 500 !important;
+}
+
+html.atelier.kiosk .product-info .price {
+    font-size: 24px;
+    color: var(--k-brand);
+}
+
+html.atelier.kiosk .product-add {
+    left: 18px;
+    bottom: 18px;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 8px 18px -8px rgba(233, 78, 119, 0.8);
+}
+
+/* הודעת "נוסף להזמנה" */
+html.atelier.kiosk .kiosk-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 120px;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px 16px 22px;
+    border-radius: 999px;
+    background: var(--at-ink);
+    color: #fff;
+    font-family: var(--at-sans);
+    font-size: 19px;
+    font-weight: 500;
+    box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.45);
+    transform: translateX(-50%);
+    animation: kiosk-toast 1.8s ease both;
+}
+
+html.atelier.kiosk .kiosk-toast-check {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--k-brand);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+@keyframes kiosk-toast {
+    0%   { opacity: 0; transform: translate(-50%, 20px); }
+    12%  { opacity: 1; transform: translate(-50%, 0); }
+    85%  { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, 0); }
+}
+
+/* פס ההזמנה */
+html.atelier.kiosk .order-bar-total {
+    color: var(--k-brand);
+}
+
+html.atelier.kiosk .order-bar-btn {
+    font-family: var(--k-display) !important;
+    font-size: 21px;
+}
+
+/* בניית מנה וסיכום */
+html.atelier.kiosk .kiosk-card-label {
+    font-family: var(--k-display);
+    font-weight: 500;
+}
+
+html.atelier.kiosk .dish-stage-title {
+    font-family: var(--k-display);
+    font-weight: 600;
+}
+
+html.atelier.kiosk .kiosk-summary-hero-image.has-dish,
+html.atelier.kiosk .dish-stage {
+    background: radial-gradient(circle at 50% 55%, #ffffff 0%, #fff4f7 55%, var(--k-brand-soft) 100%);
+}
+
+@media (max-width: 900px) {
+    html.atelier.kiosk .kiosk-side {
+        flex-basis: 140px;
+    }
+
+    html.atelier.kiosk .kiosk-side-img,
+    html.atelier.kiosk .kiosk-side-icon {
+        width: 64px;
+        height: 64px;
+    }
+
+    html.atelier.kiosk .kiosk-menu .kiosk-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 24px 20px 32px;
+    }
+}
+
+/* ==========================================================================
+   גרסה 3 - עגלה ותשלום קבועים ואמיתיים + תנועה ומשחקיות
+   ========================================================================== */
+
+.kiosk-fx-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2147482999;
+}
+
+/* ---------- עמוד העגלה: שתי עמודות קבועות, כל אחת גוללת בעצמה ---------- */
+
+html.atelier.kiosk .kiosk-cart-page-wrapper {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+html.atelier.kiosk .kiosk-cart-main-layout {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    align-items: stretch;
+}
+
+html.atelier.kiosk .kiosk-cart-right-panel {
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* עמודת התשלום לא זזה: הסכום וכפתור התשלום מעוגנים תמיד לתחתית */
+html.atelier.kiosk .kiosk-cart-left-panel {
+    flex: 0 0 470px;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 32px;
+    overflow-y: auto;
+    background: #fff;
+    border-right: 1px solid var(--at-line);
+}
+
+html.atelier.kiosk .kiosk-payment-form {
+    flex: 1;
+    min-height: 100%;
+    gap: 22px;
+}
+
+html.atelier.kiosk .kiosk-credit-card-inputs,
+html.atelier.kiosk .pay-cash-note,
+html.atelier.kiosk .kiosk-paypal-wrapper {
+    animation: kiosk-fade 0.25s ease-out both;
+}
+
+/* כותרת התשלום */
+html.atelier.kiosk .pay-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--at-line);
+}
+
+html.atelier.kiosk .pay-head-title {
+    margin: 0;
+    font-size: 30px;
+}
+
+html.atelier.kiosk .pay-head-secure {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #ecf7ee;
+    color: #2f7a43;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .kiosk-pay-section-title {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--at-ink-mute);
+}
+
+/* בחירות: כרטיסים עם אייקון וסימון */
+html.atelier.kiosk .kiosk-custom-toggle-group {
+    gap: 10px;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn {
+    position: relative;
+    height: auto;
+    min-height: 84px;
+    padding: 12px 8px;
+    flex-direction: column;
+    gap: 6px;
+    background: #fff;
+    border: 2px solid var(--at-line);
+    border-radius: var(--k-radius-sm);
+    color: var(--at-ink);
+    font-size: 16px;
+    font-weight: 500;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.12s ease;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn .pay-ico {
+    display: flex;
+    font-size: 24px;
+    color: var(--at-ink-mute);
+    transition: color 0.2s ease, transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+html.atelier.kiosk .kiosk-toggle-btn.active {
+    background: var(--k-brand-soft);
+    border-color: var(--k-brand);
+    color: var(--at-ink);
+    box-shadow: none !important;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn.active .pay-ico {
+    color: var(--k-brand);
+    transform: scale(1.15);
+}
+
+html.atelier.kiosk .kiosk-toggle-btn.active::after {
+    content: "✓";
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--k-brand);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    animation: kiosk-check-pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+/* שדות כרטיס אשראי - כמו מסוף אמיתי */
+html.atelier.kiosk .kiosk-credit-card-inputs {
+    gap: 10px;
+    padding: 16px;
+    border-radius: var(--k-radius-sm);
+    background: var(--at-paper);
+}
+
+html.atelier.kiosk .kiosk-credit-card-inputs input {
+    height: 56px;
+    background: #fff;
+    border: 1.5px solid var(--at-line-strong);
+    border-radius: 12px;
+    font-size: 18px;
+    letter-spacing: 0.06em;
+    direction: ltr;
+    text-align: right;
+}
+
+html.atelier.kiosk .kiosk-credit-card-inputs input::placeholder {
+    letter-spacing: 0;
+}
+
+html.atelier.kiosk .kiosk-credit-card-inputs input:focus {
+    border-color: var(--k-brand);
+    box-shadow: 0 0 0 4px rgba(233, 78, 119, 0.12);
+}
+
+html.atelier.kiosk .pay-brands {
+    display: flex;
+    gap: 10px;
+    font-size: 34px;
+    color: #9a8f94;
+}
+
+html.atelier.kiosk .pay-cash-note {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: var(--k-radius-sm);
+    background: var(--at-paper);
+    color: var(--at-ink-soft);
+    font-size: 16px;
+    line-height: 1.45;
+}
+
+html.atelier.kiosk .pay-cash-note svg {
+    flex-shrink: 0;
+    font-size: 30px;
+    color: var(--k-brand);
+}
+
+/* קבלה - מעוגנת לתחתית העמודה, ואחריה הסכום והכפתור */
+html.atelier.kiosk .pay-receipt {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px dashed var(--at-line-strong);
+}
+
+html.atelier.kiosk .pay-receipt-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: var(--at-ink-soft);
+}
+
+html.atelier.kiosk .pay-receipt-row.is-discount {
+    color: #2f7a43;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .kiosk-pay-summary-block {
+    margin-top: 0;
+    padding: 14px 0 0;
+    border-top: 0;
+}
+
+html.atelier.kiosk .kiosk-total-text-label {
+    font-size: 22px;
+}
+
+html.atelier.kiosk .kiosk-actual-final-price {
+    font-size: 40px;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .kiosk-btn-submit-order {
+    height: 72px;
+    font-family: var(--k-display) !important;
+    font-size: 22px;
+}
+
+html.atelier.kiosk .kiosk-cart-item-card {
+    animation: kiosk-up 0.3s ease-out both;
+}
+
+/* ---------- תנועה ומשחקיות ---------- */
+
+/* כרטיסים קופצים פנימה יחד, וה-+ מסתובב בלחיצה */
+html.atelier.kiosk .product-card,
+html.atelier.kiosk .category-card {
+    animation: kiosk-pop-in 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both !important;
+}
+
+html.atelier.kiosk .product-add {
+    transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1), background-color 0.2s ease;
+}
+
+html.atelier.kiosk .product-card:active .product-add {
+    transform: rotate(90deg) scale(1.2);
+    background: var(--k-brand-dark);
+}
+
+html.atelier.kiosk .product-image img,
+html.atelier.kiosk .category-image-wrapper img {
+    transition: transform 0.5s cubic-bezier(0.3, 1.2, 0.5, 1);
+}
+
+html.atelier.kiosk .product-card:active .product-image img,
+html.atelier.kiosk .category-card:active .category-image-wrapper img {
+    transform: scale(1.08);
+}
+
+/* תפריט הצד: התמונה של הקטגוריה הנבחרת קופצת */
+html.atelier.kiosk .kiosk-side-item.active .kiosk-side-img,
+html.atelier.kiosk .kiosk-side-item.active .kiosk-side-icon {
+    animation: kiosk-wobble 0.6s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+html.atelier.kiosk .kiosk-side-item:active .kiosk-side-img,
+html.atelier.kiosk .kiosk-side-item:active .kiosk-side-icon {
+    transform: scale(0.92);
+}
+
+/* בניית מנה: תמונה שנבחרה קופצת */
+html.atelier.kiosk .kiosk-option-card.is-selected .kiosk-card-image-wrapper img {
+    animation: kiosk-boing 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+html.atelier.kiosk .kiosk-option-card.is-selected::after {
+    animation: kiosk-check-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+/* פס ההזמנה: המספרים קופצים כשמשהו נוסף */
+html.atelier.kiosk .order-bar-count,
+html.atelier.kiosk .order-bar-total {
+    display: inline-block;
+    animation: kiosk-bump 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* מסך הפתיחה: יד קטנה שמזמינה ללחוץ */
+html.atelier.kiosk .tap-hint {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + 220px);
+    z-index: 2;
+    font-size: 46px;
+    color: #fff;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45));
+    pointer-events: none;
+    animation: kiosk-tap 1.6s ease-in-out infinite;
+}
+
+/* עמודת התשלום צריכה להיכנס במסך אחד בלי גלילה */
+html.atelier.kiosk .kiosk-cart-left-panel {
+    padding: 20px 28px;
+}
+
+html.atelier.kiosk .kiosk-payment-form {
+    gap: 14px;
+}
+
+html.atelier.kiosk .pay-head {
+    padding-bottom: 12px;
+}
+
+html.atelier.kiosk .pay-head-title {
+    font-size: 28px;
+}
+
+html.atelier.kiosk .pay-head-side {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+html.atelier.kiosk .pay-brands {
+    gap: 6px;
+    font-size: 28px;
+}
+
+html.atelier.kiosk .kiosk-pay-section-title {
+    margin-bottom: 8px;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn {
+    min-height: 60px;
+    padding: 8px 6px;
+    flex-direction: row;
+    gap: 7px;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn .pay-ico {
+    font-size: 20px;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn.active::after {
+    top: -8px;
+    left: -8px;
+    width: 22px;
+    height: 22px;
+}
+
+html.atelier.kiosk .kiosk-credit-card-inputs {
+    gap: 8px;
+    padding: 10px;
+}
+
+html.atelier.kiosk .kiosk-card-row-split {
+    gap: 8px;
+}
+
+html.atelier.kiosk .kiosk-credit-card-inputs input {
+    height: 52px;
+}
+
+html.atelier.kiosk .pay-receipt {
+    gap: 6px;
+    padding-top: 12px;
+}
+
+html.atelier.kiosk .kiosk-pay-summary-block {
+    padding-top: 6px;
+}
+
+html.atelier.kiosk .kiosk-actual-final-price {
+    font-size: 36px;
+}
+
+html.atelier.kiosk .kiosk-btn-submit-order {
+    height: 66px;
+}
+
+@keyframes kiosk-pop-in {
+    from { transform: translateY(18px) scale(0.94); }
+    to   { transform: none; }
+}
+
+@keyframes kiosk-wobble {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.14) rotate(-6deg); }
+    65%  { transform: scale(0.97) rotate(3deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes kiosk-boing {
+    0%   { transform: scale(1); }
+    45%  { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes kiosk-check-pop {
+    from { opacity: 0; transform: scale(0.2) rotate(-60deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes kiosk-bump {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.3); color: var(--k-brand); }
+    100% { transform: scale(1); }
+}
+
+@keyframes kiosk-tap {
+    0%, 100% { transform: translate(0, -50%) rotate(-12deg); }
+    50%      { transform: translate(-10px, -38%) rotate(-12deg) scale(0.9); }
+}
+
+@media (max-width: 900px) {
+    html.atelier.kiosk .kiosk-cart-page-wrapper {
+        overflow-y: auto;
+    }
+
+    html.atelier.kiosk .kiosk-cart-main-layout {
+        height: auto;
+    }
+
+    html.atelier.kiosk .kiosk-cart-left-panel {
+        flex-basis: auto;
+        overflow: visible;
+    }
+
+    html.atelier.kiosk .tap-hint {
+        left: auto;
+        right: 48px;
+    }
+}
+
+/* ==========================================================================
+   גרסה 4 - תשלום יציב לגמרי, כרטיסים ממורכזים, אזור אישי אמיתי
+   ========================================================================== */
+
+/* ---------- תשלום: שום דבר לא זז ---------- */
+
+/* האזור שמתחלף (אשראי / מזומן / PayPal) תמיד באותו גובה */
+html.atelier.kiosk .kiosk-credit-card-inputs,
+html.atelier.kiosk .pay-cash-note,
+html.atelier.kiosk .kiosk-paypal-wrapper {
+    box-sizing: border-box;
+    min-height: 132px;
+}
+
+html.atelier.kiosk .kiosk-paypal-wrapper {
+    border: 0;
+    border-radius: var(--k-radius-sm);
+    background: var(--at-paper);
+}
+
+/* פס גלילה לא מופיע ונעלם (זה הזיז את כל העמודה הצידה) */
+html.atelier.kiosk .kiosk-cart-left-panel {
+    scrollbar-gutter: stable;
+    scrollbar-width: none;
+}
+
+html.atelier.kiosk .kiosk-cart-left-panel::-webkit-scrollbar {
+    display: none;
+}
+
+/* בחירות בתשלום לא מתכווצות בלחיצה - רק משנות צבע */
+html.atelier.kiosk .kiosk-toggle-btn:active {
+    transform: none !important;
+}
+
+html.atelier.kiosk .kiosk-toggle-btn.active .pay-ico {
+    transform: none;
+}
+
+/* ---------- כרטיסים ממורכזים ---------- */
+
+html.atelier.kiosk .kiosk-grid,
+html.atelier.kiosk .categories-grid,
+html.atelier.kiosk .kiosk-options-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    align-items: stretch;
+}
+
+html.atelier.kiosk .kiosk-grid > .product-card {
+    flex: 0 0 215px;
+    width: 215px;
+}
+
+html.atelier.kiosk .categories-grid > .category-card {
+    flex: 0 0 280px;
+    width: 280px;
+}
+
+html.atelier.kiosk .kiosk-options-grid > .kiosk-option-card {
+    flex: 0 0 190px;
+    width: 190px;
+}
+
+html.atelier.kiosk .kiosk-grid > .at-page-head,
+html.atelier.kiosk .categories-grid > .at-page-head {
+    flex: 0 0 100%;
+    align-items: center;
+    text-align: center;
+}
+
+html.atelier.kiosk .kiosk-step-container {
+    text-align: center;
+}
+
+/* ---------- אזור אישי ---------- */
+
+html.atelier.kiosk .user-page-container {
+    gap: 28px;
+    padding: 32px 40px 0;
+}
+
+html.atelier.kiosk .side-menu {
+    flex: 0 0 300px;
+    align-self: flex-start;
+    gap: 4px;
+    padding: 20px;
+    background: #fff;
+    border-radius: var(--k-radius);
+    box-shadow: var(--k-shadow);
+}
+
+html.atelier.kiosk .account-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 4px 4px 18px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--at-line);
+}
+
+html.atelier.kiosk .account-avatar {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--k-brand-soft);
+    color: var(--k-brand);
+    font-family: var(--k-display);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+html.atelier.kiosk .account-avatar-lg {
+    width: 88px;
+    height: 88px;
+    font-size: 34px;
+}
+
+html.atelier.kiosk .account-head-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.3;
+}
+
+html.atelier.kiosk .account-head-text strong {
+    font-family: var(--k-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .account-head-text span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    color: var(--at-ink-mute);
+}
+
+html.atelier.kiosk .menu-button {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 14px;
+    border-radius: var(--k-radius-sm);
+    font-family: var(--at-sans);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--at-ink-soft);
+}
+
+html.atelier.kiosk .menu-ico {
+    display: flex;
+    font-size: 19px;
+    color: var(--at-ink-mute);
+}
+
+html.atelier.kiosk .menu-button:hover:not(.active) {
+    background: var(--at-paper);
+}
+
+html.atelier.kiosk .menu-button.active {
+    padding-right: 14px;
+    background: var(--k-brand-soft);
+    border-color: transparent;
+    color: var(--k-brand-dark);
+    font-weight: 600;
+}
+
+html.atelier.kiosk .menu-button.active .menu-ico {
+    color: var(--k-brand);
+}
+
+html.atelier.kiosk .content-display-area {
+    padding-bottom: 32px;
+}
+
+/* אורח: טופס התחברות + כרטיס הטבות זה לצד זה */
+html.atelier.kiosk .content-display-area.is-guest {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+html.atelier.kiosk .content-display-area.is-guest .auth-container {
+    flex: 1 1 440px;
+    max-width: 480px;
+}
+
+html.atelier.kiosk .auth-card {
+    box-sizing: border-box;
+    max-width: none;
+    padding: 32px;
+}
+
+html.atelier.kiosk .auth-perks {
+    box-sizing: border-box;
+}
+
+html.atelier.kiosk .auth-card h3 {
+    margin-bottom: 22px;
+    font-size: 30px;
+}
+
+html.atelier.kiosk .auth-input {
+    height: 58px;
+}
+
+html.atelier.kiosk .btn-submit {
+    height: 62px;
+    margin-top: 6px;
+}
+
+html.atelier.kiosk .btn-switch {
+    color: var(--k-brand-dark);
+    font-weight: 600;
+}
+
+html.atelier.kiosk .auth-perks {
+    flex: 1 1 300px;
+    max-width: 380px;
+    padding: 28px;
+    border-radius: var(--k-radius);
+    background: var(--k-brand-soft);
+}
+
+html.atelier.kiosk .auth-perks h4 {
+    margin: 0 0 18px;
+    font-family: var(--k-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .auth-perks ul {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+html.atelier.kiosk .auth-perks li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+html.atelier.kiosk .auth-perks li div {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+}
+
+html.atelier.kiosk .auth-perks strong {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+html.atelier.kiosk .auth-perks small {
+    font-size: 14px;
+    color: var(--at-ink-soft);
+}
+
+html.atelier.kiosk .perk-ico {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--k-brand);
+    font-size: 20px;
+    box-shadow: 0 6px 14px -8px rgba(233, 78, 119, 0.6);
+}
+
+/* פרופיל */
+html.atelier.kiosk .profile-content {
+    max-width: 620px;
+}
+
+html.atelier.kiosk .profile-content > h2 {
+    display: none;
+}
+
+html.atelier.kiosk .profile-hero {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 16px;
+    padding: 22px;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+}
+
+html.atelier.kiosk .profile-hero-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+html.atelier.kiosk .profile-hero-text strong {
+    font-family: var(--k-display);
+    font-size: 28px;
+    font-weight: 600;
+}
+
+html.atelier.kiosk .profile-hero-text span {
+    align-self: flex-start;
+    margin-top: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--k-brand-soft);
+    color: var(--k-brand-dark);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .profile-details {
+    padding: 4px 22px !important;
+    font-size: 18px;
+}
+
+html.atelier.kiosk .profile-details p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+}
+
+html.atelier.kiosk .profile-details strong {
+    display: inline;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--at-ink-mute);
+}
+
+html.atelier.kiosk .profile-content button {
+    width: 100%;
+    height: 58px;
+    margin-top: 16px;
+    border-color: rgba(214, 47, 79, 0.35) !important;
+    color: var(--at-accent) !important;
+}
+
+/* ההזמנות שלי: סטטוס בצבע */
+html.atelier.kiosk .order-status-badge {
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+html.atelier.kiosk .order-status-badge[data-status="pending"]   { background: #fff4d6; color: #8a6400; }
+html.atelier.kiosk .order-status-badge[data-status="preparing"] { background: #e6efff; color: #2c55b8; }
+html.atelier.kiosk .order-status-badge[data-status="ready"]     { background: #e3f6e8; color: #23784a; }
+html.atelier.kiosk .order-status-badge[data-status="completed"] { background: #efefef; color: #555; }
+html.atelier.kiosk .order-status-badge[data-status="cancelled"] { background: #fde8ea; color: #b42335; }
+
+html.atelier.kiosk .sidebar-title,
+html.atelier.kiosk .favorites-title {
+    margin-bottom: 18px !important;
+    padding-bottom: 0 !important;
+    border-bottom: 0 !important;
+    font-size: 30px !important;
+}
+
+html.atelier.kiosk .order-price {
+    color: var(--k-brand);
+}
+
+@media (max-width: 900px) {
+    html.atelier.kiosk .side-menu {
+        flex-basis: auto;
+        flex-direction: column;
+        align-self: stretch;
+    }
+
+    html.atelier.kiosk .content-display-area.is-guest {
+        flex-direction: column;
+    }
+
+    html.atelier.kiosk .auth-perks {
+        max-width: none;
+    }
+}
+
+/* ==========================================================================
+   גרסה 5 - כפתור תשלום תמיד גלוי, עגלה אמיתית, מספר פריטים בסרגל
+   ========================================================================== */
+
+/* בעיצובים האחרים העטיפה לא קיימת מבחינת הפריסה */
+html:not(.kiosk) .pay-footer {
+    display: contents;
+}
+
+/* פוטר התשלום דבוק לתחתית העמודה - הכפתור לעולם לא נחתך,
+   גם במסך נמוך; רק החלק העליון של העמודה גולל אם צריך */
+html.atelier.kiosk .kiosk-cart-left-panel {
+    padding-bottom: 0;
+}
+
+html.atelier.kiosk .pay-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    padding: 12px 0 20px;
+    background: #fff;
+    box-shadow: 0 -16px 18px -18px rgba(34, 25, 29, 0.25);
+}
+
+html.atelier.kiosk .pay-footer .pay-receipt {
+    margin-top: 0;
+}
+
+html.atelier.kiosk .pay-footer .kiosk-order-submit-wrapper {
+    margin-top: 12px;
+}
+
+/* ---------- העגלה ---------- */
+
+html.atelier.kiosk .kiosk-panel-title-wrapper {
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+html.atelier.kiosk .cart-count {
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--k-brand-soft);
+    color: var(--k-brand-dark);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+html.atelier.kiosk .cart-add-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-inline-start: auto;
+    height: 50px;
+    padding: 0 22px;
+    background: #fff;
+    border: 2px solid rgba(233, 78, 119, 0.35);
+    border-radius: 999px;
+    color: var(--k-brand-dark);
+    font-family: var(--at-sans);
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+html.atelier.kiosk .cart-add-more svg {
+    font-size: 13px;
+}
+
+/* פריט בעגלה: תמונה ממוזערת מימין והפרטים לידה */
+html.atelier.kiosk .kiosk-cart-item-card {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    column-gap: 18px;
+    row-gap: 4px;
+    align-items: start;
+}
+
+html.atelier.kiosk .kiosk-cart-item-card > :not(.cart-thumb) {
+    grid-column: 2;
+}
+
+html.atelier.kiosk .cart-thumb {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    width: 96px;
+    height: 96px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--at-paper-deep);
+}
+
+html.atelier.kiosk .cart-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+html.atelier.kiosk .kiosk-item-actions-row {
+    margin-top: 6px;
+}
+
+/* סל ריק */
+html.atelier.kiosk .kiosk-cart-status.empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 70px 0;
+    text-align: center;
+    color: var(--at-ink-soft);
+}
+
+html.atelier.kiosk .empty-ico {
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--k-brand-soft);
+    color: var(--k-brand);
+    font-size: 40px;
+}
+
+html.atelier.kiosk .empty-cta {
+    height: 58px;
+    padding: 0 44px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--k-brand);
+    color: #fff;
+    font-family: var(--k-display);
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 24px -10px rgba(233, 78, 119, 0.7);
+}
+
+/* מספר הפריטים על אייקון העגלה */
+html.atelier.kiosk .nav-badge {
+    position: absolute;
+    top: 2px;
+    left: calc(50% - 24px);
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: var(--k-brand);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 0 0 2px #fff;
+    animation: kiosk-bump 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* ==========================================================================
+   גרסה 6 - ההזמנות שלי ומועדפים (Components/kiosk/*)
+   ========================================================================== */
+
+.acc-section {
+    max-width: 860px;
+    font-family: var(--at-sans);
+    color: var(--at-ink);
+    animation: kiosk-up 0.3s ease-out both;
+}
+
+.acc-section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.acc-section h2,
+.acc-detail-title h2 {
+    margin: 0;
+    font-family: var(--k-display);
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.acc-chip {
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--k-brand-soft);
+    color: var(--k-brand-dark);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.acc-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 56px;
+    padding: 0 32px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--k-brand);
+    color: #fff;
+    font-family: var(--k-display);
+    font-size: 19px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 22px -12px rgba(233, 78, 119, 0.8);
+}
+
+.acc-btn-sm {
+    height: 46px;
+    padding: 0 20px;
+    font-size: 16px;
+}
+
+.acc-btn-block {
+    width: 100%;
+    height: 50px;
+    font-size: 17px;
+}
+
+.acc-heart {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 2px solid rgba(233, 78, 119, 0.3);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--k-brand);
+    font-size: 19px;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.acc-heart.on {
+    border-color: var(--k-brand);
+    background: var(--k-brand);
+    color: #fff;
+}
+
+.acc-heart:active {
+    transform: scale(1.2) !important;
+}
+
+/* מצב ריק */
+.acc-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 560px;
+    padding: 60px 20px;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+    font-family: var(--at-sans);
+    text-align: center;
+    color: var(--at-ink-mute);
+    font-size: 16px;
+}
+
+.acc-empty strong {
+    font-family: var(--k-display);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+.acc-empty-ico {
+    width: 88px;
+    height: 88px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--k-brand-soft);
+    color: var(--k-brand);
+    font-size: 36px;
+}
+
+.acc-empty .acc-btn-primary {
+    margin-top: 14px;
+}
+
+/* רשימת הזמנות */
+.acc-order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.acc-order-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    padding: 16px 20px 16px 16px;
+    border: 0;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+    font-family: var(--at-sans);
+    color: var(--at-ink);
+    text-align: right;
+    cursor: pointer;
+    transition: transform 0.12s ease;
+}
+
+.acc-thumbs {
+    flex-shrink: 0;
+    display: flex;
+    width: 104px;
+}
+
+.acc-thumbs img,
+.acc-thumb-empty {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 3px solid #fff;
+    background: var(--at-paper-deep);
+    box-shadow: 0 4px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.acc-thumbs img + img {
+    margin-right: -40px;
+}
+
+.acc-thumb-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--k-brand);
+    font-size: 24px;
+}
+
+.acc-order-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.acc-order-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--k-display);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.acc-order-date {
+    font-size: 14px;
+    color: var(--at-ink-mute);
+}
+
+.acc-order-summary {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px;
+    color: var(--at-ink-soft);
+}
+
+.acc-order-total {
+    font-family: var(--k-display);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+.acc-chevron {
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--at-ink-mute);
+}
+
+/* תגית סטטוס */
+.acc-status {
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: #efefef;
+    color: #555;
+    font-family: var(--at-sans);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.acc-status[data-status="pending"]   { background: #fff4d6; color: #8a6400; }
+.acc-status[data-status="preparing"] { background: #e6efff; color: #2c55b8; }
+.acc-status[data-status="ready"]     { background: #e3f6e8; color: #23784a; }
+.acc-status[data-status="cancelled"] { background: #fde8ea; color: #b42335; }
+
+/* פרטי הזמנה */
+.acc-detail-head {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.acc-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 20px;
+    border: 2px solid var(--at-line-strong);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--at-ink);
+    font-family: var(--at-sans);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.acc-detail-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.acc-detail-title > span {
+    font-size: 15px;
+    color: var(--at-ink-mute);
+}
+
+.acc-tracker {
+    display: flex;
+    margin-bottom: 16px;
+    padding: 22px 18px 18px;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+}
+
+.acc-track-step {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--at-ink-mute);
+    font-size: 15px;
+}
+
+/* הקו שמחבר בין השלבים */
+.acc-track-step + .acc-track-step::before {
+    content: "";
+    position: absolute;
+    top: 17px;
+    right: -50%;
+    width: 100%;
+    height: 3px;
+    border-radius: 3px;
+    background: #ece4e6;
+    z-index: 0;
+}
+
+.acc-track-step.done::before,
+.acc-track-step.current::before {
+    background: var(--k-brand) !important;
+}
+
+.acc-track-dot {
+    position: relative;
+    z-index: 1;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ece4e6;
+    color: var(--at-ink-mute);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.acc-track-step.done .acc-track-dot {
+    background: var(--k-brand);
+    color: #fff;
+}
+
+.acc-track-step.current .acc-track-dot {
+    background: var(--k-brand);
+    color: #fff;
+    box-shadow: 0 0 0 6px var(--k-brand-soft);
+    animation: kiosk-bump 0.6s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.acc-track-step.current .acc-track-label {
+    color: var(--k-brand-dark);
+    font-weight: 600;
+}
+
+.acc-cancelled {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 18px 20px;
+    border-radius: var(--k-radius);
+    background: #fde8ea;
+    color: #b42335;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.acc-meta {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.acc-meta > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px 18px;
+    border-radius: var(--k-radius-sm);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+}
+
+.acc-meta span {
+    font-size: 14px;
+    color: var(--at-ink-mute);
+}
+
+.acc-meta strong {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.acc-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.acc-item {
+    display: flex;
+    gap: 18px;
+    padding: 16px;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+}
+
+.acc-item-img {
+    flex-shrink: 0;
+    width: 110px;
+    height: 110px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--at-paper-deep);
+}
+
+.acc-item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.acc-item-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.acc-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.acc-item-top strong {
+    font-family: var(--k-display);
+    font-size: 21px;
+    font-weight: 600;
+}
+
+.acc-item-top small {
+    font-family: var(--at-sans);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--at-ink-mute);
+}
+
+.acc-item-price {
+    font-family: var(--k-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--k-brand);
+}
+
+.acc-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.acc-tag {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--at-paper);
+    font-size: 14px;
+    color: var(--at-ink-soft);
+}
+
+.acc-tag b {
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+.acc-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.acc-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 16px;
+    padding: 18px 22px;
+    border-radius: var(--k-radius);
+    background: var(--at-ink);
+    color: #fff;
+}
+
+.acc-total span {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.acc-total strong {
+    font-family: var(--k-display);
+    font-size: 30px;
+    font-weight: 600;
+}
+
+/* מועדפים */
+.acc-fav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.acc-fav-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--k-radius);
+    background: #fff;
+    box-shadow: var(--k-shadow);
+    animation: kiosk-pop-in 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+.acc-fav-img {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    margin: 10px 10px 0;
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--at-paper-deep);
+}
+
+.acc-fav-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.acc-fav-heart {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-color: #fff;
+    box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.35);
+}
+
+.acc-fav-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 16px 16px;
+}
+
+.acc-fav-details {
+    flex: 1;
+    margin: 0 0 8px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--at-ink-mute);
+}
+
+/* ==========================================================================
+   גרסה 7 - פירוט המנה בתחתית מסך הבנייה
+   ========================================================================== */
+
+html.atelier.kiosk .kiosk-footer-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 14px var(--at-gutter);
+}
+
+html.atelier.kiosk .kiosk-footer-bar .kiosk-nav-buttons {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+    gap: 12px;
+}
+
+html.atelier.kiosk .kiosk-footer-bar .kiosk-btn-next {
+    min-width: 240px;
+    margin-inline-start: 0;
+}
+
+.build-breakdown {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: var(--at-sans);
+}
+
+.bb-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.bb-name {
+    font-family: var(--k-display);
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--at-ink);
+}
+
+.bb-price {
+    font-family: var(--k-display);
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--k-brand);
+}
+
+.bb-chips {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 40px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.bb-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.bb-empty {
+    font-size: 15px;
+    color: var(--at-ink-mute);
+}
+
+.bb-group {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bb-group + .bb-group {
+    padding-right: 14px;
+    border-right: 1px solid var(--at-line-strong);
+}
+
+.bb-step {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--at-ink-mute);
+}
+
+.bb-chip {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 8px 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--k-brand-soft);
+    color: var(--k-brand-dark);
+    font-family: var(--at-sans);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    animation: bb-chip-in 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+.bb-x {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--k-brand);
+    font-size: 15px;
+    line-height: 1;
+}
+
+@keyframes bb-chip-in {
+    from { opacity: 0; transform: scale(0.5); }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (max-width: 900px) {
+    html.atelier.kiosk .kiosk-footer-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    html.atelier.kiosk .kiosk-footer-bar .kiosk-nav-buttons {
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 900px) {
+    .acc-meta {
+        flex-wrap: wrap;
+    }
+
+    .acc-thumbs {
+        width: 72px;
+    }
+
+    .acc-thumbs img + img {
+        display: none;
+    }
+}

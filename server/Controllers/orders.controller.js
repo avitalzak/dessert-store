@@ -3,6 +3,7 @@ import Payment from '../Models/payments.model.js'
 import User from '../Models/users.model.js'
 import ShoppingCart from '../Models/shoppingCart.model.js'
 import Product from '../Models/products.model.js'
+import { nextSequence } from '../Models/counters.model.js'
 
 const OrderController = {
 
@@ -84,7 +85,7 @@ const OrderController = {
 
     addOrder: async (req, res) => {
         const userId = req.user?.userId || req.user?._id || null;
-        const { items, type, method } = req.body;
+        const { items, type, method, tableNumber } = req.body;
 
         try {
             if (!items || items.length === 0) {
@@ -136,11 +137,18 @@ const OrderController = {
                 }
             }
 
+            // מספר הזמנה קצר שמתחיל מ-1 כל יום, כדי שיהיה קל לקרוא ללקוח
+            const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Jerusalem" });
+            const orderNumber = await nextSequence(`orders-${today}`);
+
+            const table = Number(tableNumber);
             const newOrder = new Order({
                 userId,
                 items,
                 totalPrice,
                 type,
+                orderNumber,
+                tableNumber: type === "dine in" && Number.isInteger(table) && table > 0 ? table : undefined,
                 status: "pending"
             });
         

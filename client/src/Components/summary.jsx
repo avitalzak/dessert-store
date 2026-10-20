@@ -5,6 +5,7 @@ import Header from "./header"
 import { addToCart, addToCartServer } from "../redux/Slice/cartSlice"
 import { useState } from "react"
 import "../styles/Summary.css"
+import DishView from "./dish/DishView"
 
 export default function Summary() {
     const dispatch = useDispatch()
@@ -35,12 +36,12 @@ export default function Summary() {
         .filter(group => group.items.length > 0)
 
     
+    const isBuildable = selectedProduct.steps?.length > 0
+
     const baseGroup = groupedComponents[0]
     const extraGroups = groupedComponents.slice(1)
 
     const basePrice = selectedProduct.price || 0
-    
-    const totalPrice = (basePrice) * quantity
 
     
     const fullComponents = Object.entries(selections).flatMap(([stepIndex, items]) => {
@@ -59,7 +60,7 @@ export default function Summary() {
         return {
             productId: selectedProduct._id,
             name: selectedProduct.name || "מנה מורכבת",
-            price: totalPrice,
+            price: basePrice,
             quantity,
             components: fullComponents
         };
@@ -96,8 +97,10 @@ export default function Summary() {
                 <div className="kiosk-summary-container">
                     <h2 className="kiosk-step-title">סיכום המנה שלך</h2>
 
-                    <div className="kiosk-summary-hero-image">
-                        {selectedProduct.image ? (
+                    <div className={`kiosk-summary-hero-image ${isBuildable ? "has-dish" : ""}`}>
+                        {isBuildable ? (
+                            <DishView product={selectedProduct} selections={selections} final />
+                        ) : selectedProduct.image ? (
                             <img src={selectedProduct.image} alt={selectedProduct.name} />
                         ) : (
                             <div className="kiosk-hero-placeholder"></div>

@@ -11,6 +11,8 @@ const Order = mongoose.models.Order || mongoose.model(
           date: { type: Date, default: Date.now },
           status: {type: String, default: "pending"},
           type: {type: String, enum: ["dine in", "takeaway"], default: "dine in"},
+          orderNumber: { type: Number },
+          tableNumber: { type: Number, min: 1 },
           paymentId: {type: mongoose.Schema.Types.ObjectId,ref: 'Payment',required: false}         
 }, {collection:"orders"})
 );

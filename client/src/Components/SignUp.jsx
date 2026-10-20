@@ -42,6 +42,11 @@ export default function SignUp({setActiveSection}) {
             return
         }
 
+        if (password.length < 6) {
+            setError("הסיסמה חייבת להכיל לפחות 6 תווים")
+            return
+        }
+
         // ולדיציה: בדיקה שתאריך הלידה אינו עתידי
         if (birthDate > getTodayDate()) {
             setError("תאריך הלידה אינו יכול להיות בעתיד")

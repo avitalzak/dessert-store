@@ -108,11 +108,14 @@ const UserController = {
                 return res.status(404).json({message: "User not found"})
             }
     
-            findUser.firstName = firstName
-            findUser.lastName = lastName
-            findUser.email = email
+            if (firstName !== undefined) findUser.firstName = firstName
+            if (lastName !== undefined) findUser.lastName = lastName
+            if (email !== undefined) findUser.email = email
 
             if (password) {
+                if (password.length < 6) {
+                    return res.status(400).json({ message: "הסיסמה חייבת להכיל לפחות 6 תווים" })
+                }
                 findUser.password = await bcrypt.hash(password, 10)
             }
 
@@ -121,7 +124,7 @@ const UserController = {
                 findUser.role = role
             }
 
-            findUser.birthDate = birthDate
+            if (birthDate !== undefined) findUser.birthDate = birthDate
             
             await findUser.save()
     
@@ -156,13 +159,13 @@ const UserController = {
             const user = await User.findOne({ email })
 
             if (!user) {
-                return res.status(400).json({ message: "משתשמ לא נמצא "})
+                return res.status(400).json({ message: "האימייל או הסיסמה אינם נכונים" })
             }
 
             const isMatch = await bcrypt.compare(password, user.password)
 
             if (!isMatch) {
-                return res.status(400).json({ message: "סיסמא שגויה" })
+                return res.status(400).json({ message: "האימייל או הסיסמה אינם נכונים" })
             }
 
             const token = jwt.sign(
@@ -191,6 +194,14 @@ const UserController = {
     register: async (req, res) => {
         
         const { firstName, lastName, email, password, birthDate } = req.body
+
+        if (!firstName || !lastName || !email || !password) {
+            return res.status(400).json({ message: "יש למלא את כל השדות" })
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ message: "הסיסמה חייבת להכיל לפחות 6 תווים" })
+        }
 
         try {
             const existingUser = await User.findOne({ email })

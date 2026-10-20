@@ -1,16 +1,17 @@
 import axios from "axios";
 import api from "./token";
+import { API_URL } from "./config";
 
 
 export const getProducts = () => {
-    return axios.get(`http://localhost:1234/products`)
+    return axios.get(`${API_URL}/products`)
 }
 
 export const addProduct = (productData) => {
-    return api.post(`http://localhost:1234/products/addProduct`, productData)
+    return api.post(`${API_URL}/products/addProduct`, productData)
 }
 
 export const deleteProduct = (id) => {
-    return api.delete(`http://localhost:1234/products/deleteProduct/${id}`)
+    return api.delete(`${API_URL}/products/deleteProduct/${id}`)
 }
 

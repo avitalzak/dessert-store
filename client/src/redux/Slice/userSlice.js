@@ -12,7 +12,7 @@ export const LoginUser = createAsyncThunk(
             return response.data.user
         }
         catch(error) {
-            return rejectWithValue(error.message)
+            return rejectWithValue(error.response?.data?.message || error.message)
         }
     }
 )
@@ -76,7 +76,8 @@ const initialState = {
     user: null,
     usersList: [],
     isSignIn: false,
-    loading: true,
+    // טוען רק אם יש טוקן לאמת; לאורח אין מה לחכות
+    loading: !!localStorage.getItem("jwtToken"),
     error: null,
     success: false
 }
@@ -100,7 +101,7 @@ const userSlice = createSlice ({
     extraReducers: (builder) => {
     builder
         .addMatcher(
-                (action) => action.type.endsWith('/pending'),
+                (action) => action.type.startsWith('user/') && action.type.endsWith('/pending'),
                 (state) => {
                     state.loading = true;
                     state.error = null;
@@ -108,7 +109,7 @@ const userSlice = createSlice ({
             )
             // 2. טיפול גנרי ב-Rejected (כל שגיאה)
             .addMatcher(
-                (action) => action.type.endsWith('/rejected'),
+                (action) => action.type.startsWith('user/') && action.type.endsWith('/rejected'),
                 (state, action) => {
                     state.loading = false;
                     state.error = action.payload;
@@ -121,7 +122,7 @@ const userSlice = createSlice ({
                 }
             )
             .addMatcher(
-                (action) => action.type.endsWith('/fulfilled'),
+                (action) => action.type.startsWith('user/') && action.type.endsWith('/fulfilled'),
                 (state, action) => {
                     state.loading = false;
                     

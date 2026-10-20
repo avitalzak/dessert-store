@@ -5,6 +5,9 @@ import { addToFavorites, removeFromFavorites } from "../redux/Slice/favoritesSli
 import { addToCartLogic } from "../Services/AddToCart"
 import { groupComponentsByStep } from "../Services/GroupComponentByStep"
 import "../styles/Order.css"
+import { isTheme } from "../theme/theme"
+import { useProductImage } from "../Services/useProductImage"
+import KioskOrderDetails from "./kiosk/KioskOrderDetails"
 
 export default function OrderCard({ order: orderProp, onBack }) {
     const dispatch = useDispatch()
@@ -13,6 +16,7 @@ export default function OrderCard({ order: orderProp, onBack }) {
     const location = useLocation()
     const favorites = useSelector(state => state.favorites.favorites)
     const { ordersList } = useSelector(state => state.orders)
+    const getImage = useProductImage()
 
     // סדר עדיפויות למקור ה-order:
     // 1. הגיע כ-prop (שימוש ישיר בקומפוננטה)
@@ -51,6 +55,19 @@ export default function OrderCard({ order: orderProp, onBack }) {
     }
 
     if (!order) return <p>לא נמצאה הזמנה</p>
+
+    if (isTheme("kiosk")) {
+        return (
+            <KioskOrderDetails
+                order={order}
+                onBack={onBack || (() => navigate(-1))}
+                getImage={getImage}
+                isFavorite={isFavorite}
+                onReorder={handleReorder}
+                onToggleFavorite={handleToggleFavorite}
+            />
+        )
+    }
 
 
     return (

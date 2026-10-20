@@ -32,6 +32,10 @@ import { FaGear } from 'react-icons/fa6';
 import HelpButton from './Components/Help';
 import { fetchCartFromServer } from './redux/Slice/cartSlice';
 import ProductsPage from './Pages/ProductsPage';
+import OrderBar from './Components/OrderBar';
+import { isTheme } from './theme/theme';
+import IdleReset from './Components/kiosk/IdleReset';
+import { isTabletView } from './device/device';
 
 
 
@@ -45,12 +49,16 @@ function App() {
     useEffect(() => {
         const token = localStorage.getItem("jwtToken")
         if (token) {
+            // טוענים את העגלה מהשרת רק אחרי שהטוקן אומת
             dispatch(fetchCurrentUser())
-            //dispatch(fetchCartFromServer())
+                .unwrap()
+                .then(() => dispatch(fetchCartFromServer()))
+                .catch(() => {})
         }
     }, [dispatch])
 
     const user = useSelector(state => state.user.user)
+    const cartCount = useSelector(state => (state.cart.items || []).reduce((sum, item) => sum + (item.quantity || 1), 0))
   
     return(
     <>
@@ -60,13 +68,14 @@ function App() {
             
             <div className="topbar-right">
        
-              <NavLink to="/" className="icon-btn">
+              <NavLink to="/" end className="icon-btn">
                 <FaHome />
                 <span>בית</span>
               </NavLink>
 
               <NavLink to="/shoppingcart" className="icon-btn">
                 <FaShoppingCart />
+                {cartCount > 0 && <span className="nav-badge kiosk-only" key={cartCount}>{cartCount}</span>}
                 <span>עגלה</span>
               </NavLink>
   
@@ -90,6 +99,7 @@ function App() {
 
           <div className="logo-french">
             LA CRÉATION DÉLICIEUSE
+            <span className="logo-tagline atelier-only">Pâtisserie · Glacier</span>
           </div>
           
         </header>
@@ -123,6 +133,9 @@ function App() {
               <Route path="/admin" element={<AdminRoute><Admin/></AdminRoute>}/> 
           </Routes>
         </div>
+
+        {isTheme("kiosk") && <OrderBar/>}
+        {isTabletView && <IdleReset/>}
     </>
     )
               

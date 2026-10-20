@@ -51,7 +51,7 @@ export default function OrdersManager() {
                                 onClick={() => toggleExpand(order._id)}
                                 style={{ cursor: 'pointer' }}
                             >
-                                <td>{order._id}</td>
+                                <td>{order.orderNumber ? `#${order.orderNumber}` : order._id}{order.tableNumber ? ` · שולחן ${order.tableNumber}` : ""}</td>
                                 <td>{order.customerName}</td>
                                 <td>
                                     {order.items && order.items.map((item, index) => (

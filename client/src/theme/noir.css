@@ -1,0 +1,916 @@
+/* ==========================================================================
+   NOIR — שוקולד וזהב קולנועי
+   --------------------------------------------------------------------------
+   נבנה מעל ערכת atelier (ה-<html> מקבל גם "atelier" וגם "noir"),
+   ומחליף לה את הצבעים ומוסיף זוהר, זהב מנצנץ, תנועה ותלת-ממד.
+   האפקטים החיים (אבק זהב, ניצוצות, הטיה) נמצאים ב-effects.js.
+   ========================================================================== */
+
+html:not(.noir) .noir-only {
+    display: none !important;
+}
+
+html.atelier.noir {
+    --at-paper: #130b07;
+    --at-paper-deep: #26180f;
+    --at-card: #1c120c;
+    --at-ink: #f4e7d0;
+    --at-ink-soft: #d2bc9b;
+    --at-ink-mute: #957f66;
+    --at-line: rgba(216, 173, 98, 0.16);
+    --at-line-strong: rgba(216, 173, 98, 0.42);
+    --at-accent: #ea5b72;
+    --at-brass: #d8ad62;
+    --at-cream: #f4e7d0;
+
+    --nr-gold: #d8ad62;
+    --nr-gold-hi: #f7e2a8;
+    --nr-dark: #1a0f08;
+    --nr-gold-grad: linear-gradient(110deg,
+        #9c7432 0%, #e9c77e 20%, #fff3cf 30%, #d8ad62 44%,
+        #a57b36 60%, #f2d590 78%, #b88b44 100%);
+
+    color-scheme: dark;
+}
+
+/* ==========================================================================
+   בסיס: רקע עמוק עם הילות אור נודדות
+   ========================================================================== */
+
+html.atelier.noir body {
+    background:
+        radial-gradient(ellipse 120% 70% at 50% -10%, #2c1b10 0%, rgba(19, 11, 7, 0) 60%),
+        #130b07;
+}
+
+html.atelier.noir body::before {
+    content: "";
+    position: fixed;
+    inset: -20%;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(38% 32% at 82% 18%, rgba(216, 173, 98, 0.14), transparent 70%),
+        radial-gradient(34% 30% at 12% 88%, rgba(234, 91, 114, 0.11), transparent 70%),
+        radial-gradient(30% 26% at 30% 30%, rgba(160, 110, 60, 0.10), transparent 70%);
+    animation: noir-drift 26s ease-in-out infinite alternate;
+}
+
+html.atelier.noir #root {
+    position: relative;
+    z-index: 1;
+}
+
+/* גרעיניות בהירה במקום הכהה (על רקע כהה) */
+html.atelier.noir body::after {
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .92  0 0 0 0 .8  0 0 0 .8 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+html.atelier.noir ::selection {
+    background: var(--nr-gold);
+    color: var(--nr-dark);
+}
+
+/* שכבת האפקטים החיים וגלי המגע */
+.noir-fx-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2147482999;
+}
+
+.noir-ripple {
+    position: fixed;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(247, 226, 168, 0.9);
+    box-shadow: 0 0 18px rgba(216, 173, 98, 0.6);
+    pointer-events: none;
+    z-index: 2147483001;
+    animation: noir-ripple 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+/* מעבר עמודים קולנועי: טשטוש שמתבהר */
+html.atelier.noir .page-content > * {
+    animation: noir-enter 0.85s cubic-bezier(0.2, 0.7, 0, 1) both;
+}
+
+/* טקסט זהב מנצנץ */
+html.atelier.noir .logo-french,
+html.atelier.noir .clean-title-brand,
+html.atelier.noir .kiosk-product-summary-name,
+html.atelier.noir .kiosk-actual-final-price,
+html.atelier.noir .product-info .price,
+html.atelier.noir .kiosk-item-price,
+html.atelier.noir .order-price,
+html.atelier.noir .category-card::before,
+html.atelier.noir .at-progress-count {
+    background: var(--nr-gold-grad);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: noir-shimmer 7s linear infinite;
+}
+
+html.atelier.noir .at-eyebrow {
+    color: var(--nr-gold);
+}
+
+html.atelier.noir .at-page-title,
+html.atelier.noir .kiosk-step-title,
+html.atelier.noir .kiosk-panel-title,
+html.atelier.noir .auth-card h3,
+html.atelier.noir .profile-content h2,
+html.atelier.noir .sidebar-title,
+html.atelier.noir .favorites-title {
+    text-shadow: 0 0 40px rgba(216, 173, 98, 0.18);
+}
+
+html.atelier.noir .at-page-head,
+html.atelier.noir .kiosk-panel-title-wrapper,
+html.atelier.noir .kiosk-pay-summary-block,
+html.atelier.noir .kiosk-summary-bill-list,
+html.atelier.noir .profile-details,
+html.atelier.noir .sidebar-title,
+html.atelier.noir .order-footer-summary-grid {
+    border-color: var(--at-line-strong) !important;
+}
+
+/* ==========================================================================
+   כפתורי זהב עם הבזק אור
+   ========================================================================== */
+
+html.atelier.noir .clean-btn-luxury-oval,
+html.atelier.noir .kiosk-btn-next,
+html.atelier.noir .kiosk-summary-btn-primary,
+html.atelier.noir .kiosk-btn-submit-order,
+html.atelier.noir .btn-submit,
+html.atelier.noir .btn-add,
+html.atelier.noir .btn-reorder-action,
+html.atelier.noir .submit-btn,
+html.atelier.noir .message-popup button,
+html.atelier.noir .persuasion-yes,
+html.atelier.noir .kiosk-toggle-btn.active {
+    position: relative;
+    overflow: hidden;
+    background: var(--nr-gold-grad) !important;
+    background-size: 200% 100% !important;
+    color: var(--nr-dark) !important;
+    border: 0 !important;
+    box-shadow:
+        0 14px 34px -12px rgba(216, 173, 98, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+    animation: noir-shimmer 9s linear infinite;
+}
+
+html.atelier.noir .clean-btn-luxury-oval::before,
+html.atelier.noir .kiosk-btn-next::before,
+html.atelier.noir .kiosk-summary-btn-primary::before,
+html.atelier.noir .kiosk-btn-submit-order::before,
+html.atelier.noir .btn-submit::before,
+html.atelier.noir .persuasion-yes::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: skewX(-20deg);
+    animation: noir-shine 3.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+html.atelier.noir .kiosk-btn-next:disabled,
+html.atelier.noir .kiosk-btn-submit-order:disabled {
+    background: var(--at-paper-deep) !important;
+    color: var(--at-ink-mute) !important;
+    box-shadow: inset 0 0 0 1px var(--at-line) !important;
+    animation: none;
+}
+
+html.atelier.noir .kiosk-btn-next:disabled::before,
+html.atelier.noir .kiosk-btn-submit-order:disabled::before {
+    display: none;
+}
+
+/* כפתורי מסגרת משניים */
+html.atelier.noir .kiosk-btn-back,
+html.atelier.noir .kiosk-summary-btn-secondary,
+html.atelier.noir .kiosk-toggle-btn,
+html.atelier.noir .delete-cancel,
+html.atelier.noir .persuasion-no,
+html.atelier.noir .btn-remove,
+html.atelier.noir .btn-back,
+html.atelier.noir .profile-content button,
+html.atelier.noir .pagination-btn,
+html.atelier.noir .kiosk-summary-quantity-control button,
+html.atelier.noir .kiosk-cart-qty-selector button {
+    border-color: var(--at-line-strong) !important;
+    color: var(--at-ink) !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+html.atelier.noir .kiosk-btn-back:active,
+html.atelier.noir .kiosk-summary-btn-secondary:active,
+html.atelier.noir .kiosk-toggle-btn:active,
+html.atelier.noir .kiosk-summary-quantity-control button:active,
+html.atelier.noir .kiosk-cart-qty-selector button:active {
+    background: rgba(216, 173, 98, 0.14) !important;
+    color: var(--nr-gold-hi) !important;
+    border-color: var(--nr-gold) !important;
+    box-shadow: 0 0 24px rgba(216, 173, 98, 0.3);
+}
+
+html.atelier.noir .pagination-btn.active {
+    background: var(--nr-gold-grad) !important;
+    color: var(--nr-dark) !important;
+    border-color: transparent !important;
+}
+
+/* ==========================================================================
+   סרגל עליון - זכוכית כהה
+   ========================================================================== */
+
+html.atelier.noir .topbar {
+    background: rgba(19, 11, 7, 0.78);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.2);
+    border-bottom: 1px solid var(--at-line);
+}
+
+html.atelier.noir .icon-btn::after {
+    background: var(--nr-gold);
+    box-shadow: 0 0 10px var(--nr-gold);
+}
+
+html.atelier.noir .icon-btn.active,
+html.atelier.noir .icon-btn.active svg {
+    color: var(--nr-gold-hi) !important;
+}
+
+html.atelier.noir .help-fab-btn {
+    border-color: var(--at-line-strong) !important;
+    color: var(--at-ink) !important;
+}
+
+html.atelier.noir .help-fab-done,
+html.atelier.noir .help-fab-btn:active {
+    background: var(--nr-gold-grad) !important;
+    color: var(--nr-dark) !important;
+    border-color: transparent !important;
+}
+
+/* ==========================================================================
+   דף הבית - קולנועי
+   ========================================================================== */
+
+html.atelier.noir .clean-fullscreen-container {
+    background: #0d0705 !important;
+}
+
+html.atelier.noir .clean-hero-slide {
+    filter: saturate(1.12) contrast(1.06) brightness(1.02);
+}
+
+html.atelier.noir .clean-hero-color-overlay {
+    background:
+        radial-gradient(ellipse 75% 85% at 62% 38%, rgba(13, 7, 5, 0) 0%, rgba(13, 7, 5, 0.5) 55%, rgba(13, 7, 5, 0.94) 100%),
+        linear-gradient(to top, rgba(13, 7, 5, 0.97) 0%, rgba(13, 7, 5, 0.55) 40%, rgba(13, 7, 5, 0) 70%);
+}
+
+html.atelier.noir .clean-fullscreen-hero::after {
+    inset: 22px 22px 74px;
+    border-color: rgba(216, 173, 98, 0.38);
+    box-shadow: inset 0 0 120px rgba(216, 173, 98, 0.06);
+}
+
+html.atelier.noir .clean-hero-content {
+    bottom: 270px;
+    max-width: 880px;
+}
+
+html.atelier.noir .clean-hero-content .at-eyebrow {
+    color: var(--nr-gold-hi);
+    animation: noir-reveal 1.2s 0.1s cubic-bezier(0.2, 0.7, 0, 1) both;
+}
+
+html.atelier.noir .clean-main-title {
+    font-size: 74px;
+    color: #fff6e6;
+    text-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+    animation: noir-reveal 1.4s 0.25s cubic-bezier(0.2, 0.7, 0, 1) both;
+}
+
+html.atelier.noir .clean-title-brand {
+    margin-top: 14px;
+    font-size: 0.78em;
+    letter-spacing: 0.06em;
+    text-shadow: none;
+    filter: drop-shadow(0 4px 24px rgba(216, 173, 98, 0.35));
+}
+
+html.atelier.noir .clean-subtitle {
+    color: rgba(244, 231, 208, 0.8);
+    animation: noir-reveal 1.2s 0.45s cubic-bezier(0.2, 0.7, 0, 1) both;
+}
+
+html.atelier.noir .promo-circles-container {
+    bottom: 124px;
+    border-top-color: rgba(216, 173, 98, 0.4);
+}
+
+html.atelier.noir .promo-circle::before {
+    color: var(--nr-gold-hi);
+}
+
+html.atelier.noir .circle-icon {
+    color: var(--nr-gold);
+}
+
+html.atelier.noir .clean-footer-action {
+    bottom: 112px !important;
+}
+
+/* טבעת זהב שפועמת סביב כפתור ההתחלה */
+html.atelier.noir .clean-footer-action::before,
+html.atelier.noir .clean-footer-action::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid var(--nr-gold);
+    border-radius: 2px;
+    pointer-events: none;
+    animation: noir-ring 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) infinite;
+}
+
+html.atelier.noir .clean-footer-action::after {
+    animation-delay: 1.2s;
+}
+
+html.atelier.noir .clean-btn-luxury-oval {
+    padding: 28px 52px !important;
+    font-size: 23px !important;
+    font-weight: 700 !important;
+}
+
+/* חותמת מסתובבת */
+html.atelier.noir .noir-badge {
+    position: absolute;
+    top: 58px;
+    left: 64px;
+    width: 172px;
+    height: 172px;
+    z-index: 6;
+    direction: ltr;
+    unicode-bidi: isolate;
+    animation: noir-spin 32s linear infinite, noir-fade-in 1.6s 0.6s ease both;
+    filter: drop-shadow(0 0 18px rgba(216, 173, 98, 0.35));
+}
+
+html.atelier.noir .noir-badge-ring {
+    font-family: var(--at-french);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    fill: var(--nr-gold-hi);
+}
+
+html.atelier.noir .noir-badge-mark {
+    font-family: var(--at-french);
+    font-style: italic;
+    font-size: 46px;
+    font-weight: 500;
+    fill: var(--nr-gold);
+}
+
+/* פס מתגלגל בתחתית */
+html.atelier.noir .noir-marquee {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 52px;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    direction: ltr;
+    background: linear-gradient(90deg, #1a0f08, #241509, #1a0f08);
+    border-top: 1px solid rgba(216, 173, 98, 0.35);
+}
+
+html.atelier.noir .noir-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: noir-marquee 38s linear infinite;
+}
+
+html.atelier.noir .noir-marquee-track span {
+    white-space: nowrap;
+    font-family: var(--at-french);
+    font-style: italic;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    color: var(--nr-gold);
+}
+
+/* ==========================================================================
+   כרטיסים בתלת-ממד (קטגוריות, מוצרים, אופציות)
+   ========================================================================== */
+
+html.atelier.noir .category-card,
+html.atelier.noir .product-card,
+html.atelier.noir .kiosk-option-card {
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+    animation-name: noir-flip;
+    animation-duration: 1s;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0, 1);
+    animation-fill-mode: backwards;
+}
+
+html.atelier.noir .category-card.is-tilting,
+html.atelier.noir .product-card.is-tilting,
+html.atelier.noir .kiosk-option-card.is-tilting {
+    transition: transform 0.12s linear, box-shadow 0.3s ease;
+}
+
+/* קטגוריות */
+html.atelier.noir .category-card {
+    box-shadow:
+        0 0 0 1px var(--at-line-strong),
+        0 30px 60px -28px rgba(0, 0, 0, 0.9);
+}
+
+html.atelier.noir .category-card.is-tilting {
+    box-shadow:
+        0 0 0 1px var(--nr-gold),
+        0 40px 80px -30px rgba(0, 0, 0, 0.95),
+        0 0 50px rgba(216, 173, 98, 0.28);
+}
+
+html.atelier.noir .category-card::after,
+html.atelier.noir .product-image::after,
+html.atelier.noir .kiosk-card-image-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255, 236, 190, 0.38), transparent 55%);
+    mix-blend-mode: overlay;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+html.atelier.noir .category-card.is-tilting::after,
+html.atelier.noir .product-card.is-tilting .product-image::after,
+html.atelier.noir .kiosk-option-card.is-tilting .kiosk-card-image-wrapper::after {
+    opacity: 1;
+}
+
+html.atelier.noir .category-card::before {
+    font-size: 34px;
+    top: 16px;
+}
+
+html.atelier.noir .category-info {
+    background: linear-gradient(to top, rgba(13, 7, 5, 0.95), rgba(13, 7, 5, 0));
+}
+
+html.atelier.noir .category-info::after {
+    color: var(--nr-gold);
+    opacity: 1;
+}
+
+html.atelier.noir .category-info h3 {
+    font-size: 34px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* מוצרים */
+html.atelier.noir .product-image {
+    position: relative;
+    box-shadow:
+        0 0 0 1px var(--at-line-strong),
+        0 30px 60px -28px rgba(0, 0, 0, 0.9);
+    transition: box-shadow 0.4s ease;
+}
+
+html.atelier.noir .product-card.is-tilting .product-image {
+    box-shadow:
+        0 0 0 1px var(--nr-gold),
+        0 40px 80px -30px rgba(0, 0, 0, 0.95),
+        0 0 50px rgba(216, 173, 98, 0.28);
+}
+
+html.atelier.noir .product-info .price {
+    font-size: 28px;
+}
+
+/* ==========================================================================
+   בניית מנה - זרקור על מה שנבחר
+   ========================================================================== */
+
+html.atelier.noir .kiosk-builder-wrapper {
+    background: transparent;
+}
+
+html.atelier.noir .at-progress-track span {
+    background: rgba(216, 173, 98, 0.14);
+}
+
+html.atelier.noir .at-progress-track span.on {
+    background: var(--nr-gold-grad);
+    box-shadow: 0 0 12px rgba(216, 173, 98, 0.55);
+}
+
+html.atelier.noir .kiosk-step-title {
+    font-size: 58px;
+}
+
+html.atelier.noir .kiosk-option-card {
+    background: var(--at-card);
+    border-color: var(--at-line);
+}
+
+html.atelier.noir .kiosk-card-image-wrapper {
+    position: relative;
+}
+
+html.atelier.noir .kiosk-card-image-wrapper img {
+    filter: brightness(0.78) saturate(0.9);
+    transition: transform 0.8s var(--at-ease), filter 0.5s ease;
+}
+
+html.atelier.noir .kiosk-option-card.is-selected {
+    border-color: var(--nr-gold);
+    box-shadow: 0 0 0 1.5px var(--nr-gold), 0 0 40px rgba(216, 173, 98, 0.4);
+}
+
+/* זוהר פנימי פועם - על שכבה נפרדת כדי לא לדרוס את אנימציית הכניסה של הכרטיס */
+html.atelier.noir .kiosk-option-card.is-selected::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    animation: noir-glow 2.2s ease-in-out infinite alternate;
+}
+
+html.atelier.noir .kiosk-option-card.is-selected .kiosk-card-image-wrapper img {
+    filter: brightness(1.06) saturate(1.15);
+    transform: scale(1.07);
+}
+
+html.atelier.noir .kiosk-card-footer {
+    background: var(--at-card);
+}
+
+html.atelier.noir .kiosk-option-card.is-selected .kiosk-card-footer {
+    background: var(--nr-gold-grad);
+    background-size: 200% 100%;
+}
+
+html.atelier.noir .kiosk-option-card.is-selected .kiosk-card-label {
+    color: var(--nr-dark);
+    font-weight: 500;
+}
+
+html.atelier.noir .kiosk-option-card::after {
+    background: var(--nr-gold-grad);
+    color: var(--nr-dark);
+    box-shadow: 0 0 20px rgba(216, 173, 98, 0.7);
+}
+
+html.atelier.noir .kiosk-option-card.is-selected::after {
+    animation: noir-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+html.atelier.noir .kiosk-footer-bar {
+    background: rgba(19, 11, 7, 0.82);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top-color: var(--at-line);
+}
+
+html.atelier.noir .kiosk-btn-next:hover:not(:disabled),
+html.atelier.noir .kiosk-summary-btn-primary:hover,
+html.atelier.noir .kiosk-btn-submit-order:hover,
+html.atelier.noir .btn-submit:hover {
+    background: var(--nr-gold-grad) !important;
+    background-size: 200% 100% !important;
+}
+
+/* במת התצוגה החיה של המנה - צלחת תחת זרקור זהב */
+html.atelier.noir .dish-stage,
+html.atelier.noir .kiosk-summary-hero-image.has-dish {
+    background:
+        radial-gradient(circle at 50% 56%, rgba(247, 226, 168, 0.26) 0%, rgba(216, 173, 98, 0.1) 32%, rgba(38, 24, 15, 0) 62%),
+        linear-gradient(180deg, #24170f, #150d08);
+    border: 1px solid var(--at-line-strong);
+    border-radius: 2px;
+    box-shadow:
+        0 40px 80px -40px rgba(0, 0, 0, 0.95),
+        0 0 70px rgba(216, 173, 98, 0.12);
+}
+
+html.atelier.noir .dish-stage-title {
+    font-family: var(--at-serif);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--nr-gold);
+}
+
+html.atelier.noir .dish-stage-hint {
+    color: var(--at-ink-mute);
+}
+
+html.atelier.noir .dish-chip {
+    background: rgba(216, 173, 98, 0.1);
+    border-color: var(--at-line-strong);
+    color: var(--at-ink);
+}
+
+html.atelier.noir .dish-chip button {
+    background: rgba(216, 173, 98, 0.2);
+    color: var(--nr-gold-hi);
+}
+
+/* ==========================================================================
+   סיכום מנה
+   ========================================================================== */
+
+html.atelier.noir .kiosk-summary-hero-image {
+    box-shadow:
+        0 0 0 1px var(--at-line-strong),
+        0 50px 90px -40px rgba(0, 0, 0, 0.95),
+        0 0 90px rgba(216, 173, 98, 0.16);
+    animation: noir-float 6s ease-in-out infinite;
+}
+
+html.atelier.noir .kiosk-product-summary-name {
+    font-size: 62px;
+    padding-bottom: 6px;
+}
+
+html.atelier.noir .kiosk-summary-bill-row::before {
+    border-bottom-color: rgba(216, 173, 98, 0.35);
+}
+
+html.atelier.noir .kiosk-summary-btn-danger {
+    color: var(--at-accent);
+}
+
+/* ==========================================================================
+   עגלה ותשלום
+   ========================================================================== */
+
+html.atelier.noir .kiosk-cart-page-wrapper {
+    background: transparent;
+}
+
+html.atelier.noir .kiosk-cart-left-panel {
+    background: linear-gradient(180deg, rgba(38, 24, 15, 0.85), rgba(28, 18, 12, 0.85));
+    border-right: 1px solid var(--at-line-strong);
+    box-shadow: -30px 0 80px -40px rgba(0, 0, 0, 0.8);
+}
+
+html.atelier.noir .kiosk-actual-final-price {
+    font-size: 64px;
+    filter: drop-shadow(0 4px 24px rgba(216, 173, 98, 0.3));
+}
+
+html.atelier.noir .kiosk-credit-card-inputs input,
+html.atelier.noir .auth-input,
+html.atelier.noir .input-field,
+html.atelier.noir .file-upload-btn,
+html.atelier.noir .users-table select {
+    background: rgba(13, 7, 5, 0.6);
+    border-color: var(--at-line-strong);
+    color: var(--at-ink);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+html.atelier.noir .kiosk-credit-card-inputs input:focus,
+html.atelier.noir .auth-input:focus,
+html.atelier.noir .input-field:focus {
+    background: rgba(13, 7, 5, 0.85);
+    border-color: var(--nr-gold);
+    box-shadow: 0 0 0 4px rgba(216, 173, 98, 0.14), 0 0 30px rgba(216, 173, 98, 0.15);
+}
+
+html.atelier.noir .kiosk-cart-item-card,
+html.atelier.noir .order-summary-card {
+    transition: background-color 0.3s ease;
+}
+
+/* ==========================================================================
+   אזור אישי, הזמנות, מועדפים
+   ========================================================================== */
+
+html.atelier.noir .menu-button.active {
+    color: var(--nr-gold-hi);
+}
+
+html.atelier.noir .menu-button.active::before {
+    background: var(--nr-gold);
+    box-shadow: 0 0 10px var(--nr-gold);
+}
+
+html.atelier.noir .auth-success {
+    border-color: #8fbf7a;
+    background: rgba(143, 191, 122, 0.1);
+    color: #b5dca3;
+}
+
+html.atelier.noir .waffle-item-card,
+html.atelier.noir .item-card {
+    background: linear-gradient(180deg, rgba(38, 24, 15, 0.8), rgba(28, 18, 12, 0.8)) !important;
+    border-color: var(--at-line-strong) !important;
+}
+
+html.atelier.noir .components-box p {
+    color: var(--at-ink-soft) !important;
+}
+
+html.atelier.noir .order-summary-card:active {
+    background: rgba(216, 173, 98, 0.08);
+}
+
+/* ==========================================================================
+   חלונות קופצים
+   ========================================================================== */
+
+html.atelier.noir .message-overlay,
+html.atelier.noir .delete-overlay,
+html.atelier.noir .persuasion-overlay {
+    background: rgba(5, 2, 1, 0.72) !important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+html.atelier.noir .message-popup,
+html.atelier.noir .delete-popup,
+html.atelier.noir .persuasion-card {
+    background: linear-gradient(180deg, #22150d, #160d08) !important;
+    border: 1px solid var(--at-line-strong);
+    box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.7),
+        0 0 80px rgba(216, 173, 98, 0.14) !important;
+    animation: noir-modal 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) both !important;
+}
+
+html.atelier.noir .birthday-banner-content {
+    background: linear-gradient(180deg, #22150d, #160d08);
+    border-color: var(--nr-gold);
+    outline-color: var(--at-line-strong);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 0 0 80px rgba(216, 173, 98, 0.25);
+}
+
+html.atelier.noir .birthday-text {
+    color: var(--at-ink);
+}
+
+/* ==========================================================================
+   ניהול
+   ========================================================================== */
+
+html.atelier.noir .form-wrapper,
+html.atelier.noir .step-box {
+    background: rgba(28, 18, 12, 0.85);
+    border-color: var(--at-line-strong);
+}
+
+html.atelier.noir .users-table tr:hover {
+    background: rgba(216, 173, 98, 0.06);
+}
+
+html.atelier.noir .admin-tabs button:hover,
+html.atelier.noir .admin-tabs button:focus {
+    color: var(--nr-gold-hi);
+    border-bottom-color: var(--nr-gold);
+}
+
+/* ==========================================================================
+   אנימציות
+   ========================================================================== */
+
+@keyframes noir-shimmer {
+    from { background-position: 0% 50%; }
+    to   { background-position: 250% 50%; }
+}
+
+@keyframes noir-shine {
+    0%, 55% { left: -60%; }
+    100%    { left: 130%; }
+}
+
+@keyframes noir-drift {
+    from { transform: translate3d(0, 0, 0) rotate(0deg); }
+    to   { transform: translate3d(-4%, 3%, 0) rotate(6deg); }
+}
+
+@keyframes noir-enter {
+    from { opacity: 0; filter: blur(12px); transform: scale(1.035); }
+    to   { opacity: 1; filter: none; transform: none; }
+}
+
+@keyframes noir-reveal {
+    from { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(40px); }
+    to   { opacity: 1; clip-path: inset(-20% -60% -20% -60%); transform: none; }
+}
+
+@keyframes noir-flip {
+    from { opacity: 0; transform: perspective(1000px) rotateX(-28deg) translateY(70px) scale(0.92); }
+}
+
+@keyframes noir-ring {
+    0%   { transform: scale(1); opacity: 0.9; }
+    100% { transform: scale(1.18, 1.5); opacity: 0; }
+}
+
+@keyframes noir-ripple {
+    from { transform: scale(0.3); opacity: 1; }
+    to   { transform: scale(7); opacity: 0; }
+}
+
+@keyframes noir-glow {
+    from { box-shadow: inset 0 0 0 1px rgba(247, 226, 168, 0.3), inset 0 0 20px rgba(216, 173, 98, 0.15); }
+    to   { box-shadow: inset 0 0 0 1px rgba(247, 226, 168, 0.8), inset 0 0 50px rgba(216, 173, 98, 0.45); }
+}
+
+@keyframes noir-pop {
+    from { opacity: 0; transform: scale(0.2) rotate(-90deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes noir-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+@keyframes noir-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes noir-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes noir-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+@keyframes noir-modal {
+    from { opacity: 0; transform: translateY(30px) scale(0.94); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   טאבלט לאורך
+   ========================================================================== */
+
+@media (max-width: 900px) {
+    html.atelier.noir .clean-main-title {
+        font-size: 54px;
+    }
+
+    html.atelier.noir .clean-hero-content {
+        bottom: 340px;
+    }
+
+    html.atelier.noir .promo-circles-container {
+        bottom: 214px;
+    }
+
+    html.atelier.noir .clean-footer-action {
+        bottom: 96px !important;
+    }
+
+    html.atelier.noir .noir-badge {
+        top: 48px;
+        left: 44px;
+        width: 140px;
+        height: 140px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.atelier.noir *,
+    html.atelier.noir *::before,
+    html.atelier.noir *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}

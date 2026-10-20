@@ -7,7 +7,7 @@ export default function Header() {
   
   return (
     <>
-    <div>
+    <div className="topbar-greeting">
       {user ? (
         <p
         >שלום {user.firstName}

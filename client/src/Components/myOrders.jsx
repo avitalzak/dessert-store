@@ -4,12 +4,24 @@ import { useNavigate } from "react-router-dom"
 import { fetchMyOrders } from "../redux/Slice/ordersSlice"  
 import OrderCard from "./orderCard"  
 import "../styles/MyOrders.css"
+import { isTheme } from "../theme/theme"
+import { useProductImage } from "../Services/useProductImage"
+import KioskOrderList from "./kiosk/KioskOrderList"
+
+const STATUS_LABELS = {
+    pending: "התקבלה",
+    preparing: "בהכנה",
+    ready: "מוכנה לאיסוף",
+    completed: "הושלמה",
+    cancelled: "בוטלה"
+}
 
 export default function MyOrders() {
     const dispatch = useDispatch() 
     const navigate = useNavigate() 
     const { ordersList: orders, loading, error } = useSelector(state => state.orders) 
-    const [selectedOrder, setSelectedOrder] = useState(null) 
+    const [selectedOrder, setSelectedOrder] = useState(null)
+    const getImage = useProductImage()
 
     const [currentPage, setCurrentPage] = useState(1) 
     const itemsPerPage = 2  // מספר ההזמנות שיוצגו בכל עמוד
@@ -28,6 +40,15 @@ export default function MyOrders() {
 
     if (loading) return <p>טוען הזמנות...</p>
     if (error) return <div>שגיאה: {error}</div>
+
+    // תצוגת העמדה: רשימה אמיתית עם תמונות, בלי דפדוף
+    if (isTheme("kiosk")) {
+        if (selectedOrder) {
+            return <OrderCard order={selectedOrder} onBack={() => setSelectedOrder(null)} />
+        }
+        const sorted = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date))
+        return <KioskOrderList orders={sorted} onSelect={setSelectedOrder} getImage={getImage} />
+    }
     if (orders.length === 0) return <p>אין הזמנות להצגה</p> 
 
     const sortedOrders = [...orders].sort(
@@ -73,7 +94,9 @@ const totalPages = Math.ceil(sortedOrders.length / itemsPerPage)
                                         ))}
                                     </div>
                                     <div className="order-summary-footer">
-                                        <span className="order-status-badge">{order.status || "הושלם"}</span>
+                                        <span className="order-status-badge" data-status={order.status}>
+                                            {isTheme("kiosk") ? (STATUS_LABELS[order.status] || order.status || "הושלמה") : (order.status || "הושלם")}
+                                        </span>
                                         <span className="order-price">₪{order.totalPrice || 65}</span>
                                     </div>
                                 </div>

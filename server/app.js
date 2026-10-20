@@ -1,4 +1,6 @@
 import express from 'express'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import cors from "cors"
 import mongoose from 'mongoose'
 import { MONGO_URI } from './config.js'
@@ -31,14 +33,23 @@ app.use(cors())
 
 
 
-app.use('/orders', orderRouter)
-app.use('/users', userRouter)
-app.use('/products', productRouter)
-app.use('/shoppingCart', requireAuth, ShoppingCartRouter)
-app.use('/categories', categoryRouter)
-app.use('/favorites', requireAuth, favoriteRouter)
-app.use('/payments', PaymentRouter)
-app.use('/upload', uploadRouter)
+const api = express.Router()
+
+api.use('/orders', orderRouter)
+api.use('/users', userRouter)
+api.use('/products', productRouter)
+api.use('/shoppingCart', requireAuth, ShoppingCartRouter)
+api.use('/categories', categoryRouter)
+api.use('/favorites', requireAuth, favoriteRouter)
+api.use('/payments', PaymentRouter)
+api.use('/upload', uploadRouter)
+
+app.use('/api', api)
+
+// serve the built React site (client/dist) and let React Router handle page routes
+const clientDist = path.join(path.dirname(fileURLToPath(import.meta.url)), '../client/dist')
+app.use(express.static(clientDist))
+app.get(/^(?!\/api).*/, (req, res) => res.sendFile(path.join(clientDist, 'index.html')))
 
 
 const connectDB = async ()=>{
@@ -47,8 +58,9 @@ const connectDB = async ()=>{
         await mongoose.connect(MONGO_URI);
         console.log("connect DB successfully!!")
 
-        app.listen(1234, ()=>{
-        console.log("running server")
+        const PORT = process.env.PORT || 1234
+        app.listen(PORT, ()=>{
+        console.log("running server on port " + PORT)
 })
 
     }

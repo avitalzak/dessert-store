@@ -6,12 +6,16 @@ import { useNavigate } from "react-router-dom"
 import { groupComponentsByStep } from "../Services/GroupComponentByStep"
 import { addToCartLogic } from "../Services/AddToCart"
 import "../styles/Favorites.css"
+import { isTheme } from "../theme/theme"
+import { useProductImage } from "../Services/useProductImage"
+import KioskFavorites from "./kiosk/KioskFavorites"
 
 export default function Favorites() {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { favorites, loading } = useSelector(state => state.favorites)
+    const getImage = useProductImage()
 
     useEffect(() => {
         dispatch(fetchFavorites())
@@ -23,6 +27,17 @@ export default function Favorites() {
     }
 
     if (loading) return <p>טוען...</p>
+
+    if (isTheme("kiosk")) {
+        return (
+            <KioskFavorites
+                items={favorites?.items}
+                getImage={getImage}
+                onAdd={handleAddToCart}
+                onRemove={(item) => dispatch(removeFromFavorites(item._id))}
+            />
+        )
+    }
     if (!favorites || !favorites.items || favorites.items.length === 0) {
         return (
             <div className="empty-favorites">

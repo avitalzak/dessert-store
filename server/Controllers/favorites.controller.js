@@ -36,8 +36,8 @@ const FavoriteController = {
     getFavoriteById: async (req, res) => {
         try {
             const id = req.params.id;
-            const favorite = await Favorite.findById(id)
-            
+            const favorite = await Favorite.findOne({ _id: id, userId: req.user.userId })
+
 
             if (!favorite) {
                 return res.status(404).json({ message: "Favorite not found" })
@@ -77,8 +77,8 @@ const FavoriteController = {
         const { items } = req.body
     
         try {
-            const updated = await Favorite.findByIdAndUpdate(
-                id,
+            const updated = await Favorite.findOneAndUpdate(
+                { _id: id, userId: req.user.userId },
                 { items },
                 { new: true }
             )

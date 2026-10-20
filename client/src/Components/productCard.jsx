@@ -19,6 +19,7 @@ export default function ProductCard({ product, onClick }) {
                     <p>{product.description}</p>
                 )}
                 <span className="price">₪{product.price}</span>
+                <span className="product-add" aria-hidden="true">+</span>
 
                 
             </div>

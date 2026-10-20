@@ -6,7 +6,7 @@ const ProductRouter = express.Router()
 
 ProductRouter.get('/', ProductController.getProducts)
 ProductRouter.get('/:id', ProductController.getProductById)
-ProductRouter.delete('/deleteProduct/:id', ProductController.deleteProduct)
+ProductRouter.delete('/deleteProduct/:id', requireAuth, requireAdmin, ProductController.deleteProduct)
 ProductRouter.post('/addProduct', requireAuth, requireAdmin, ProductController.addProduct)
 ProductRouter.put('/updateProduct/:id', requireAuth, requireAdmin, ProductController.updateProduct)
 

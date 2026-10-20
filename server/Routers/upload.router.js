@@ -1,11 +1,12 @@
 import express from "express";
 import upload from "../upload.js";
 import cloudinary from "../cloudinary.js";
+import { requireAuth, requireAdmin } from "../middlewares/Middleware.js";
 
 const router = express.Router();
 
 
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", requireAuth, requireAdmin, upload.single("image"), async (req, res) => {
 
     try {
 

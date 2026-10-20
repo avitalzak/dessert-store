@@ -63,8 +63,21 @@ export const mergeCartServer = createAsyncThunk(
         }
 })
 
+// עגלת אורח נשמרת בדפדפן כדי שלא תימחק ברענון
+export const GUEST_CART_KEY = "guestCart"
+
+const loadGuestCart = () => {
+    try {
+        if (localStorage.getItem("jwtToken")) return []
+        const saved = JSON.parse(localStorage.getItem(GUEST_CART_KEY))
+        return Array.isArray(saved) ? saved : []
+    } catch {
+        return []
+    }
+}
+
 const initialState = {
-    items: [],
+    items: loadGuestCart(),
     status: 'idle',
     loading: false,
     error: null,
@@ -127,6 +140,7 @@ const cartSlice = createSlice({
         },
         clearCart: (state) => {
             state.items = []
+            state.error = null
         }
     },
     extraReducers: (builder) => {
@@ -152,14 +166,20 @@ const cartSlice = createSlice({
                 state.items = action.payload || []
             })
             .addMatcher(
-                (action) => action.type.endsWith('/pending'),
-                (state) => { state.status = 'loading' }
+                (action) => action.type.startsWith('cart/') && action.type.endsWith('/pending'),
+                (state) => {
+                    state.status = 'loading'
+                    state.error = null
+                }
             )
             .addMatcher(
-                (action) => action.type.endsWith('/rejected'),
+                (action) => action.type.startsWith('cart/') && action.type.endsWith('/rejected'),
                 (state, action) => {
                     state.status = 'failed'
-                    state.error = action.error.message
+                    const payload = action.payload
+                    state.error = typeof payload === 'string'
+                        ? payload
+                        : payload?.message || payload?.error || action.error.message
                 }
             )
     }

@@ -1,10 +1,15 @@
 import OptionCard from "./optionCard"
+import IngredientIcon from "./dish/IngredientIcon"
 import "../styles/OptionCard.css"
+import { useImagesReady } from "../Services/useImagesReady"
 
-export default function StepScreen({ step, chosen, onToggle }) {
+export default function StepScreen({ step, product, chosen, onToggle }) {
 
     //כמות הפריטים שניתן לבחור עוד (אם  אפשר לבחור כמה פריטים)
     const remaining = step.multiSelect ? step.maxSelect - chosen.length : null
+
+    // כל האופציות של השלב מופיעות יחד, רק אחרי שהתמונות נטענו
+    const imagesReady = useImagesReady(step.options.map(o => o.image))
 
     return (
         <div className="kiosk-step-container">
@@ -16,7 +21,7 @@ export default function StepScreen({ step, chosen, onToggle }) {
                     : ""}
             </p>
 
-            <div className="kiosk-options-grid">
+            <div className={`kiosk-options-grid ${imagesReady ? "" : "is-pending"}`}>
                 {step.options.map(option => {
                     const isSelected = chosen.some(c => c.label === option.label)
                     const isDisabled = step.multiSelect && !isSelected && remaining <= 0
@@ -27,6 +32,7 @@ export default function StepScreen({ step, chosen, onToggle }) {
                             option={option}
                             isSelected={isSelected}
                             disabled={isDisabled}
+                            fallback={<IngredientIcon option={option} step={step} product={product} />}
                             onClick={() => onToggle(option)}
                         />
                     )

@@ -1,8 +1,9 @@
 import axios from "axios";
 import api from "./token";
+import { API_URL } from "./config";
 
 export const getCategories = () => {
-    return axios.get('http://localhost:1234/categories')
+    return axios.get(`${API_URL}/categories`)
 }
 
 export const addCategory = (categoryData) => {

@@ -1,3 +1,4 @@
+import { API_URL } from "../API/config"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AddProduct, DeleteProduct, GetProducts } from "../redux/Slice/productSlice"
@@ -76,9 +77,10 @@ export default function ProductsManager() {
         const data = new FormData()
         data.append("image", imageFile)
         const response = await fetch(
-            "http://localhost:1234/upload",
+            `${API_URL}/upload`,
             {
                 method: "POST",
+                headers: { Authorization: `Bearer ${localStorage.getItem("jwtToken")}` },
                 body: data
             }
         )
@@ -91,8 +93,9 @@ export default function ProductsManager() {
             const data = new FormData();
             data.append("image", file);
         
-            const response = await fetch("http://localhost:1234/upload", {
+            const response = await fetch(`${API_URL}/upload`, {
                 method: "POST",
+                headers: { Authorization: `Bearer ${localStorage.getItem("jwtToken")}` },
                 body: data,
             });
 
@@ -203,8 +206,8 @@ export default function ProductsManager() {
                                             <div key={optionIndex} className="flex-row" style={{ marginBottom: "5px" }}>
                                                 <input placeholder="שם אופציה" value={option.label} onChange={(e) => updateOptionField(stepIndex, optionIndex, "label", e.target.value)} className="input-field" />
                                                 <input type="number" placeholder="מחיר" value={option.priceDelta} onChange={(e) => updateOptionField(stepIndex, optionIndex, "priceDelta", Number(e.target.value))} className="input-field" style={{ width: "80px" }} />
-                                                <input type="file" className="file-upload-btn" accept="image/*" onChange={(e) => updateOptionField(stepIndex, optionIndex, "imageFile", e.target.files[0])}/>
-                                                {option.imageFile && (<span>{option.imageFile.name}</span>)}
+                                                <input type="file" id={`option-image-${stepIndex}-${optionIndex}`} accept="image/*" onChange={(e) => updateOptionField(stepIndex, optionIndex, "imageFile", e.target.files[0])} style={{ display: "none" }} />
+                                                <label htmlFor={`option-image-${stepIndex}-${optionIndex}`} className="file-upload-btn" style={{ flex: 1 }}>{option.imageFile ? `📁 נבחר: ${option.imageFile.name}` : "📁 בחר תמונה"}</label>
                                                 <button type="button" onClick={() => removeOptionRow(stepIndex, optionIndex)} className="btn delete-btn">הסר</button>
                                             </div>
                                         ))}

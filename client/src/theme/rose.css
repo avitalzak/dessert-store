@@ -1,0 +1,1464 @@
+/* ==========================================================================
+   ROSE — פטיסרי ורוד, פטל, פיסטוק וזהב
+   --------------------------------------------------------------------------
+   נבנה מעל ערכת atelier (ה-<html> מקבל גם "atelier" וגם "rose").
+   בהיר ושמח, גופנים חדשים, כרטיסים מעוגלים בתלת-ממד, פריסת בנטו למוצרים
+   וסרטון פתיחה בדף הבית (HeroFilm.jsx). האפקטים החיים ב-effects.js.
+   ========================================================================== */
+
+html:not(.rose) .rose-only {
+    display: none !important;
+}
+
+html.atelier.rose {
+    --at-paper: #fff7f3;
+    --at-paper-deep: #fde7ea;
+    --at-card: #ffffff;
+    --at-ink: #2a1433;
+    --at-ink-soft: #634a66;
+    --at-ink-mute: #9c8299;
+    --at-line: rgba(42, 20, 51, 0.09);
+    --at-line-strong: rgba(42, 20, 51, 0.2);
+    --at-accent: #e8436e;
+    --at-brass: #c9953a;
+    --at-cream: #fff7f3;
+
+    --at-serif: "Bellefair", "Frank Ruhl Libre", serif;
+    --at-french: "Playfair Display", "Bellefair", serif;
+    --at-sans: "Heebo", "Assistant", system-ui, sans-serif;
+    --rs-script: "Parisienne", "Playfair Display", cursive;
+
+    --rs-pink: #ff6f96;
+    --rs-raspberry: #e8436e;
+    --rs-blush: #ffd9e1;
+    --rs-pistachio: #8fbf73;
+    --rs-mint: #d6efd9;
+    --rs-peach: #ffd2b8;
+    --rs-gold: #d8ad4e;
+
+    --rs-grad: linear-gradient(120deg, #ff8fae 0%, #ff5f8c 35%, #e8436e 60%, #ff7fa0 100%);
+    --rs-gold-grad: linear-gradient(110deg,
+        #b8862b 0%, #f3d27a 22%, #fff4cf 32%, #d8ad4e 46%,
+        #b8862b 64%, #f0cf78 82%, #c4943a 100%);
+
+    --rs-radius: 26px;
+    --rs-radius-sm: 16px;
+    --rs-shadow: 0 24px 50px -28px rgba(232, 67, 110, 0.38), 0 8px 18px -10px rgba(42, 20, 51, 0.12);
+    --rs-shadow-hi: 0 40px 70px -30px rgba(232, 67, 110, 0.5), 0 14px 30px -14px rgba(42, 20, 51, 0.2);
+}
+
+/* ==========================================================================
+   בסיס: רקע שמנת-ורדרד עם כתמי צבע נודדים
+   ========================================================================== */
+
+html.atelier.rose body {
+    background: #fff7f3;
+    font-weight: 400;
+}
+
+html.atelier.rose body::before {
+    content: "";
+    position: fixed;
+    inset: -20%;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(34% 30% at 85% 12%, rgba(255, 143, 174, 0.32), transparent 70%),
+        radial-gradient(30% 28% at 8% 85%, rgba(143, 191, 115, 0.26), transparent 70%),
+        radial-gradient(30% 26% at 45% 55%, rgba(255, 210, 184, 0.35), transparent 70%),
+        radial-gradient(24% 22% at 15% 15%, rgba(216, 173, 78, 0.16), transparent 70%);
+    animation: rose-drift 22s ease-in-out infinite alternate;
+}
+
+html.atelier.rose #root {
+    position: relative;
+    z-index: 1;
+}
+
+html.atelier.rose body::after {
+    opacity: 0.035;
+}
+
+html.atelier.rose ::selection {
+    background: var(--rs-raspberry);
+    color: #fff;
+}
+
+html.atelier.rose ::-webkit-scrollbar-thumb {
+    background: rgba(232, 67, 110, 0.35);
+}
+
+.rose-fx-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2147482999;
+}
+
+/* גל עדין במגע - בלי זיקוקים */
+.rose-ripple {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border-radius: 50%;
+    background: rgba(255, 111, 150, 0.22);
+    border: 1.5px solid rgba(232, 67, 110, 0.45);
+    pointer-events: none;
+    z-index: 2147483001;
+    animation: rose-ripple 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+html.atelier.rose .page-content > * {
+    animation: rose-enter 0.7s cubic-bezier(0.2, 0.7, 0, 1) both;
+}
+
+/* ==========================================================================
+   טיפוגרפיה
+   ========================================================================== */
+
+html.atelier.rose .at-eyebrow {
+    font-family: var(--rs-script);
+    font-style: normal;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.1;
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .at-eyebrow::before {
+    width: 34px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--rs-grad);
+    opacity: 1;
+}
+
+html.atelier.rose .at-page-head {
+    border-bottom: 0;
+    padding-bottom: 12px;
+}
+
+html.atelier.rose .at-page-title,
+html.atelier.rose .kiosk-step-title,
+html.atelier.rose .kiosk-panel-title,
+html.atelier.rose .auth-card h3,
+html.atelier.rose .profile-content h2,
+html.atelier.rose .sidebar-title,
+html.atelier.rose .details-main-header h2,
+html.atelier.rose .favorites-title {
+    font-family: var(--at-serif) !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.005em;
+    color: var(--at-ink) !important;
+}
+
+html.atelier.rose .at-page-title {
+    font-size: 68px;
+    line-height: 1;
+}
+
+html.atelier.rose .at-page-lede {
+    font-size: 19px;
+    font-weight: 300;
+}
+
+/* זהב מנצנץ לשם המותג */
+html.atelier.rose .logo-french,
+html.atelier.rose .clean-title-brand {
+    background: var(--rs-gold-grad);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: rose-shimmer 7s linear infinite;
+}
+
+/* מחירים */
+html.atelier.rose .product-info .price,
+html.atelier.rose .kiosk-item-price,
+html.atelier.rose .kiosk-actual-final-price,
+html.atelier.rose .order-price,
+html.atelier.rose .kiosk-old-price-strikethrough {
+    font-family: var(--at-french);
+    font-style: italic;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   כפתורים
+   ========================================================================== */
+
+html.atelier.rose .clean-btn-luxury-oval,
+html.atelier.rose .kiosk-btn-next,
+html.atelier.rose .kiosk-summary-btn-primary,
+html.atelier.rose .kiosk-btn-submit-order,
+html.atelier.rose .btn-submit,
+html.atelier.rose .btn-add,
+html.atelier.rose .btn-reorder-action,
+html.atelier.rose .submit-btn,
+html.atelier.rose .message-popup button,
+html.atelier.rose .persuasion-yes,
+html.atelier.rose .delete-confirm {
+    position: relative;
+    overflow: hidden;
+    background: var(--rs-grad) !important;
+    background-size: 200% 100% !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    font-family: var(--at-sans) !important;
+    font-weight: 700 !important;
+    box-shadow:
+        0 16px 34px -14px rgba(232, 67, 110, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+    animation: rose-shimmer 8s linear infinite;
+    transition: transform 0.2s cubic-bezier(0.3, 1.5, 0.5, 1), box-shadow 0.3s ease !important;
+}
+
+html.atelier.rose .clean-btn-luxury-oval::before,
+html.atelier.rose .kiosk-btn-next::before,
+html.atelier.rose .kiosk-summary-btn-primary::before,
+html.atelier.rose .kiosk-btn-submit-order::before,
+html.atelier.rose .btn-submit::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-20deg);
+    animation: rose-shine 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+html.atelier.rose .kiosk-btn-next:active:not(:disabled),
+html.atelier.rose .kiosk-summary-btn-primary:active,
+html.atelier.rose .kiosk-btn-submit-order:active:not(:disabled),
+html.atelier.rose .btn-submit:active,
+html.atelier.rose .clean-btn-luxury-oval:active {
+    transform: scale(0.96) !important;
+}
+
+html.atelier.rose .kiosk-btn-next:hover:not(:disabled),
+html.atelier.rose .kiosk-summary-btn-primary:hover,
+html.atelier.rose .kiosk-btn-submit-order:hover,
+html.atelier.rose .btn-submit:hover {
+    background: var(--rs-grad) !important;
+    background-size: 200% 100% !important;
+}
+
+html.atelier.rose .kiosk-btn-next:disabled,
+html.atelier.rose .kiosk-btn-submit-order:disabled {
+    background: #f1e4e8 !important;
+    color: var(--at-ink-mute) !important;
+    box-shadow: none !important;
+    animation: none;
+}
+
+html.atelier.rose .kiosk-btn-next:disabled::before,
+html.atelier.rose .kiosk-btn-submit-order:disabled::before {
+    display: none;
+}
+
+/* כפתורים משניים - לבנים מעוגלים */
+html.atelier.rose .kiosk-btn-back,
+html.atelier.rose .kiosk-summary-btn-secondary,
+html.atelier.rose .delete-cancel,
+html.atelier.rose .persuasion-no,
+html.atelier.rose .btn-remove,
+html.atelier.rose .btn-back,
+html.atelier.rose .profile-content button {
+    background: #fff !important;
+    color: var(--at-ink) !important;
+    border: 1.5px solid var(--at-line-strong) !important;
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 8px 20px -14px rgba(42, 20, 51, 0.3) !important;
+}
+
+html.atelier.rose .kiosk-btn-back:active,
+html.atelier.rose .kiosk-summary-btn-secondary:active,
+html.atelier.rose .btn-back:active {
+    background: var(--rs-blush) !important;
+    border-color: var(--rs-pink) !important;
+}
+
+html.atelier.rose .kiosk-toggle-btn,
+html.atelier.rose .pagination-btn {
+    background: #fff;
+    border: 1.5px solid var(--at-line);
+    border-radius: var(--rs-radius-sm);
+    color: var(--at-ink);
+    box-shadow: 0 6px 16px -12px rgba(42, 20, 51, 0.3);
+    transition: all 0.25s ease;
+}
+
+html.atelier.rose .kiosk-toggle-btn.active,
+html.atelier.rose .pagination-btn.active {
+    background: var(--rs-grad);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 14px 28px -14px rgba(232, 67, 110, 0.7);
+}
+
+html.atelier.rose .kiosk-summary-quantity-control button,
+html.atelier.rose .kiosk-cart-qty-selector button {
+    background: #fff;
+    border: 1.5px solid var(--at-line-strong);
+    color: var(--rs-raspberry);
+    font-weight: 600;
+    box-shadow: 0 8px 18px -12px rgba(232, 67, 110, 0.5);
+}
+
+html.atelier.rose .kiosk-summary-quantity-control button:active,
+html.atelier.rose .kiosk-cart-qty-selector button:active {
+    background: var(--rs-grad);
+    color: #fff;
+    border-color: transparent;
+}
+
+html.atelier.rose .kiosk-item-btn-delete:hover,
+html.atelier.rose .kiosk-summary-btn-danger {
+    color: var(--rs-raspberry);
+}
+
+/* ==========================================================================
+   סרגל עליון - זכוכית בהירה
+   ========================================================================== */
+
+html.atelier.rose .topbar {
+    background: rgba(255, 247, 243, 0.72);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    border-bottom: 1px solid rgba(232, 67, 110, 0.12);
+}
+
+html.atelier.rose .logo-french {
+    font-family: var(--at-french);
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: 0.2em;
+}
+
+html.atelier.rose .topbar .logo-tagline {
+    font-family: var(--rs-script);
+    font-style: normal;
+    font-size: 19px;
+    letter-spacing: 0.02em;
+    margin-top: 3px;
+}
+
+html.atelier.rose .icon-btn {
+    font-family: var(--at-sans);
+    font-weight: 500;
+}
+
+html.atelier.rose .icon-btn::after {
+    height: 3px;
+    border-radius: 3px;
+    background: var(--rs-grad);
+}
+
+html.atelier.rose .icon-btn.active,
+html.atelier.rose .icon-btn.active svg {
+    color: var(--rs-raspberry) !important;
+}
+
+html.atelier.rose .help-fab-btn {
+    background: #fff !important;
+    border-color: rgba(232, 67, 110, 0.3) !important;
+    color: var(--rs-raspberry) !important;
+    box-shadow: 0 8px 20px -12px rgba(232, 67, 110, 0.5) !important;
+}
+
+html.atelier.rose .help-fab-done,
+html.atelier.rose .help-fab-btn:active {
+    background: var(--rs-grad) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+}
+
+/* ==========================================================================
+   דף הבית + סרטון
+   ========================================================================== */
+
+html.atelier.rose .clean-fullscreen-container {
+    background: #1d0c22 !important;
+}
+
+html.atelier.rose .clean-fullscreen-hero::after {
+    border-color: rgba(255, 255, 255, 0.32);
+    border-radius: 18px;
+    z-index: 7;
+}
+
+html.atelier.rose .clean-hero-color-overlay {
+    z-index: 4;
+    background:
+        linear-gradient(to top, rgba(42, 12, 40, 0.88) 0%, rgba(42, 12, 40, 0.5) 36%, rgba(42, 12, 40, 0) 66%),
+        linear-gradient(to left, rgba(42, 12, 40, 0.45) 0%, rgba(42, 12, 40, 0) 50%);
+}
+
+html.atelier.rose .clean-hero-content {
+    z-index: 8;
+    max-width: 880px;
+    bottom: 236px;
+}
+
+html.atelier.rose .clean-hero-content .at-eyebrow {
+    font-size: 38px;
+    color: #ffc2d2;
+    margin-bottom: 6px;
+}
+
+html.atelier.rose .clean-hero-content .at-eyebrow::before {
+    background: #ffc2d2;
+}
+
+html.atelier.rose .clean-main-title {
+    font-family: var(--at-serif);
+    font-size: 78px;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 6px 40px rgba(42, 12, 40, 0.5);
+    animation: rose-reveal 1.3s 0.2s cubic-bezier(0.2, 0.7, 0, 1) both;
+}
+
+html.atelier.rose .clean-title-brand {
+    font-family: var(--at-french);
+    font-weight: 600;
+    font-size: 0.7em;
+    letter-spacing: 0.08em;
+    margin-top: 14px;
+    filter: drop-shadow(0 4px 22px rgba(0, 0, 0, 0.35));
+}
+
+html.atelier.rose .clean-subtitle {
+    font-family: var(--at-sans);
+    font-weight: 300;
+    font-size: 23px;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+html.atelier.rose .promo-circles-container {
+    z-index: 8;
+    border-top-color: rgba(255, 255, 255, 0.3);
+}
+
+html.atelier.rose .promo-circle {
+    font-family: var(--at-sans);
+    color: #fff;
+}
+
+html.atelier.rose .promo-circle::before {
+    font-family: var(--rs-script);
+    font-style: normal;
+    font-size: 30px;
+    color: #ffc2d2;
+}
+
+html.atelier.rose .circle-icon {
+    color: #ffc2d2;
+}
+
+html.atelier.rose .clean-footer-action {
+    z-index: 8;
+}
+
+html.atelier.rose .clean-footer-action::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 143, 174, 0.9);
+    pointer-events: none;
+    animation: rose-ring 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) infinite;
+}
+
+html.atelier.rose .clean-btn-luxury-oval {
+    padding: 26px 50px !important;
+    font-size: 23px !important;
+}
+
+/* הסרטון */
+html.atelier.rose .hero-film {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #1d0c22;
+    z-index: 1;
+}
+
+html.atelier.rose .film-shot {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.3s ease, filter 1.3s ease;
+    filter: blur(14px);
+}
+
+html.atelier.rose .film-shot.is-current {
+    opacity: 1;
+    filter: none;
+    z-index: 2;
+}
+
+html.atelier.rose .film-shot.is-leaving {
+    opacity: 0;
+    z-index: 1;
+}
+
+html.atelier.rose .film-frame {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+}
+
+html.atelier.rose .film-pan.is-current .film-frame,
+html.atelier.rose .film-pan.is-leaving .film-frame {
+    animation: film-pan var(--dur) cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+html.atelier.rose .film-close-a.is-current .film-frame,
+html.atelier.rose .film-close-a.is-leaving .film-frame {
+    animation: film-close-a var(--dur) linear forwards;
+}
+
+html.atelier.rose .film-close-b.is-current .film-frame,
+html.atelier.rose .film-close-b.is-leaving .film-frame {
+    animation: film-close-b var(--dur) linear forwards;
+}
+
+html.atelier.rose .film-push.is-current .film-frame,
+html.atelier.rose .film-push.is-leaving .film-frame {
+    animation: film-push var(--dur) ease-out forwards;
+}
+
+html.atelier.rose .film-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    z-index: 3;
+    transition: opacity 1.2s ease;
+}
+
+html.atelier.rose .hero-film.has-video .film-video {
+    opacity: 1;
+}
+
+/* כתובית של המוצר בתקריב */
+html.atelier.rose .film-caption {
+    position: absolute;
+    top: 64px;
+    left: 70px;
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 18px 26px 20px;
+    border-radius: 22px;
+    background: rgba(255, 247, 243, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    color: #fff;
+    text-align: right;
+    animation: rose-caption 3.8s cubic-bezier(0.2, 0.7, 0, 1) both;
+}
+
+html.atelier.rose .film-caption-n {
+    font-family: var(--at-french);
+    font-style: italic;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: #ffc2d2;
+}
+
+html.atelier.rose .film-caption-name {
+    font-family: var(--at-serif);
+    font-size: 40px;
+    line-height: 1.05;
+}
+
+html.atelier.rose .film-caption-price {
+    font-family: var(--at-french);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 26px;
+    color: #ffd98a;
+}
+
+html.atelier.rose .film-progress {
+    position: absolute;
+    top: 38px;
+    left: 70px;
+    right: 70px;
+    z-index: 8;
+    display: flex;
+    gap: 6px;
+}
+
+html.atelier.rose .film-progress span {
+    flex: 1;
+    height: 3px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+}
+
+html.atelier.rose .film-progress span.done {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+html.atelier.rose .film-progress span i {
+    display: block;
+    height: 100%;
+    background: #fff;
+    transform-origin: right;
+    animation: film-progress linear forwards;
+}
+
+/* ==========================================================================
+   כרטיסים בתלת-ממד + הופעה משותפת אחרי טעינה
+   ========================================================================== */
+
+html.atelier.rose .category-card,
+html.atelier.rose .product-card,
+html.atelier.rose .kiosk-option-card {
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+    animation-name: rose-pop-in;
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1.1);
+    animation-fill-mode: backwards;
+    animation-delay: 0s !important;
+}
+
+html.atelier.rose .category-card.is-tilting,
+html.atelier.rose .product-card.is-tilting,
+html.atelier.rose .kiosk-option-card.is-tilting {
+    transition: transform 0.12s linear, box-shadow 0.3s ease;
+}
+
+/* בזמן טעינה: שלד מנצנץ במקום כרטיסים שקופצים אחד-אחד */
+html.atelier.rose .is-pending .category-card,
+html.atelier.rose .is-pending .product-card,
+html.atelier.rose .is-pending .kiosk-option-card {
+    animation: rose-skeleton 1.4s ease-in-out infinite !important;
+    background: linear-gradient(100deg, #fbe6ea 30%, #fff5f2 50%, #fbe6ea 70%) !important;
+    background-size: 300% 100% !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+html.atelier.rose .is-pending .category-card > *,
+html.atelier.rose .is-pending .product-card > *,
+html.atelier.rose .is-pending .kiosk-option-card > *,
+html.atelier.rose .is-pending .category-card::before,
+html.atelier.rose .is-pending .kiosk-option-card::after {
+    visibility: hidden;
+}
+
+html.atelier.rose .category-card::after,
+html.atelier.rose .product-image::after,
+html.atelier.rose .kiosk-card-image-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.5), transparent 55%);
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+html.atelier.rose .category-card.is-tilting::after,
+html.atelier.rose .product-card.is-tilting .product-image::after,
+html.atelier.rose .kiosk-option-card.is-tilting .kiosk-card-image-wrapper::after {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   קטגוריות
+   ========================================================================== */
+
+html.atelier.rose .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 28px;
+}
+
+html.atelier.rose .category-card {
+    border-radius: var(--rs-radius);
+    background: #f6dbe1;
+    box-shadow: var(--rs-shadow);
+    overflow: hidden;
+}
+
+html.atelier.rose .category-card.is-tilting {
+    box-shadow: var(--rs-shadow-hi);
+}
+
+html.atelier.rose .category-card::before {
+    content: counter(at-cat, decimal-leading-zero);
+    top: 18px;
+    right: 18px;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--rs-raspberry);
+    font-family: var(--at-french);
+    font-size: 19px;
+    box-shadow: 0 8px 18px -8px rgba(42, 20, 51, 0.35);
+}
+
+html.atelier.rose .category-info {
+    padding: 100px 24px 24px;
+    background: linear-gradient(to top, rgba(42, 12, 40, 0.82), rgba(42, 12, 40, 0));
+}
+
+html.atelier.rose .category-info h3 {
+    font-family: var(--at-serif);
+    font-size: 40px;
+    color: #fff;
+}
+
+html.atelier.rose .category-info::after {
+    content: "←";
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--rs-grad);
+    color: #fff;
+    font-size: 20px;
+    opacity: 1;
+    box-shadow: 0 10px 22px -10px rgba(232, 67, 110, 0.9);
+}
+
+/* ==========================================================================
+   מוצרים - פריסת בנטו: המוצר הראשון גדול, השאר כרטיסים מעוגלים
+   ========================================================================== */
+
+html.atelier.rose .kiosk-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-flow: dense;
+    gap: 26px;
+}
+
+html.atelier.rose .product-card {
+    position: relative;
+    padding: 12px 12px 18px;
+    background: #fff;
+    border-radius: var(--rs-radius);
+    box-shadow: var(--rs-shadow);
+}
+
+html.atelier.rose .product-card.is-tilting {
+    box-shadow: var(--rs-shadow-hi);
+}
+
+html.atelier.rose .product-image {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 18px;
+    background: var(--rs-blush);
+}
+
+html.atelier.rose .product-info {
+    padding: 16px 8px 0;
+    gap: 6px 12px;
+}
+
+html.atelier.rose .product-info h3 {
+    font-family: var(--at-serif);
+    font-size: 27px;
+    line-height: 1.05;
+}
+
+html.atelier.rose .product-info p {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--at-ink-soft);
+}
+
+html.atelier.rose .product-info .price {
+    align-self: center;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: var(--rs-blush);
+    color: var(--rs-raspberry);
+    font-size: 21px;
+}
+
+html.atelier.rose .product-add {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 4;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--rs-grad);
+    color: #fff;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1;
+    box-shadow: 0 12px 24px -10px rgba(232, 67, 110, 0.9);
+    transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+html.atelier.rose .product-card:active .product-add {
+    transform: scale(1.2) rotate(90deg);
+}
+
+/* המוצר הראשון - כרטיס גיבור גדול עם הטקסט על התמונה */
+html.atelier.rose .product-card:first-of-type {
+    grid-column: span 2;
+    grid-row: span 2;
+    min-height: 520px;
+    padding: 0;
+    overflow: hidden;
+}
+
+html.atelier.rose .product-card:first-of-type .product-info h3,
+html.atelier.rose .product-card:first-of-type .product-info .price {
+    grid-row: 2;
+}
+
+html.atelier.rose .product-card:first-of-type .product-info p {
+    grid-row: 3;
+    padding-left: 90px;
+}
+
+html.atelier.rose .product-card:first-of-type .product-image {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    height: 100%;
+    border-radius: 0;
+}
+
+html.atelier.rose .product-card:first-of-type .product-image::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(to top, rgba(42, 12, 40, 0.85) 0%, rgba(42, 12, 40, 0.15) 50%, rgba(42, 12, 40, 0) 70%);
+}
+
+html.atelier.rose .product-card:first-of-type .product-info {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 3;
+    padding: 30px 32px;
+}
+
+html.atelier.rose .product-card:first-of-type .product-info h3 {
+    font-size: 56px;
+    color: #fff;
+}
+
+html.atelier.rose .product-card:first-of-type .product-info p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+html.atelier.rose .product-card:first-of-type .product-info .price {
+    background: rgba(255, 255, 255, 0.95);
+    font-size: 28px;
+}
+
+html.atelier.rose .product-card:first-of-type .product-info::before {
+    content: "המומלץ שלנו";
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: start;
+    margin-bottom: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--rs-gold-grad);
+    background-size: 200% 100%;
+    color: #3a2410;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+html.atelier.rose .product-card:first-of-type .product-add {
+    top: auto;
+    bottom: 30px;
+    left: 30px;
+    width: 64px;
+    height: 64px;
+    font-size: 38px;
+}
+
+/* ==========================================================================
+   בניית מנה
+   ========================================================================== */
+
+html.atelier.rose .kiosk-builder-wrapper,
+html.atelier.rose .kiosk-cart-page-wrapper {
+    background: transparent;
+}
+
+html.atelier.rose .at-progress-name {
+    font-family: var(--at-serif);
+    font-size: 22px;
+}
+
+html.atelier.rose .at-progress-track span {
+    height: 6px;
+    border-radius: 6px;
+    background: rgba(232, 67, 110, 0.12);
+}
+
+html.atelier.rose .at-progress-track span.on {
+    background: var(--rs-grad);
+    box-shadow: 0 4px 12px -4px rgba(232, 67, 110, 0.7);
+}
+
+html.atelier.rose .at-progress-count {
+    font-family: var(--at-french);
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .kiosk-step-title {
+    font-size: 64px;
+}
+
+html.atelier.rose .kiosk-option-card {
+    background: #fff;
+    border: 2px solid transparent;
+    border-radius: 22px;
+    box-shadow: var(--rs-shadow);
+}
+
+html.atelier.rose .kiosk-card-image-wrapper {
+    position: relative;
+    background: var(--rs-blush);
+}
+
+html.atelier.rose .kiosk-card-footer {
+    background: #fff;
+    align-items: center;
+}
+
+html.atelier.rose .kiosk-card-label {
+    font-family: var(--at-sans);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+html.atelier.rose .kiosk-option-card.is-selected {
+    border-color: var(--rs-pink);
+    box-shadow: 0 0 0 4px rgba(255, 111, 150, 0.22), var(--rs-shadow-hi);
+}
+
+html.atelier.rose .kiosk-option-card.is-selected .kiosk-card-footer {
+    background: var(--rs-grad);
+}
+
+html.atelier.rose .kiosk-option-card.is-selected .kiosk-card-label {
+    color: #fff;
+}
+
+html.atelier.rose .kiosk-option-card::after {
+    width: 40px;
+    height: 40px;
+    background: var(--rs-grad);
+    color: #fff;
+    font-size: 19px;
+    box-shadow: 0 8px 18px -6px rgba(232, 67, 110, 0.9);
+}
+
+html.atelier.rose .kiosk-option-card.is-selected::after {
+    animation: rose-check 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+html.atelier.rose .kiosk-footer-bar {
+    background: rgba(255, 247, 243, 0.82);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border-top-color: rgba(232, 67, 110, 0.12);
+}
+
+html.atelier.rose .kiosk-btn-back {
+    height: 68px;
+}
+
+/* במת התצוגה החיה של המנה */
+html.atelier.rose .dish-stage,
+html.atelier.rose .kiosk-summary-hero-image.has-dish {
+    background:
+        radial-gradient(circle at 50% 56%, #ffffff 0%, #fff1f3 45%, #fde0e6 100%);
+    border: 0;
+    border-radius: 30px;
+    box-shadow: var(--rs-shadow);
+}
+
+html.atelier.rose .dish-stage-title {
+    font-family: var(--rs-script);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .dish-chip {
+    border-radius: 999px;
+    background: #fff;
+    border-color: rgba(232, 67, 110, 0.25);
+    color: var(--at-ink);
+}
+
+/* ==========================================================================
+   סיכום מנה
+   ========================================================================== */
+
+html.atelier.rose .kiosk-summary-container .kiosk-step-title {
+    font-family: var(--rs-script) !important;
+    font-style: normal;
+    font-size: 36px;
+    color: var(--rs-raspberry) !important;
+}
+
+html.atelier.rose .kiosk-summary-hero-image {
+    border-radius: 30px;
+    box-shadow: var(--rs-shadow-hi);
+    animation: rose-float 6s ease-in-out infinite;
+}
+
+html.atelier.rose .kiosk-product-summary-name {
+    font-size: 68px;
+}
+
+html.atelier.rose .kiosk-product-summary-description {
+    font-family: var(--at-french);
+    font-style: italic;
+    font-size: 19px;
+}
+
+html.atelier.rose .kiosk-summary-bill-list {
+    padding: 6px 22px;
+    border: 0;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: var(--rs-shadow);
+}
+
+html.atelier.rose .kiosk-summary-bill-row:last-child {
+    border-bottom: 0;
+}
+
+html.atelier.rose .kiosk-summary-bill-row::before {
+    border-bottom: 2px dotted rgba(232, 67, 110, 0.3);
+}
+
+/* ==========================================================================
+   עגלה ותשלום
+   ========================================================================== */
+
+html.atelier.rose .kiosk-panel-title-wrapper,
+html.atelier.rose .kiosk-pay-summary-block {
+    border-color: rgba(232, 67, 110, 0.25);
+}
+
+html.atelier.rose .kiosk-panel-title {
+    font-size: 58px;
+}
+
+html.atelier.rose .kiosk-cart-item-card {
+    margin: 14px 0;
+    padding: 22px 24px;
+    border: 0;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: var(--rs-shadow);
+}
+
+html.atelier.rose .kiosk-cart-item-card:last-child {
+    border-bottom: 0;
+}
+
+html.atelier.rose .kiosk-item-name {
+    font-size: 30px;
+}
+
+html.atelier.rose .kiosk-item-price {
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .kiosk-cart-left-panel {
+    margin: 28px 28px 28px 0;
+    padding: 44px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 0;
+    border-radius: 32px;
+    box-shadow: var(--rs-shadow-hi);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+html.atelier.rose .kiosk-pay-section-title {
+    font-family: var(--at-sans);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .kiosk-actual-final-price {
+    font-size: 60px;
+    background: var(--rs-grad);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: rose-shimmer 7s linear infinite;
+}
+
+/* שדות קלט */
+html.atelier.rose .kiosk-credit-card-inputs input,
+html.atelier.rose .auth-input,
+html.atelier.rose .input-field,
+html.atelier.rose .file-upload-btn,
+html.atelier.rose .users-table select {
+    background: #fff;
+    border: 1.5px solid var(--at-line);
+    border-radius: var(--rs-radius-sm);
+    color: var(--at-ink);
+    box-shadow: inset 0 2px 4px rgba(42, 20, 51, 0.04);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+html.atelier.rose .kiosk-credit-card-inputs input:focus,
+html.atelier.rose .auth-input:focus,
+html.atelier.rose .input-field:focus {
+    border-color: var(--rs-pink);
+    box-shadow: 0 0 0 5px rgba(255, 111, 150, 0.16);
+}
+
+/* ==========================================================================
+   אזור אישי, הזמנות, מועדפים
+   ========================================================================== */
+
+html.atelier.rose .side-menu {
+    border-left-color: rgba(232, 67, 110, 0.15);
+}
+
+html.atelier.rose .menu-button {
+    font-family: var(--at-serif);
+    font-size: 26px;
+    border-bottom-color: rgba(232, 67, 110, 0.1);
+}
+
+html.atelier.rose .menu-button.active {
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .menu-button.active::before {
+    height: 3px;
+    border-radius: 3px;
+    background: var(--rs-grad);
+}
+
+html.atelier.rose .auth-card {
+    padding: 44px;
+    background: rgba(255, 255, 255, 0.86);
+    border-radius: 32px;
+    box-shadow: var(--rs-shadow-hi);
+}
+
+html.atelier.rose .auth-error {
+    border-radius: 12px;
+}
+
+html.atelier.rose .order-summary-card,
+html.atelier.rose .waffle-item-card,
+html.atelier.rose .item-card {
+    margin-bottom: 14px !important;
+    padding: 22px 24px !important;
+    background: #fff !important;
+    border: 0 !important;
+    border-radius: 22px !important;
+    box-shadow: var(--rs-shadow) !important;
+}
+
+html.atelier.rose .order-summary-card:last-child {
+    border-bottom: 0;
+}
+
+html.atelier.rose .order-status-badge {
+    border: 0;
+    border-radius: 999px;
+    background: var(--rs-mint);
+    color: #3f6b2e;
+}
+
+html.atelier.rose .order-id,
+html.atelier.rose .order-number-tag {
+    font-family: var(--at-french);
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .waffle-img-box {
+    border-radius: 16px;
+}
+
+html.atelier.rose .waffle-component-tag {
+    border: 0;
+    border-radius: 999px;
+    background: var(--rs-blush);
+    color: var(--at-ink);
+}
+
+html.atelier.rose .btn-fav-heart {
+    border-color: rgba(232, 67, 110, 0.35);
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .btn-fav-heart.heart-filled {
+    background: var(--rs-grad);
+    border-color: transparent;
+    color: #fff;
+}
+
+html.atelier.rose .profile-details {
+    padding: 4px 24px;
+    border: 0;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: var(--rs-shadow);
+}
+
+html.atelier.rose .profile-details p:last-child {
+    border-bottom: 0;
+}
+
+/* ==========================================================================
+   חלונות קופצים
+   ========================================================================== */
+
+html.atelier.rose .message-overlay,
+html.atelier.rose .delete-overlay,
+html.atelier.rose .persuasion-overlay {
+    background: rgba(42, 20, 51, 0.35) !important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+html.atelier.rose .message-popup,
+html.atelier.rose .delete-popup,
+html.atelier.rose .persuasion-card {
+    background: #fff !important;
+    border-radius: 32px !important;
+    box-shadow: 0 50px 100px -30px rgba(42, 20, 51, 0.45) !important;
+    animation: rose-modal 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.25) both !important;
+}
+
+html.atelier.rose .birthday-banner-content {
+    background: #fff;
+    border: 0;
+    border-radius: 32px;
+    outline: 2px dashed rgba(232, 67, 110, 0.3);
+    outline-offset: -12px;
+    box-shadow: 0 50px 100px -30px rgba(232, 67, 110, 0.5);
+}
+
+html.atelier.rose .discount-badge {
+    background: var(--rs-grad);
+    border-radius: 999px;
+}
+
+html.atelier.rose .birthday-close-btn {
+    border-radius: 50%;
+}
+
+/* ==========================================================================
+   ניהול
+   ========================================================================== */
+
+html.atelier.rose .form-wrapper,
+html.atelier.rose .step-box {
+    background: #fff;
+    border: 0;
+    border-radius: 22px;
+    box-shadow: var(--rs-shadow);
+}
+
+html.atelier.rose .btn {
+    border-radius: 999px;
+}
+
+html.atelier.rose .delete-btn {
+    border-color: rgba(232, 67, 110, 0.4);
+    color: var(--rs-raspberry);
+}
+
+html.atelier.rose .admin-tabs button:hover,
+html.atelier.rose .admin-tabs button:focus {
+    color: var(--rs-raspberry);
+    border-bottom-color: var(--rs-raspberry);
+}
+
+html.atelier.rose .users-table tr:hover {
+    background: rgba(255, 111, 150, 0.06);
+}
+
+/* ==========================================================================
+   אנימציות
+   ========================================================================== */
+
+@keyframes rose-drift {
+    from { transform: translate3d(0, 0, 0) rotate(0deg); }
+    to   { transform: translate3d(-5%, 4%, 0) rotate(8deg); }
+}
+
+@keyframes rose-shimmer {
+    from { background-position: 0% 50%; }
+    to   { background-position: 250% 50%; }
+}
+
+@keyframes rose-shine {
+    0%, 55% { left: -60%; }
+    100%    { left: 130%; }
+}
+
+@keyframes rose-enter {
+    from { opacity: 0; transform: translateY(24px) scale(0.985); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes rose-reveal {
+    from { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(40px); }
+    to   { opacity: 1; clip-path: inset(-20% -60% -20% -60%); transform: none; }
+}
+
+@keyframes rose-pop-in {
+    from { opacity: 0; transform: perspective(1000px) translateY(40px) scale(0.94); }
+}
+
+@keyframes rose-skeleton {
+    from { background-position: 100% 0; }
+    to   { background-position: -200% 0; }
+}
+
+@keyframes rose-ripple {
+    from { transform: scale(0.4); opacity: 1; }
+    to   { transform: scale(5); opacity: 0; }
+}
+
+@keyframes rose-ring {
+    0%   { transform: scale(1); opacity: 0.9; }
+    100% { transform: scale(1.15, 1.45); opacity: 0; }
+}
+
+@keyframes rose-check {
+    from { opacity: 0; transform: scale(0.2) rotate(-90deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes rose-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+@keyframes rose-modal {
+    from { opacity: 0; transform: translateY(30px) scale(0.92); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes rose-caption {
+    0%   { opacity: 0; transform: translateY(24px); }
+    14%  { opacity: 1; transform: none; }
+    86%  { opacity: 1; transform: none; }
+    100% { opacity: 0; transform: translateY(-12px); }
+}
+
+/* תנועות המצלמה של הסרטון */
+@keyframes film-pan {
+    from { transform: scale(1.5) translate(14%, -7%); }
+    to   { transform: scale(1.5) translate(-14%, -7%); }
+}
+
+@keyframes film-close-a {
+    from { transform: scale(1.08) translate(2%, 1%); }
+    to   { transform: scale(1.32) translate(-3%, -2%); }
+}
+
+@keyframes film-close-b {
+    from { transform: scale(1.34) translate(-3%, 2%) rotate(-1deg); }
+    to   { transform: scale(1.1) translate(2%, -1%) rotate(0deg); }
+}
+
+@keyframes film-push {
+    from { transform: scale(1.25); }
+    to   { transform: scale(1.02); }
+}
+
+@keyframes film-progress {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+/* ==========================================================================
+   טאבלט לאורך
+   ========================================================================== */
+
+@media (max-width: 1100px) {
+    html.atelier.rose .kiosk-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    html.atelier.rose .kiosk-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    html.atelier.rose .product-card:first-of-type {
+        grid-row: span 1;
+        aspect-ratio: 4 / 3;
+    }
+
+    html.atelier.rose .clean-main-title {
+        font-size: 58px;
+    }
+
+    html.atelier.rose .film-caption {
+        top: 60px;
+        left: 44px;
+    }
+
+    html.atelier.rose .film-progress {
+        left: 44px;
+        right: 44px;
+    }
+
+    html.atelier.rose .kiosk-cart-left-panel {
+        margin: 0 var(--at-gutter) 28px;
+        width: auto;
+    }
+}

@@ -4,6 +4,10 @@ import { groupComponentsByStep } from "../Services/GroupComponentByStep"
 import Delete from "./delete"
 import { useEffect, useState } from "react"
 import "../styles/Cart.css"
+import { useNavigate } from "react-router-dom"
+import { GetProducts } from "../redux/Slice/productSlice"
+import { FaShoppingBag } from "react-icons/fa"
+import { MENU_PATH } from "../Services/menuStart"
 
 
 export default function Cart() {
@@ -11,6 +15,13 @@ export default function Cart() {
     const dispatch = useDispatch() 
     const items = useSelector(state => state.cart.items)  
     const isSignIn = useSelector(state => state.user.isSignIn)
+    const products = useSelector(state => state.products.products)
+    const navigate = useNavigate()
+
+    // תמונות המוצרים לעגלה
+    useEffect(() => {
+        if (!products || products.length === 0) dispatch(GetProducts())
+    }, [dispatch, products])
     const { loading, error} =useSelector(state => state.cart) 
     const [deleteModal, setDeleteModal] = useState({
         isOpen: false,
@@ -36,7 +47,13 @@ export default function Cart() {
 console.log("Cart items:", items);
     if (loading) return <div>טוען נתונים...</div>
     if (error) return <div>שגיאה: {error}</div>
-    if (!items || items.length === 0) return <div className="kiosk-cart-status empty">הסל שלך עדיין ריק</div>
+    if (!items || items.length === 0) return (
+        <div className="kiosk-cart-status empty">
+            <span className="empty-ico kiosk-only"><FaShoppingBag /></span>
+            הסל שלך עדיין ריק
+            <button className="empty-cta kiosk-only" onClick={() => navigate(MENU_PATH)}>לתפריט</button>
+        </div>
+    )
 
     const handleRemove = (item) => {
         if (!item) return
@@ -103,6 +120,11 @@ console.log("Cart items:", items);
     
                         return (
                             <div key={item._id || index} className="kiosk-cart-item-card">
+                                <div className="cart-thumb kiosk-only">
+                                    {products?.find(p => p._id === item.productId)?.image && (
+                                        <img src={products.find(p => p._id === item.productId).image} alt="" />
+                                    )}
+                                </div>
     
                                 <div className="kiosk-item-main-info">
                                     <span className="kiosk-item-price">

@@ -17,5 +17,3 @@ services:
         sync: false
       - key: API_SECRET
         sync: false
-      - key: VITE_PAYPAL_CLIENT_ID
-        sync: false

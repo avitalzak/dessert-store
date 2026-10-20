@@ -228,7 +228,7 @@ import { resetSession } from "../Services/kioskSession"
 import { isTabletView } from "../device/device"
 import { FaLock, FaChair, FaShoppingBag, FaCreditCard, FaMoneyBillWave, FaPaypal, FaCcVisa, FaCcMastercard, FaCcAmex, FaCashRegister } from "react-icons/fa"
 
-const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || "YOUR_PAYPAL_CLIENT_ID"
+const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || "sb" // "sb" = PayPal sandbox test id
 
 function loadPayPalScript(clientId) {
   return new Promise((resolve, reject) => {

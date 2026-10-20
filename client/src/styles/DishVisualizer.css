@@ -440,52 +440,103 @@
     overflow: hidden;
 }
 
-/* כל הנוזל עולה מהתחתית עד הגובה שלו */
+/* כל הנוזל עולה מהתחתית עד הגובה שלו, בזמן שהזרם נשפך */
 .pd-liquid-rise {
     position: absolute;
     inset: 0;
-    animation: pdLiquidRise .9s cubic-bezier(.3, .7, .4, 1) .15s both;
+    animation: pdLiquidRise 1.25s cubic-bezier(.35, .1, .3, 1) .25s both;
 }
 
 @keyframes pdLiquidRise {
     from { transform: translateY(var(--rise)); }
 }
 
-.pd-liquid-body {
+.pd-liquid-body,
+.pd-liquid-shade {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    transition: background-color .6s, opacity .6s;
-    /* קצת צל בצדדים, כמו נוזל בכוס עגולה */
-    box-shadow: inset 18px 0 22px -12px rgba(0, 0, 0, .12), inset -18px 0 22px -12px rgba(0, 0, 0, .12);
 }
 
+.pd-liquid-body {
+    transition: opacity .6s;
+}
+
+.pd-liquid-shade {
+    background:
+        linear-gradient(90deg, rgba(60, 40, 20, .16) 0%, rgba(60, 40, 20, 0) 17%,
+            rgba(255, 255, 255, .32) 24%, rgba(255, 255, 255, 0) 31%,
+            rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, .14) 76%, rgba(255, 255, 255, 0) 80%,
+            rgba(60, 40, 20, 0) 84%, rgba(60, 40, 20, .2) 100%);
+    pointer-events: none;
+}
+
+/* פני הנוזל: בהירים במרכז, עם קו מניסקוס בהיר איפה שהנוזל נוגע בזכוכית */
 .pd-liquid-top {
     position: absolute;
     border-radius: 50%;
-    transition: background-color .6s, opacity .6s;
-    box-shadow: inset 0 -3px 6px rgba(255, 255, 255, .6), 0 2px 4px rgba(0, 0, 0, .08);
+    background:
+        radial-gradient(ellipse 55% 45% at 42% 38%, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 70%),
+        var(--top);
+    box-shadow:
+        inset 0 0 0 1.5px rgba(255, 255, 255, .75),
+        inset 0 -5px 9px rgba(80, 50, 20, .1),
+        0 1px 2px rgba(80, 50, 20, .12);
+    transition: opacity .6s;
 }
 
-/* זרם הנוזל שנמזג מלמעלה לרגע */
+.pd-bubble,
+.pd-foam {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.pd-bubble {
+    background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .9) 0 22%, rgba(255, 255, 255, .15) 45%, rgba(255, 255, 255, .5) 100%);
+    box-shadow: 0 0 0 .5px rgba(255, 255, 255, .6);
+    animation: pdFadeIn .6s ease-out calc(1.2s + var(--i) * 70ms) both;
+}
+
+.pd-foam {
+    background: radial-gradient(circle at 40% 35%, #fff 0 30%, rgba(255, 255, 255, .55) 70%);
+    animation: pdFadeIn .5s ease-out calc(1.3s + var(--i) * 40ms) both;
+}
+
+/* גלים מתרחבים במקום שבו הזרם פוגע בפני הנוזל */
+.pd-ripple {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, .7);
+    pointer-events: none;
+    animation: pdRipple .7s ease-out calc(.3s + var(--i) * .35s) both;
+}
+
+@keyframes pdRipple {
+    from { transform: scale(.08); opacity: 1; }
+    to { transform: scale(.85); opacity: 0; }
+}
+
+/* זרם הנוזל שנמזג מלמעלה: יורד, נשפך, ואז הזנב שלו נופל פנימה */
 .pd-liquid-stream {
     position: absolute;
-    left: 48.5%;
-    width: 3%;
+    left: 47.9%;
+    width: 4.2%;
     top: 0;
-    border-radius: 0 0 40% 40%;
-    opacity: .85;
-    transform-origin: top;
-    animation: pdLiquidPour 1.1s ease-in-out both;
+    border-radius: 999px;
+    opacity: var(--o);
+    background: linear-gradient(90deg, var(--c), var(--c2) 40%, rgba(255, 255, 255, .85) 50%, var(--c2) 60%, var(--c));
+    box-shadow: inset 0 0 0 1px rgba(120, 90, 60, .14);
+    animation: pdLiquidPour 1.6s ease-in-out both;
     pointer-events: none;
 }
 
 @keyframes pdLiquidPour {
-    0% { transform: scaleY(0); opacity: .85; }
-    25% { transform: scaleY(1); }
-    75% { opacity: .85; transform: scaleY(1); }
-    100% { transform: scaleY(1) scaleX(.2); opacity: 0; }
+    0% { clip-path: inset(0 0 100% 0); }
+    18% { clip-path: inset(0 0 0 0); transform: scaleX(1); }
+    70% { clip-path: inset(0 0 0 0); transform: scaleX(.85); }
+    100% { clip-path: inset(100% 0 0 0); transform: scaleX(.5); }
 }
 
 /* הכוס רועדת קצת בזמן הערבול */
@@ -500,7 +551,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .pd-liquid-rise, .pd-liquid-stream, .pd-dish.is-blending .pd-frame { animation: none; }
+    .pd-liquid-rise, .pd-liquid-stream, .pd-ripple, .pd-dish.is-blending .pd-frame { animation: none; }
+    .pd-ripple { display: none; }
     .pd-liquid-stream { display: none; }
 }
 

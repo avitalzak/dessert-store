@@ -61,7 +61,7 @@ export const PHOTO_DISHES = {
         inside: [[0.07, 0.12], [0.93, 0.12], [0.8, 0.9], [0.2, 0.9]],
         // דפנות הכוס (x של הדופן השמאלית בשני גבהים) ותחתית הפנים - בשביל הנוזל
         walls: { y0: 0.18, x0: 0.05, y1: 0.86, x1: 0.235 },
-        floor: { cy: 0.82, ry: 0.05 },
+        floor: { cy: 0.895, ry: 0.04 },
         // יחס גובה/רוחב (בפיקסלים) של אליפסת פני הנוזל בזווית הצילום
         tilt: 0.5,
         final: { base: "shake_glass_full", perCm: 0.1, cmScale: 0.6, squash: 0.5, padTop: 0.12,
@@ -179,11 +179,12 @@ function smoothieColor(fruits, liquidItem) {
     return look ? mix(avg, look.mixWith, look.amount * 0.6) : avg
 }
 
-// איך כל נוזל נראה בתוך הכוס (צבע + כמה הוא אטום)
+// איך כל נוזל נראה בתוך הכוס: צבע, כמה הוא אטום, וכמה הוא מטשטש את הפירות שמאחוריו.
+// bubbles = בועות קטנות שנדבקות לדפנות, foam = טבעת קצף דקה על פני הנוזל
 const LIQUID_LOOK = {
-    milk: { color: "#fffaf2", opacity: 0.8 },
-    oj: { color: "#ffa634", opacity: 0.62 },
-    water: { color: "#bfe3f5", opacity: 0.42 },
+    milk: { color: "#fdfaf3", opacity: 0.89, blur: 3, bubbles: 0, foam: 16 },
+    oj: { color: "#ff9a1f", opacity: 0.72, blur: 1.5, bubbles: 9, foam: 6 },
+    water: { color: "#cfeaf6", opacity: 0.3, blur: 0.8, bubbles: 12, foam: 0 },
 }
 
 // final = בשייק: להציג את הכוס המוכנה (אחרי הבלנדר) במקום הכוס עם הפירות והנוזל
@@ -373,7 +374,7 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
         if (liquidItem) {
             const look = LIQUID_LOOK[liquidOf(liquidItem.label).type] || LIQUID_LOOK.water
             const { walls: w, floor } = conf
-            const wallAt = y => w.x0 + (w.x1 - w.x0) * (y - w.y0) / (w.y1 - w.y0) + 0.02
+            const wallAt = y => w.x0 + (w.x1 - w.x0) * (y - w.y0) / (w.y1 - w.y0) + 0.012
             const pileTop = Math.min(floor.cy, ...scene.toppings.flatMap(tp => tp.pieces.map(p => p.y - p.h / 2)))
             const cy = Math.max(0.3, Math.min(0.4, pileTop - 0.08))
             const rx = 0.5 - wallAt(cy)
@@ -384,11 +385,30 @@ export function buildPhotoScene(product, selections, manifest, { final = false }
                 const a = from + (to - from) * i / 16
                 return [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry]
             })
+            // בועות על הדפנות (בעיקר ליד הזכוכית) וקצף על שפת פני הנוזל
+            const rand = seeded("liquid" + liquidItem.key)
+            const bubbles = Array.from({ length: look.bubbles }, () => {
+                const y = cy + ry + rand() * (floor.cy - cy - ry - 0.03)
+                const half = 0.5 - wallAt(y)
+                const side = rand() < 0.5 ? -1 : 1
+                return { x: 0.5 + side * half * (0.55 + rand() * 0.4), y, r: 0.004 + rand() * 0.007 }
+            })
+            const foam = Array.from({ length: look.foam }, (_, i) => {
+                // מקובץ ליד השפה, בעיקר בקשת הקדמית, בגדלים שונים
+                const a = Math.PI * (-0.15 + 1.3 * (i + rand()) / look.foam)
+                const k = 0.84 + rand() * 0.13
+                return { x: 0.5 + Math.cos(a) * rx * k, y: cy + Math.sin(a) * ry * k, r: 0.003 + rand() ** 2 * 0.01 }
+            })
             scene.liquid = {
                 key: liquidItem.key, label: liquidItem.label, stepIndex: liquidItem.stepIndex,
                 ...look,
-                top: mix(look.color, "#ffffff", 0.35),
+                // עמוק = כהה ורווי יותר, ליד פני הנוזל = בהיר יותר
+                shallow: mix(look.color, "#ffffff", 0.18),
+                deep: mix(look.color, "#5a3a20", 0.12),
+                top: mix(look.color, "#ffffff", 0.3),
                 surface: { cx: 0.5, cy, rx, ry },
+                floor: floor.cy,
+                bubbles, foam,
                 points: [...arc(0.5, cy, rx, ry, Math.PI, 2 * Math.PI), ...arc(0.5, floor.cy, fx, floor.ry, 0, Math.PI)],
             }
             // תוספות צפות על פני הנוזל (אם יש כאלה לפני שהכל נטחן)

@@ -150,8 +150,6 @@ export function classify(option, step, dish) {
     const scoopStep = title.includes("גלידה") || title.includes("טעמ")
     if (label.includes("קצפת")) return scoopStep ? "whip" : "whipTop"
     if (scoopStep) return "scoop"
-    // שוקולד כ"תוספת" על וופל/קרפ/פנקייק = ממרח שוקולד
-    if (label === "שוקולד" && dish !== "icecream" && dish !== "shake") return "spread"
     return "topping"
 }
 

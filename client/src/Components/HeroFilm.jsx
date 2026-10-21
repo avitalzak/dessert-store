@@ -39,18 +39,17 @@ export default function HeroFilm({ storeImage, closingImage }) {
                 caption: { n: i + 1, name: p.name, price: p.price }
             }))
 
-        // תמונת פתיחה וסיום הן אופציונליות - בלעדיהן הסרטון בנוי רק מתמונות המוצרים
         return [
-            storeImage && { src: storeImage, kind: "pan", duration: 7500 },
+            { src: storeImage, kind: "pan", duration: 7500 },
             ...closeups,
-            closingImage && { src: closingImage, kind: "push", duration: 5500 }
-        ].filter(Boolean)
+            { src: closingImage, kind: "push", duration: 5500 }
+        ]
     }, [products, storeImage, closingImage])
 
     const current = index % shots.length
 
     useEffect(() => {
-        if (hasVideo || shots.length === 0) return
+        if (hasVideo) return
         const timer = setTimeout(() => {
             setPrev(current)
             setIndex(current + 1)
@@ -58,7 +57,7 @@ export default function HeroFilm({ storeImage, closingImage }) {
         return () => clearTimeout(timer)
     }, [current, shots, hasVideo])
 
-    const caption = shots[current]?.caption
+    const caption = shots[current].caption
 
     return (
         <div className={`hero-film ${hasVideo ? "has-video" : ""}`}>

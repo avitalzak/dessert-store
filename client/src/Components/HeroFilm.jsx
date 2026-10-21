@@ -10,9 +10,8 @@ import { GetProducts } from "../redux/Slice/productSlice"
 const VIDEO_SRC = null
 const CLOSEUP_COUNT = 6
 
-// מוצרים שלא יופיעו בסרטון, ומוצר שמוצג בו תמיד (במקום השלישי)
-const HIDDEN_FROM_FILM = ["עוגת יום הולדת", "עוגת גבינה"]
-const FEATURED_IN_FILM = "גלידה ברכבה אישית"
+// מוצרים שלא יופיעו בסרטון
+const HIDDEN_FROM_FILM = ["עוגת יום הולדת", "עוגת גבינה", "גלידה ברכבה אישית"]
 
 export default function HeroFilm({ storeImage, closingImage }) {
     const dispatch = useDispatch()
@@ -27,13 +26,9 @@ export default function HeroFilm({ storeImage, closingImage }) {
     }, [dispatch, products])
 
     const shots = useMemo(() => {
-        const featured = (products || []).find(p => p.name === FEATURED_IN_FILM && p.image)
-        const picks = (products || [])
-            .filter(p => p.image && p !== featured && !HIDDEN_FROM_FILM.includes(p.name))
-            .slice(0, featured ? CLOSEUP_COUNT - 2 : CLOSEUP_COUNT - 1)
-        if (featured) picks.splice(2, 0, featured)
-
-        const closeups = picks
+        const closeups = (products || [])
+            .filter(p => p.image && !HIDDEN_FROM_FILM.includes(p.name))
+            .slice(0, CLOSEUP_COUNT - 1)
             .map((p, i) => ({
                 src: p.image,
                 kind: i % 2 === 0 ? "close-a" : "close-b",

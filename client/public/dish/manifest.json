@@ -167,29 +167,29 @@
   "type": "pieces",
   "pieces": [
    {
-    "file": "t_strawberry_halves_0.webp",
-    "w": 166,
-    "h": 200
+    "file": "t_strawberry_halves_0.webp?v=2575319",
+    "w": 164,
+    "h": 198
    },
    {
-    "file": "t_strawberry_halves_1.webp",
-    "w": 168,
+    "file": "t_strawberry_halves_1.webp?v=2575319",
+    "w": 144,
     "h": 176
    },
    {
-    "file": "t_strawberry_halves_2.webp",
-    "w": 159,
-    "h": 213
+    "file": "t_strawberry_halves_2.webp?v=2575319",
+    "w": 135,
+    "h": 212
    },
    {
-    "file": "t_strawberry_halves_3.webp",
-    "w": 179,
-    "h": 184
+    "file": "t_strawberry_halves_3.webp?v=2575319",
+    "w": 153,
+    "h": 181
    },
    {
-    "file": "t_strawberry_halves_4.webp",
+    "file": "t_strawberry_halves_4.webp?v=2575319",
     "w": 164,
-    "h": 179
+    "h": 178
    }
   ],
   "src": [
@@ -1363,58 +1363,58 @@
   "type": "pieces",
   "pieces": [
    {
-    "file": "t_strawberry_bits_0.webp",
+    "file": "t_strawberry_bits_0.webp?v=2575319",
     "w": 94,
-    "h": 83
+    "h": 82
    },
    {
-    "file": "t_strawberry_bits_1.webp",
+    "file": "t_strawberry_bits_1.webp?v=2575319",
     "w": 99,
     "h": 90
    },
    {
-    "file": "t_strawberry_bits_2.webp",
+    "file": "t_strawberry_bits_2.webp?v=2575319",
     "w": 93,
-    "h": 98
+    "h": 96
    },
    {
-    "file": "t_strawberry_bits_3.webp",
-    "w": 114,
+    "file": "t_strawberry_bits_3.webp?v=2575319",
+    "w": 113,
     "h": 86
    },
    {
-    "file": "t_strawberry_bits_4.webp",
+    "file": "t_strawberry_bits_4.webp?v=2575319",
     "w": 103,
     "h": 102
    },
    {
-    "file": "t_strawberry_bits_5.webp",
+    "file": "t_strawberry_bits_5.webp?v=2575319",
     "w": 89,
-    "h": 94
+    "h": 93
    },
    {
-    "file": "t_strawberry_bits_6.webp",
+    "file": "t_strawberry_bits_6.webp?v=2575319",
     "w": 93,
-    "h": 103
+    "h": 102
    },
    {
-    "file": "t_strawberry_bits_7.webp",
+    "file": "t_strawberry_bits_7.webp?v=2575319",
     "w": 103,
     "h": 103
    },
    {
-    "file": "t_strawberry_bits_8.webp",
+    "file": "t_strawberry_bits_8.webp?v=2575319",
     "w": 106,
-    "h": 104
+    "h": 103
    },
    {
-    "file": "t_strawberry_bits_9.webp",
+    "file": "t_strawberry_bits_9.webp?v=2575319",
     "w": 101,
     "h": 105
    },
    {
-    "file": "t_strawberry_bits_10.webp",
-    "w": 115,
+    "file": "t_strawberry_bits_10.webp?v=2575319",
+    "w": 114,
     "h": 100
    }
   ],

@@ -4,8 +4,10 @@ import { GetProducts } from "../redux/Slice/productSlice"
 
 // "סרטון" פתיחה קולנועי לדף הבית:
 // מצלמה שעוברת על הדלפק בחנות, ואז תקריבים של המוצרים עם השם והמחיר.
-// אם קיים קובץ וידאו אמיתי ב-public/videos/store.mp4 - הוא מוצג במקום.
-const VIDEO_SRC = "/videos/store.mp4"
+// כשיהיה קובץ וידאו אמיתי: לשים אותו ב-public/videos/store.mp4 ולכתוב כאן "/videos/store.mp4".
+// כל עוד אין קובץ - לא מציגים <video> בכלל: NetFree מחליף אותו ב-iframe לאותה כתובת,
+// והשרת מחזיר במקום הקובץ החסר את האתר עצמו, כך שהאתר כולו (עם הסרגל) הופיע בתוך דף הבית.
+const VIDEO_SRC = null
 const CLOSEUP_COUNT = 6
 
 // מוצרים שלא יופיעו בסרטון, ומוצר שמוצג בו תמיד (במקום השלישי)
@@ -95,16 +97,18 @@ export default function HeroFilm({ storeImage, closingImage }) {
                 </div>
             )}
 
-            <video
-                className="film-video"
-                src={VIDEO_SRC}
-                autoPlay
-                muted
-                loop
-                playsInline
-                onCanPlay={() => setHasVideo(true)}
-                onError={() => setHasVideo(false)}
-            />
+            {VIDEO_SRC && (
+                <video
+                    className="film-video"
+                    src={VIDEO_SRC}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    onCanPlay={() => setHasVideo(true)}
+                    onError={() => setHasVideo(false)}
+                />
+            )}
         </div>
     )
 }

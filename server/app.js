@@ -49,7 +49,8 @@ app.use('/api', api)
 // serve the built React site (client/dist) and let React Router handle page routes
 const clientDist = path.join(path.dirname(fileURLToPath(import.meta.url)), '../client/dist')
 app.use(express.static(clientDist))
-app.get(/^(?!\/api).*/, (req, res) => res.sendFile(path.join(clientDist, 'index.html')))
+// only page routes get index.html; a missing file (e.g. /videos/x.mp4) gets a real 404 instead of the whole site
+app.get(/^(?!\/api)(?!.*\.\w+$).*/, (req, res) => res.sendFile(path.join(clientDist, 'index.html')))
 
 
 const connectDB = async ()=>{

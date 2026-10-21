@@ -44,7 +44,8 @@ return (
             <div className="clean-fullscreen-hero">
                 
                 {isTheme("rose") || isTheme("kiosk") ? (
-                    <HeroFilm storeImage={SLIDES[1]} closingImage={SLIDES[0]} />
+                    // התמונות ב-SLIDES הן צילומי מסך של האתר עצמו (עם הסרגל), ולכן לא נכנסות לסרטון
+                    <HeroFilm />
                 ) : SLIDES.map((url, index) => (
                     <div 
                         key={index}

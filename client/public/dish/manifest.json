@@ -199,7 +199,7 @@
  },
  "waffle_base": {
   "type": "single",
-  "file": "waffle_base.webp",
+  "file": "waffle_base.webp?v=2575320",
   "w": 905,
   "h": 650,
   "src": [
@@ -767,7 +767,7 @@
  },
  "crepe_base": {
   "type": "single",
-  "file": "crepe_base.webp",
+  "file": "crepe_base.webp?v=2575320",
   "w": 878,
   "h": 561,
   "src": [
@@ -866,7 +866,7 @@
  },
  "pancake_base": {
   "type": "single",
-  "file": "pancake_base.webp",
+  "file": "pancake_base.webp?v=2575320",
   "w": 920,
   "h": 621,
   "src": [
